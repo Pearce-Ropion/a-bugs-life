@@ -1,0 +1,10 @@
+node_modules/
+build_artifacts/
+build/
+dist/
+logs/
+*.log
+*.xml
+.cache/
+.vscode/
+.DS_Store
