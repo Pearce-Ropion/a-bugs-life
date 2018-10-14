@@ -2,6 +2,9 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore, combineReducers, compose } from 'redux';
+import 'semantic-ui-css/semantic.min.css';
+
+import { Application } from '../src/components/Application';
 
 // const rootReducer = combineReducers();
 

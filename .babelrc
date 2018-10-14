@@ -17,7 +17,7 @@
     ],
     "plugins": [
         "transform-object-rest-spread",
-        "transform-object-properties"
+        "transform-class-properties"
     ],
     "ignore": [
         "node_modules"
