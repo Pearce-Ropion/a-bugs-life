@@ -1,19 +1,23 @@
 import React from 'react';
-import { Form, Search, Divider } from 'semantic-ui-react';
+import { Form, Search, Divider, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import dropdownOptions from '../api/DropdownOptions';
 
 export const TicketForm = props =>
     <Form>
+        <Form.Input 
+            fluid
+            label='Summary'
+            placeholder='Summary'
+            onChange={props.onFieldChange} />
+        <Form.TextArea
+            autoHeight
+            rows='5'
+            label='Description'
+            placeholder='Description'
+            onChange={props.onFieldChange} />
         <Form.Group widths='equal'>
-            <Form.Dropdown 
-                fluid
-                selection
-                label='Ticket Type'
-                placeholder='Type'
-                options={dropdownOptions.TicketTypes}
-                onChange={props.onFieldChange} />
             <Form.Dropdown
                 fluid
                 selection
@@ -21,22 +25,20 @@ export const TicketForm = props =>
                 multiple
                 allowAdditions
                 label='Tags'
-                placeholder='Tags'
+                placeholder='Select Multiple or Enter Your Own'
                 additionLabel='New Tag: '
+                options={dropdownOptions.TagTypes}
                 onChange={props.onFieldChange} />
+            <Form.Input
+                fluid
+                readOnly
+                label='Attachments'
+                placeholder='Files...'
+                onChange={props.onFieldChange}
+                action={
+                    <Button content='Attach Files' color='teal' icon='file image' labelPosition='right' />
+                } />
         </Form.Group>
-        <Form.Input 
-            fluid
-            label='Summary'
-            placeholder='Summary'
-            onChange={props.onFieldChange} />
-        <Form.TextArea
-            fluid
-            autoHeight
-            rows='5'
-            label='Description'
-            placeholder='Description'
-            onChange={props.onFieldChange} />
         {
             props.isEditing &&
                 <React.Fragment>
@@ -77,7 +79,7 @@ export const TicketForm = props =>
     </Form>
 
 TicketForm.defaultProps = {
-    isEditing: false,
+    isEditing: true,
 }
 
 TicketForm.propTypes = {

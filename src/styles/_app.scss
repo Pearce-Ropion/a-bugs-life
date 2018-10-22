@@ -1,3 +1,18 @@
+@import './abstracts';
+@import './heading';
+@import './tickets';
+@import './modals';
+
+body {
+    overflow: hidden;
+}
+
+#application {
+    margin-top: -1rem;
+    
+}
+
+
 #sidebar {
     background-color: rgb(0, 112, 204);
 }

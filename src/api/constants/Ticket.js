@@ -1,55 +1,3 @@
-export const TicketTypes = {
-    TASK: {
-        name: 'Task',
-        icon: {
-            name: 'check',
-            color: 'blue'
-        },
-    },
-    BUG: {
-        name: 'Bug',
-        icon: {
-            name: 'bug',
-            color: 'red'
-        },
-    },
-    FEATURE: {
-        name: 'Feature',
-        icon: {
-            name: 'magic',
-            color: 'blue'
-        },
-    },
-    EPIC: {
-        name: 'Epic',
-        icon: {
-            name: 'lightning',
-            color: 'purple',
-        },
-    },
-    IMPROVEMENT: {
-        name: 'Improvement',
-        icon: {
-            name: 'arrow up',
-            color: 'green',
-        },
-    },
-    TEST: {
-        name: 'Test',
-        icon: {
-            name: 'pencil',
-            color: 'teal',
-        },
-    },
-    REQUEST: {
-        name: 'Request',
-        icon: {
-            name: 'envelope',
-            color: 'gray'
-        },
-    },
-}
-
 export const PriorityLevels = {
     P0: {
         short: 'P0',
@@ -91,6 +39,14 @@ export const PriorityLevels = {
             color: 'green',
         },
     },
+    BUG: {
+        short: 'Bug',
+        name: 'Bug',
+        icon: {
+            name: 'bug',
+            color: 'grey',
+        },
+    },
 };
 
 export const SeverityLevels = {
@@ -101,3 +57,13 @@ export const SeverityLevels = {
     NA: 'N/A',
 };
 
+export const TagTypes = () => new Map([
+    'Network',
+    'Camino',
+    'eCampus',
+    'Laptop',
+    'Desktop',
+    'Media Services',
+    'Library',
+    'CourseAvail',
+].map(val => [val, val]));

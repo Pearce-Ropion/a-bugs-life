@@ -19,11 +19,9 @@ export class TicketTable extends React.Component {
     }
 
     getColumns = () => [
-        IconColumn({ property: 'type' }),
         IconColumn({ property: 'priority' }),
         TextColumn({ property: 'id', className: 'small' }),
         TextColumn({ property: 'summary', className: 'x-large' }),
-        LabelColumn({ property: 'epic', className: 'medium centered' }),
     ]
 
     onSelect = (event, data) => {
@@ -52,6 +50,7 @@ export class TicketTable extends React.Component {
                     ref={tableBody => {
                         this.tableBody = tableBody && tableBody.getRef();
                     }}/>
+
             </Table.Provider>
         );
     }

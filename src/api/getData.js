@@ -1,31 +1,37 @@
 import faker from 'faker';
 
-import { TicketTypes, PriorityLevels, SeverityLevels } from './constants/Ticket'
-import { StatusTypes } from './constants/Status'
+import { PriorityLevels, SeverityLevels } from './constants/Ticket'
+import { StatusTypes, ResolutionTypes } from './constants/Status'
+
+const randomType = obj => {
+    const values = Object.values(obj);
+    const length = values.length;
+    return values[Math.floor(Math.random() * length)];
+}
+
+const randomString = (count, string) => new Array(count).fill(0).map(() => string);
 
 export const getData = count => {
     const data = [];
     for (let i = 0; i < count; i++) {
         data.push({
             id: i,
-            project: faker.commerce.product(),
-            type: Object.values(TicketTypes)[Math.floor(Math.random() * Object.keys(TicketTypes).length)],
-            summary: faker.lorem.sentence(),
+            summary: faker.hacker.phrase(),
             description: faker.lorem.paragraph(3),
             assignee: faker.name.firstName().concat(' ', faker.name.lastName()),
             reporter: faker.name.firstName().concat(' ', faker.name.lastName()),
-            watchers: new Array(3).fill(0).map(val => faker.name.firstName().concat(' ', faker.name.lastName())),
-            components: new Array(3).fill(0).map(val => faker.commerce.department()),
-            epic: faker.finance.account(),
-            priority: Object.values(PriorityLevels)[Math.floor(Math.random() * Object.keys(PriorityLevels).length)],
-            severity: Object.values(SeverityLevels)[Math.floor(Math.random() * Object.keys(SeverityLevels).length)],
-            labels: new Array(3).fill(0).map(val => faker.database.column()),
+            watchers: randomString(3, faker.name.firstName().concat(' ', faker.name.lastName())),
+            components: randomString(3, faker.commerce.department()),
+            priority: PriorityLevels.BUG,
+            severity: randomType(SeverityLevels),
+            labels: randomString(3, faker.database.column()),
             attachments: [],
-            status: Object.values(StatusTypes)[Math.floor(Math.random() * Object.keys(SeverityLevels).length)],
+            status: randomType(StatusTypes),
+            resolution: randomType(ResolutionTypes),
             dateCreated: new Date(),
             dateModified: new Date(),
             dateClosed: new Date(),
-        })
-    }
+        });
+    };
     return data;
-}
+};
