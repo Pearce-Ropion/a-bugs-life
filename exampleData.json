@@ -1,0 +1,15 @@
+{
+    "summary": "some summary",
+    "description": "some description",
+    "assignee": "some name",
+    "reporter": "some name",
+    "component": "some component",
+    "priority": 1,
+    "severity": 1,
+    "labels": "label1, label2",
+    "status": "some status",
+    "resolution": "some res",
+    "created": 123,
+    "moifidied": 124,
+    "closed": 125
+}
