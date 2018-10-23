@@ -34,8 +34,8 @@ class Serv(BaseHTTPRequestHandler):
 			json_string = post_body_bytes.decode('utf8').replace("'", '"')
 			data = json.loads(json_string)
 
-			for key in data:
-				print(key + ": " + str(data[key]))
+			self.execute_db_command(self.get_insert_command(data), False)
+			self.execute_db_command('''SELECT * FROM tickets''', True)
 
 			self.send_response(200)
 			# self.send_header('Content-type', 'text/html')
@@ -43,6 +43,42 @@ class Serv(BaseHTTPRequestHandler):
 			self.send_response(400)
 
 		self.end_headers()
+
+	def execute_db_command(self, command, traverse_cursor):
+		db = sqlite3.connect('bugs.db')
+
+		# gets a cursor object
+		cursor = db.cursor()
+
+		cursor.execute(command)
+		db.commit()
+
+		if traverse_cursor:
+			for row in cursor:
+				rowStr = ''''''
+				for attribute in row:
+					rowStr += (str(attribute) + ''' ''')
+				print(rowStr)
+
+		db.close()
+
+	def get_insert_command(self, data):
+		# ASSUME THAT KEYS ARE IN THE PROPER ORDER!		
+		command = '''INSERT INTO tickets('''
+		
+		# insert keys into command
+		for key in data:
+			command += (key + ',')
+		command = command[:-1]
+		command += ''') VALUES('''
+
+		# insert values into command
+		for key in data:
+			command += ("'" + str(data[key]) + "',")
+		command = command[:-1]
+		command += ''')'''
+
+		return command
 
 # starts the HTTP Daemon
 http_daemon = HTTPServer(('localhost', args.PORT_NUMBER), Serv)
