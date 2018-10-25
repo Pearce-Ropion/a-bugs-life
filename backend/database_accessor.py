@@ -1,31 +1,21 @@
 # import standard Python library for SQLite
 import sqlite3
 
-# import helper Python scripts
+# import helper Python script
 import constants
 
-def execute_db_command(command, traverse_cursor):
+def execute_db_command(command):
 	db = sqlite3.connect(constants.database)
 
-	# gets a cursor object
 	cursor = db.cursor()
-
 	cursor.execute(command)
-
-	if traverse_cursor:
-		for row in cursor:
-			rowStr = ''
-			for attribute in row:
-				rowStr += (str(attribute) + ' ')
-			print(rowStr)
-	else:
-		db.commit()
+	db.commit()
 
 	db.close()
 
-def get_insert_command(data):
+def get_insert_command(data, table_name):
 	# ASSUME THAT KEYS ARE IN THE PROPER ORDER!		
-	command = 'INSERT INTO ' + constants.tickets_table + '('
+	command = 'INSERT INTO ' + table_name + '('
 	
 	# insert keys into command
 	for key in data:
