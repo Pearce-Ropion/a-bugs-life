@@ -34,11 +34,10 @@ class Server(BaseHTTPRequestHandler):
 			json_string = post_body_bytes.decode('utf8').replace("'", '"')
 			data = json.loads(json_string)
 
-			db.execute_db_command(db.get_insert_command(data), False)
-			db.execute_db_command('SELECT * FROM ' + constants.tickets_table, True)
+			db.execute_db_command(db.get_insert_command(data, constants.tickets_table))
 
-			self.send_response(200)
-			# self.send_header('Content-type', 'text/html')
+			self.send_response(200, {"test": "hey"})
+			self.send_header('Content-type', 'text/html')
 		except:
 			self.send_response(400)
 
