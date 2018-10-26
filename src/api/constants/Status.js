@@ -73,4 +73,5 @@ export const ResolutionTypes = {
     KILLED: 'Killed',
     APPROVED: 'Approved',
     NOT_APPROVED: 'Not Approved',
+    UNRESOLVED: 'Unresolved',
 };

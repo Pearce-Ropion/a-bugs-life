@@ -57,7 +57,7 @@ export const SeverityLevels = {
     NA: 'N/A',
 };
 
-export const TagTypes = () => new Map([
+export const ComponentTypes = [
     'Network',
     'Camino',
     'eCampus',
@@ -66,4 +66,4 @@ export const TagTypes = () => new Map([
     'Media Services',
     'Library',
     'CourseAvail',
-].map(val => [val, val]));
+];

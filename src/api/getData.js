@@ -1,15 +1,20 @@
 import faker from 'faker';
 
-import { PriorityLevels, SeverityLevels } from './constants/Ticket'
+import { PriorityLevels, SeverityLevels, ComponentTypes } from './constants/Ticket'
 import { StatusTypes, ResolutionTypes } from './constants/Status'
+import { UserTypes } from './constants/Users'
+import { capitalize } from './Utils';
 
-const randomType = obj => {
+const randomNumber = (min, max) => faker.random.number({ min, max });
+
+const randomType = (obj, skip = 0) => {
     const values = Object.values(obj);
     const length = values.length;
-    return values[Math.floor(Math.random() * length)];
+    return values[Math.floor(Math.random() * (length - skip))];
 }
 
-const randomString = (count, string) => new Array(count).fill(0).map(() => string);
+const randomString = (count, fn) => new Array(count).fill(0).map(() => capitalize(fn()));
+const randomDate = () => new Date(randomNumber(2005, 2018), randomNumber(0, 11), randomNumber(0, 29), randomNumber(0, 23), randomNumber(0, 59)).getTime() / 1000;
 
 export const getData = count => {
     const data = [];
@@ -17,20 +22,19 @@ export const getData = count => {
         data.push({
             id: i,
             summary: faker.hacker.phrase(),
-            description: faker.lorem.paragraph(3),
-            assignee: faker.name.firstName().concat(' ', faker.name.lastName()),
-            reporter: faker.name.firstName().concat(' ', faker.name.lastName()),
-            watchers: randomString(3, faker.name.firstName().concat(' ', faker.name.lastName())),
-            components: randomString(3, faker.commerce.department()),
+            description: faker.lorem.paragraph(5),
+            assignee: randomType(UserTypes, 1),
+            reporter: randomType(UserTypes, 2),
+            component: ComponentTypes[Math.floor(Math.random() * ComponentTypes.length)],
             priority: PriorityLevels.BUG,
             severity: randomType(SeverityLevels),
-            labels: randomString(3, faker.database.column()),
+            labels: randomString(3, faker.database.column),
             attachments: [],
             status: randomType(StatusTypes),
             resolution: randomType(ResolutionTypes),
-            dateCreated: new Date(),
-            dateModified: new Date(),
-            dateClosed: new Date(),
+            created: randomDate(),
+            modified: randomDate(),
+            closed: randomDate(),
         });
     };
     return data;

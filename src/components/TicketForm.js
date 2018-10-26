@@ -1,37 +1,46 @@
 import React from 'react';
-import { Form, Search, Divider, Button } from 'semantic-ui-react';
+import { Form, Divider, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import dropdownOptions from '../api/DropdownOptions';
+import TicketProps from '../api/constants/TicketProps';
+import { UserDropdownOptions } from '../api/constants/Users';
+import { sortByKey } from '../api/Utils';
 
 export const TicketForm = props =>
     <Form>
         <Form.Input 
             fluid
+            name='summary'
             label='Summary'
             placeholder='Summary'
+            value={props.fields.summary}
             onChange={props.onFieldChange} />
         <Form.TextArea
             autoHeight
             rows='5'
+            name='description'
             label='Description'
             placeholder='Description'
+            value={props.fields.description}
             onChange={props.onFieldChange} />
         <Form.Group widths='equal'>
             <Form.Dropdown
                 fluid
                 selection
                 search
-                multiple
                 allowAdditions
-                label='Tags'
+                name='component'
+                label='Component'
                 placeholder='Select Multiple or Enter Your Own'
-                additionLabel='New Tag: '
-                options={dropdownOptions.TagTypes}
+                additionLabel='New Component: '
+                value={props.fields.component}
+                options={sortByKey(dropdownOptions.ComponentTypes, 'value')}
                 onChange={props.onFieldChange} />
             <Form.Input
                 fluid
                 readOnly
+                name='attachments'
                 label='Attachments'
                 placeholder='Files...'
                 onChange={props.onFieldChange}
@@ -40,49 +49,68 @@ export const TicketForm = props =>
                 } />
         </Form.Group>
         {
-            props.isEditing &&
+            props.isEmployee &&
                 <React.Fragment>
                     <Divider />
                     <Form.Group widths='equal'>
-                        <Form.Input
+                        <Form.Dropdown
                             fluid
-                            control={Search}
+                            selection
+                            search
+                            name='assignee'
                             label='Assignee'
                             placeholder='Assginee'
+                            icon='search'
+                            value={props.fields.assignee.name}
+                            options={UserDropdownOptions}
                             onChange={props.onFieldChange} />
                         <Form.Dropdown
                             fluid
                             selection
                             search
                             multiple
-                            label='Watchers'
-                            placeholder='Watchers'
+                            allowAdditions
+                            name='labels'
+                            label='Labels'
+                            placeholder='Select or Enter Your Own'
+                            additionLabel='New Label: '
                             icon='search'
+                            value={props.fields.labels}
+                            options={props.labels.labelDropdownOptions}
                             onChange={props.onFieldChange} />
                     </Form.Group>
                     <Form.Group widths='equal'>
                         <Form.Dropdown
                             fluid
                             selection
+                            name='priority'
                             label='Priority'
                             placeholder='Priority'
-                            options={dropdownOptions.PriorityLevels} />
+                            value={props.fields.priority.name}
+                            options={dropdownOptions.PriorityLevels}
+                            onChange={props.onFieldChange} />
                         <Form.Dropdown
                             fluid
                             selection
+                            name='severity'
                             label='Severity'
                             placeholder='Severity'
-                            options={dropdownOptions.SeverityLevels} />
+                            value={props.fields.severity}
+                            options={dropdownOptions.SeverityLevels}
+                            onChange={props.onFieldChange} />
                     </Form.Group>
                 </React.Fragment>
         }
     </Form>
 
 TicketForm.defaultProps = {
-    isEditing: true,
+    isEditable: false,
+    isEmployee: false,
 }
 
 TicketForm.propTypes = {
-    isEditing: PropTypes.bool,
+    isEditable: PropTypes.bool,
+    isEmployee: PropTypes.bool,
+    fields: PropTypes.shape(TicketProps),
     onFieldChange: PropTypes.func,
 }

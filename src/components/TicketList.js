@@ -3,7 +3,6 @@ import { Segment, List, Popup } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import TicketProps from '../api/constants/TicketProps';
-import { PriorityLevels, SeverityLevels } from '../api/constants/Ticket';
 import { StatusTag } from './Tags'
 
 export const PriorityPopup = props =>

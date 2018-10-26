@@ -4,15 +4,22 @@
 @import './modals';
 
 body {
-    overflow: hidden;
+  overflow: hidden;
 }
 
-#application {
-    margin-top: -1rem;
-    
-}
+#details {
+  margin-top: -1rem;
 
+}
 
 #sidebar {
-    background-color: rgb(0, 112, 204);
+  background-color: rgb(0, 112, 204);
+}
+
+.centerVerticalGroup {
+  display: -webkit-box !important;
+
+  & > .button {
+    display: -webkit-box !important;
+  }
 }
