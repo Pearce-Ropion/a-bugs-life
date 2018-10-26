@@ -4,7 +4,7 @@ import postcss from 'rollup-plugin-postcss';
 import { description, version } from './package.json';
 
 export default {
-    input: 'src/main.js',
+    input: 'app/index.js',
     output: {
         dir: 'dist',
         file: 'bundle.js',
@@ -20,7 +20,7 @@ export default {
     plugins: [
         babel({
             exclude: ['node_modules/**', 'src/styles/*'],
-            plugins: ['external-helpers'],
+            plugins: ['@babel/external-helpers'],
         }),
         postcss({
             modules: true,
