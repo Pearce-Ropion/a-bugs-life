@@ -8,7 +8,7 @@
 	"private": false,
 	"scripts": {
 		"build": "yarn clean && yarn build:dist",
-		"build:dist": "NODE_ENV=production rollup --config rollup.config.js src/index.js",
+		"build:dist": "NODE_ENV=production rollup --config rollup.config.js app/index.js",
 		"clean": "rimraf dist .cache",
 		"dev": "yarn clean && yarn dev:build",
 		"dev:build": "NODE_ENV=development parcel app/index.html",
