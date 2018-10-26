@@ -6,7 +6,7 @@
 	"components": "some component",
 	"priority": 1,
 	"severity": 1,
-	"labels": "label1-label2",
+	"labels": ["label1", "label2"],
 	"attachments": "attachment1",
 	"status": "some status",
 	"resolution": "some res",
