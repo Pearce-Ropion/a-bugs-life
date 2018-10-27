@@ -3,7 +3,7 @@ from http.server import BaseHTTPRequestHandler
 import json
 
 # import helper Python scripts
-import constants
+import constants as c
 import database_accessor as db
 
 # Server inherits methods from BaseHTTPRequestHandler class
@@ -29,21 +29,22 @@ class Server(BaseHTTPRequestHandler):
 	# built into BaseHTTPRequestHandler, which runs when we receive a POST request
 	def do_POST(self):
 		try:
-			print(self.path)
-
 			content_length = int(self.headers['Content-Length'])
 			post_body_bytes = self.rfile.read(content_length)
 			json_string = post_body_bytes.decode('utf8').replace("'", '"')
 			data = json.loads(json_string)
 
-			db.execute_db_command(db.get_insert_command(data, constants.tickets_table), None)
-			tickets_data = db.execute_db_command('SELECT * FROM ' + constants.tickets_table, constants.attributes[constants.tickets_table])
-			print(json.dumps(tickets_data, indent=4))
+			db.insert_into_db(data, c.tickets_table)
+			tickets_data = db.get_table_data(c.tickets_table, None)
+			first_ticket_data = db.get_table_data(c.tickets_table, 1)
+			print(first_ticket_data)
 
-			# self.wfile.write(bytes(json.dumps({"tickets_data": "data"}), 'utf-8'))
 			self.send_response(200)
-			# self.send_header('Content-type', 'text/html')
+			self.end_headers()
+
+			tickets_data_string = json.dumps(tickets_data)
+			tickets_data_bytes = tickets_data_string.encode()
+			self.wfile.write(tickets_data_bytes)
 		except:
 			self.send_response(400)
-
-		self.end_headers()
+			self.end_headers()

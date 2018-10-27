@@ -2,11 +2,11 @@
 import sqlite3
 
 # import helper Python script
-import constants
+import constants as c
 
 # print database information (names of tables and their attributes)
 def print_database_information():
-	db = sqlite3.connect(constants.database)
+	db = sqlite3.connect(c.database)
 
 	cursor = db.cursor()
 
@@ -16,7 +16,7 @@ def print_database_information():
 		print(row[0])
 	print('')
 
-	for table_name in constants.table_list:
+	for table_name in c.table_list:
 		cursor.execute("SELECT sql FROM sqlite_master WHERE tbl_name = '" + table_name + "' AND type='table'")
 		print("Attributes of '" + table_name + "' table:")
 		for row in cursor:
@@ -28,7 +28,7 @@ def print_database_information():
 
 # print the contents of the given table
 def print_table(table_name):
-	db = sqlite3.connect(constants.database)
+	db = sqlite3.connect(c.database)
 
 	cursor = db.cursor()
 
@@ -57,7 +57,7 @@ while user_input != 'q':
 	if user_input == 'i':
 		print_database_information()
 	elif user_input == 'd':
-		for table_name in constants.table_list:
+		for table_name in c.table_list:
 			print_table(table_name)
 	elif user_input == 'q':
 		break
