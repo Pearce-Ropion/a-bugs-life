@@ -28,6 +28,8 @@ class Server(BaseHTTPRequestHandler):
 
 	# built into BaseHTTPRequestHandler, which runs when we receive a POST request
 	def do_POST(self):
+		print(self.path)
+
 		try:
 			content_length = int(self.headers['Content-Length'])
 			post_body_bytes = self.rfile.read(content_length)
@@ -35,9 +37,19 @@ class Server(BaseHTTPRequestHandler):
 			data = json.loads(json_string)
 
 			db.insert_into_db(data, c.tickets_table)
-			tickets_data = db.get_table_data(c.tickets_table, None)
-			first_ticket_data = db.get_table_data(c.tickets_table, 1)
-			print(first_ticket_data)
+			
+			tickets_data = db.get_table_data(c.tickets_table)
+			
+			filter1 = ('id', 2)
+			print(json.dumps(db.get_table_data(c.tickets_table, filter1), indent=4))
+			
+			filters = (
+				('labels', ["test1","test2"]),
+				('assignee', 'a1'),
+				('severity', 10),
+				('attachments', ["tester","attachment","attachment2"])
+			)
+			print(json.dumps(db.get_table_data(c.tickets_table, filters), indent=4))
 
 			self.send_response(200)
 			self.end_headers()

@@ -4,14 +4,35 @@ import sqlite3
 # import helper Python script
 import constants as c
 
-def get_table_data(table_name, id):
+def get_table_data(table_name, filter=None):
 	db = sqlite3.connect(c.database)
 
 	cursor = db.cursor()
 
 	command = 'SELECT * FROM ' + table_name
-	if id is not None:
-		command += (' WHERE id=' + str(id))
+	if (filter is not None) and (len(filter) > 0):
+		command += ' WHERE '
+		if type(filter[0]) is str:
+			# there is only 1 filter
+			command += (filter[0] + '=' + str(filter[1]))
+		else:
+			# there are multiple filters to be added
+			for pair in filter:
+				command += str(pair[0])
+				if pair[1] is None:
+					command += ' IS NULL AND '
+				else:
+					if pair[0] == 'labels' or pair[0] == 'attachments':
+						value = ','.join(pair[1])
+					else:
+						value = str(pair[1])
+					if type(filter[1]) is int:
+						command += ('=' + value + ' AND ')
+					else:
+						command += ("='" + value + "' AND ")
+			# removes the ' AND ' after the last filter
+			command = command[:-5]
+
 	cursor.execute(command)
 
 	# gets the list of attributes for this table
@@ -26,8 +47,8 @@ def get_table_data(table_name, id):
 			key = attributes_list[counter]
 			
 			value = attribute
-			# for the labels or attachments attribute, convert a comma-separated String to a list of Strings
-			if (attribute is not None) and (key == 'labels' or key == 'attachments'):
+			# if the attribute is labels or attachments, convert a comma-separated String to a list of Strings
+			if (key == 'labels' or key == 'attachments') and (attribute is not None):
 				value = attribute.split(',')
 			
 			rowObject[key] = value
@@ -37,10 +58,7 @@ def get_table_data(table_name, id):
 
 	db.close()
 
-	if id is not None:
-		return data[0]
-	else:
-		return data
+	return (data if (len(data) > 0) else None)
 
 def insert_into_db(data, table_name):
 	db = sqlite3.connect(c.database)
@@ -57,10 +75,10 @@ def insert_into_db(data, table_name):
 	for attribute in attributes_list:
 		command += (attribute + ',')
 	command = command[:-1]
+	
 	command += ') VALUES('
-
-	for _ in range(len(attributes_list)):
-		command += '?,'
+	# insert '?,' for each of the attributes in the table
+	command += ('?,' * len(attributes_list))
 	command = command[:-1]
 	command += ')'
 
