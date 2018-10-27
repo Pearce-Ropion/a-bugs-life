@@ -43,13 +43,13 @@ class Server(BaseHTTPRequestHandler):
 			filter1 = ('id', 2)
 			print(json.dumps(db.get_table_data(c.tickets_table, filter1), indent=4))
 			
-			filters = (
+			filter2 = (
 				('labels', ["test1","test2"]),
 				('assignee', 'a1'),
 				('severity', 10),
-				('attachments', ["tester","attachment","attachment2"])
+				('attachments', None)
 			)
-			print(json.dumps(db.get_table_data(c.tickets_table, filters), indent=4))
+			print(json.dumps(db.get_table_data(c.tickets_table, filter2), indent=4))
 
 			self.send_response(200)
 			self.end_headers()
