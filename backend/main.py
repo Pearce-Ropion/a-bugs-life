@@ -1,6 +1,6 @@
 # import standard Python libraries
 import argparse
-from http.server import HTTPServer
+from BaseHTTPServer import HTTPServer
 
 # import helper Python script
 import server as my_server
