@@ -10,19 +10,19 @@ def print_database_information():
 
 	cursor = db.cursor()
 
-	print('Names of Tables:')
+	print 'Names of Tables:'
 	cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
 	for row in cursor:
-		print(row[0])
-	print('')
+		print row[0]
+	print ''
 
 	for table_name in c.table_list:
 		cursor.execute("SELECT sql FROM sqlite_master WHERE tbl_name = '" + table_name + "' AND type='table'")
-		print("Attributes of '" + table_name + "' table:")
+		print "Attributes of '" + table_name + "' table:"
 		for row in cursor:
 			for attribute in row:
-				print(attribute)
-		print('')
+				print attribute
+		print ''
 
 	db.close()
 
@@ -34,16 +34,16 @@ def print_table(table_name):
 
 	cursor.execute('SELECT * FROM ' + table_name)
 
-	print("Data in '" + table_name + "' table:")
+	print "Data in '" + table_name + "' table:"
 	row = None
 	for row in cursor:
 		rowStr = ''
 		for attribute in row:
 			rowStr += (str(attribute) + ' ')
-		print(rowStr)
+		print rowStr
 	if row is None:
-		print('[EMPTY TABLE]')
-	print('')
+		print '[EMPTY TABLE]'
+	print ''
 
 	db.close()
 
@@ -51,9 +51,9 @@ def print_table(table_name):
 
 user_input = ''
 while user_input != 'q':
-	print('')
-	user_input = input("Enter 'i' for database information, 'd' for table data, or 'q' to quit -> ").lower()
-	print('')
+	print ''
+	user_input = raw_input("Enter 'i' for database information, 'd' for table data, or 'q' to quit -> ").lower()
+	print ''
 	if user_input == 'i':
 		print_database_information()
 	elif user_input == 'd':
@@ -62,5 +62,5 @@ while user_input != 'q':
 	elif user_input == 'q':
 		break
 	else:
-		print('Invalid input.')
-print('')
+		print 'Invalid input.'
+print ''

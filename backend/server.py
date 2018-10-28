@@ -1,5 +1,6 @@
 # import standard Python libraries
-from http.server import BaseHTTPRequestHandler
+from BaseHTTPServer import BaseHTTPRequestHandler
+from io import open
 import json
 
 # import helper Python scripts
@@ -11,10 +12,10 @@ class Server(BaseHTTPRequestHandler):
 	# built into BaseHTTPRequestHandler, which runs when we receive a GET request
 	def do_GET(self):
 		# required because the html, scss, and js files are in the app directory
-		self.path = '/..' + self.path
+		path = '/..' + self.path
 		
 		try:
-			file_to_open = open(self.path[1:]).read()
+			file_to_open = open(path[1:]).read()
 			self.send_response(200)
 		except:
 			file_to_open = 'File Not Found!'
@@ -24,39 +25,47 @@ class Server(BaseHTTPRequestHandler):
 		self.end_headers()
 		
 		# write the contents of the file onto the screen
-		self.wfile.write(bytes(file_to_open, 'utf-8'))
+		self.wfile.write(str(file_to_open).encode('utf-8'))
 
 	# built into BaseHTTPRequestHandler, which runs when we receive a POST request
 	def do_POST(self):
-		print(self.path)
-
 		try:
+			path = self.path[5:]
+			if len(path) == 0:
+				raise Exception
+
 			content_length = int(self.headers['Content-Length'])
 			post_body_bytes = self.rfile.read(content_length)
 			json_string = post_body_bytes.decode('utf8').replace("'", '"')
 			data = json.loads(json_string)
 
-			db.insert_into_db(data, c.tickets_table)
-			
-			tickets_data = db.get_table_data(c.tickets_table)
-			
-			filter1 = ('id', 2)
-			print(json.dumps(db.get_table_data(c.tickets_table, filter1), indent=4))
-			
-			filter2 = (
-				('labels', ["test1","test2"]),
-				('assignee', 'a1'),
-				('severity', 10),
-				('attachments', None)
-			)
-			print(json.dumps(db.get_table_data(c.tickets_table, filter2), indent=4))
+			response_data = None
+
+			if path == 'test1':
+				db.insert_into_db(data, c.tickets_table)
+			elif path == 'test2':
+				response_data = db.get_table_data(c.tickets_table)
+			elif path == 'test3':
+				filter1 = ('id', 2)
+				print json.dumps(db.get_table_data(c.tickets_table, filter1), indent=4)
+
+				filter2 = (
+					('labels', ["test1","test2"]),
+					('assignee', 'a1'),
+					('severity', 10),
+					('attachments', None)
+				)
+				print json.dumps(db.get_table_data(c.tickets_table, filter2), indent=4)
+			else:
+				raise Exception
 
 			self.send_response(200)
 			self.end_headers()
 
-			tickets_data_string = json.dumps(tickets_data)
-			tickets_data_bytes = tickets_data_string.encode()
-			self.wfile.write(tickets_data_bytes)
+			if response_data is not None:
+				response_data_string = json.dumps(response_data)
+				response_data_bytes = response_data_string.encode()
+				self.wfile.write(response_data_bytes)
 		except:
 			self.send_response(400)
 			self.end_headers()
