@@ -1,5 +1,5 @@
 import { StatusTypes, ResolutionTypes } from './constants/Status';
-import { PriorityLevels, SeverityLevels, TagTypes } from './constants/Ticket';
+import { PriorityLevels, SeverityLevels, ComponentTypes } from './constants/Ticket';
 
 export const buildStaticOptions = options => {
     return Object.values(options).map((option, idx) => {
@@ -11,20 +11,22 @@ export const buildStaticOptions = options => {
     });
 };
 
-export const buildMapOptions = options => Array.from(options.keys()).map((option, idx) => {
-    return {
-        key: idx,
-        value: option,
-        text: option,
-    };
-});
+export const buildArrayOptions = options => {
+    return options.map((option, idx) => {
+        return {
+            key: idx,
+            value: option,
+            text: option,
+        };
+    });
+};
 
 export const buildStatusOptions = options => {
     return Object.values(options).map((option, idx) => {
         return {
             key: idx,
-            value: option.value,
-            text: option.value,
+            value: option.name,
+            text: option.name,
         };
     });
 };
@@ -45,6 +47,6 @@ export default {
     ResolutionTypes: buildStaticOptions(ResolutionTypes),
     PriorityLevels: buildIconOptions(PriorityLevels),
     SeverityLevels: buildStaticOptions(SeverityLevels),
-    TagTypes: buildMapOptions(TagTypes()),
+    ComponentTypes: buildArrayOptions(ComponentTypes),
 };
 

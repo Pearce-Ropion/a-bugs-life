@@ -1,62 +1,62 @@
 export const StatusTypes = {
     OPEN: {
         type: Symbol('OPEN'),
-        value: 'Open',
+        name: 'Open',
         color: 'blue',
     },
     IN_PROGRESS: {
         type: Symbol('IN_PROGRESS'),
-        value: 'In Progress',
+        name: 'In Progress',
         color: 'yellow',
     },
     RESOLVED: {
         type: Symbol('RESOLVED'),
-        value: 'Resolved',
+        name: 'Resolved',
         color: 'green',
     },
     CLOSED: {
         type: Symbol('CLOSED'),
-        value: 'Closed',
+        name: 'Closed',
         color: 'green',
     },
     REOPENED: {
         type: Symbol('REOPENED'),
-        value: 'Reopened',
+        name: 'Reopened',
         color: 'blue',
     },
     BLOCKED: {
         type: Symbol('BLOCKED'),
-        value: 'Blocked',
+        name: 'Blocked',
         color: 'yellow',
     },
     CODE_COMPLETE: {
         type: Symbol('CODE_COMPLETE'),
-        value: 'Code Complete',
+        name: 'Code Complete',
         color: 'yellow',
     },
     BACKLOG: {
         type: Symbol('BACKLOG'),
-        value: 'Backlog',
+        name: 'Backlog',
         color: 'blue',
     },
     ON_HOLD: {
         type: Symbol('ON_HOLD'),
-        value: 'On Hold',
+        name: 'On Hold',
         color: 'blue',
     },
     CODE_REVIEW: {
         type: Symbol('CODE_REVIEW'),
-        value: 'Code Review',
+        name: 'Code Review',
         color: 'yellow',
     },
     TESTING: {
         type: Symbol('TESTING'),
-        value: 'Testing',
+        name: 'Testing',
         color: 'orange',
     },
     QA_TESTING: {
         type: Symbol('QA_TESTING'),
-        value: 'QA Testing',
+        name: 'QA Testing',
         color: 'orange',
     },
 };
@@ -73,4 +73,5 @@ export const ResolutionTypes = {
     KILLED: 'Killed',
     APPROVED: 'Approved',
     NOT_APPROVED: 'Not Approved',
+    UNRESOLVED: 'Unresolved',
 };
