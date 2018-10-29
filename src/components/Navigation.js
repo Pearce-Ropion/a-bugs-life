@@ -10,7 +10,7 @@ import { Panes } from '../api/constants/Panes';
 
 export const Navigation = props =>
     <Grid id='heading' padded>
-        <Grid.Column width={11}>
+        <Grid.Column width={10}>
             {
                 (props.activePane === Panes.CREATE || props.currentUser === UserTypes.USER) && <Header as='h1' inverted content={`A Bug's Life`} />
             }
@@ -25,7 +25,10 @@ export const Navigation = props =>
                     : null
             }
         </Grid.Column>
-        <Grid.Column width={5} className='right'>
+        <Grid.Column width={6} className='right'>
+            {
+                props.isLoggedIn && <Header as='h5' inverted textAlign='left' content={`Welcome, ${props.currentUser.name}`} style={{ display: 'inline-block', marginRight: '2em' }} />
+            }
             {
                 props.activePane !== Panes.CREATE && <TicketHandler isModal labels={props.labels} />
             }

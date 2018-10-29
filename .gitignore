@@ -1,14 +1,12 @@
 node_modules/
 build_artifacts/
+backend/__pycache__/
 dist/
 logs/
 *.log
+*.pyc
 *.xml
 .cache/
 .vscode/
 .DS_Store
 *.code-workspace
-backend/__pycache__/
-backend/constants.pyc
-backend/database_accessor.pyc
-backend/server.pyc
