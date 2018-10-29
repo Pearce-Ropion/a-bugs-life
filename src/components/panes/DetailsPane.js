@@ -15,7 +15,7 @@ export class DetailsPane extends React.Component {
         super(props);
         // this.props.tickets = [];
         this.state = {
-            fake: true,
+            fake: false,
             currentTicket: 0,
         };
     };
