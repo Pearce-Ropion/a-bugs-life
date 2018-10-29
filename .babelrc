@@ -16,8 +16,8 @@
         "@babel/react"
     ],
     "plugins": [
-        "transform-object-rest-spread",
-        "transform-class-properties"
+        ["@babel/plugin-proposal-object-rest-spread", {}, "spread"],
+        ["transform-class-properties", {}, "class"]
     ],
     "ignore": [
         "node_modules"
