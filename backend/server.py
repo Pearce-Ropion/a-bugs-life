@@ -12,20 +12,20 @@ class Server(BaseHTTPRequestHandler):
 	# built into BaseHTTPRequestHandler, which runs when we receive a GET request
 	def do_GET(self):		
 		# initially, the js files were in the parent directory, but got moved to backend directory (this one!)
-		# self.path = '/..' + self.path
+		self.path = '/..' + self.path
 
 		try:
 			file_to_open = open(self.path[1:]).read()
 			self.send_response(200)
 		except:
 			file_to_open = 'File Not Found!'
-			self.send_response(404)
+			# self.send_response(404)
 
 		# required by the BaseHTTPRequestHandler class
 		self.end_headers()
 		
 		# write the contents of the file onto the screen
-		self.wfile.write(str(file_to_open).encode('utf-8'))
+		self.wfile.write(file_to_open.encode('utf-8'))
 
 	# built into BaseHTTPRequestHandler, which runs when we receive a POST request
 	def do_POST(self):
