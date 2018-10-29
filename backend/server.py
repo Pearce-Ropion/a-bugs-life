@@ -11,11 +11,13 @@ import database_accessor as db
 class Server(BaseHTTPRequestHandler):
 	# built into BaseHTTPRequestHandler, which runs when we receive a GET request
 	def do_GET(self):		
-		# initially, the js files were in the parent directory, but got moved to backend directory (this one!)
-		self.path = '/..' + self.path
+		# this is the correct path for a repository directly cloned from GitHub
+		# path = '/../app' + self.path
+		
+		path = '/../app/build' + self.path
 
 		try:
-			file_to_open = open(self.path[1:]).read()
+			file_to_open = open(path[1:]).read()
 			self.send_response(200)
 		except:
 			file_to_open = 'File Not Found!'
