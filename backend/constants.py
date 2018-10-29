@@ -13,7 +13,7 @@ attributes = {tickets_table: ['id', 'summary','description', 'assignee', 'report
 table_list = [tickets_table, users_table]
 
 # paths for GET Request
-dev_path = '/../app'
+dev_path = '/../dist'
 build_path = '/../build'
 
 # the current environment ('dev' or 'build'), which will be set after server.py runs
