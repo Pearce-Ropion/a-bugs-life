@@ -54,12 +54,18 @@ def update_db(data, table_name):
 	
 	# insert attributes into command
 	for attribute in attributes_list:
-		command += (attribute + '=?,')
 		if attribute == 'labels':
-			value = value = ','.join(data['labels'])
+			if len(data['labels']) > 0:
+				command += ('labels=?,')
+				value = ','.join(data['labels'])
+				values_list.append(value)
+			else:
+				command += ('labels=NULL,')
 		else:
+			command += (attribute + '=?,')
 			value = data[attribute]
-		values_list.append(value)
+			values_list.append(value)
+
 	command = command[:-1]
 	
 	command += ' WHERE id=?'
@@ -89,9 +95,9 @@ def get_table_data(table_name, filters=None):
 			key = attributes_list[counter]
 			
 			value = attribute
-			# if the attribute is labels or attachments, convert a comma-separated String to a list of Strings
-			if (key == 'labels') and (attribute is not None):
-				value = attribute.split(',')
+			# if the attribute is labels, convert a comma-separated String to a list of Strings
+			if key == 'labels':
+				value = attribute.split(',') if (attribute is not None) else []
 			
 			rowObject[key] = value
 			counter += 1
