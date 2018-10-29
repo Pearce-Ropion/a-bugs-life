@@ -22,12 +22,12 @@ export const StatusTypes = {
     REOPENED: {
         type: Symbol('REOPENED'),
         name: 'Reopened',
-        color: 'blue',
+        color: 'orange',
     },
     BLOCKED: {
         type: Symbol('BLOCKED'),
         name: 'Blocked',
-        color: 'yellow',
+        color: 'red',
     },
     CODE_COMPLETE: {
         type: Symbol('CODE_COMPLETE'),
@@ -39,10 +39,10 @@ export const StatusTypes = {
         name: 'Backlog',
         color: 'blue',
     },
-    ON_HOLD: {
-        type: Symbol('ON_HOLD'),
-        name: 'On Hold',
-        color: 'blue',
+    VALIDATED: {
+        type: Symbol('VALIDATED'),
+        name: 'Validated',
+        color: 'orange',
     },
     CODE_REVIEW: {
         type: Symbol('CODE_REVIEW'),
