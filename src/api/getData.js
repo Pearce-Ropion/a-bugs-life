@@ -14,7 +14,7 @@ const randomType = (obj, skip = 0) => {
 }
 
 const randomString = (count, fn) => new Array(count).fill(0).map(() => capitalize(fn()));
-const randomDate = () => new Date(randomNumber(2005, 2018), randomNumber(0, 11), randomNumber(0, 29), randomNumber(0, 23), randomNumber(0, 59)).getTime() / 1000;
+const randomDate = () => Math.round(new Date(randomNumber(2005, 2018), randomNumber(0, 11), randomNumber(0, 29), randomNumber(0, 23), randomNumber(0, 59)).getTime() / 1000);
 
 export const getData = count => {
     const data = [];
@@ -23,14 +23,13 @@ export const getData = count => {
             id: i,
             summary: faker.hacker.phrase(),
             description: faker.lorem.paragraph(5),
-            assignee: randomType(UserTypes, 1),
-            reporter: randomType(UserTypes, 2),
+            assignee: randomType(UserTypes, 1).name,
+            reporter: randomType(UserTypes, 1).name,
             component: ComponentTypes[Math.floor(Math.random() * ComponentTypes.length)],
-            priority: PriorityLevels.BUG,
+            priority: PriorityLevels.BUG.name,
             severity: randomType(SeverityLevels),
             labels: randomString(3, faker.database.column),
-            attachments: [],
-            status: randomType(StatusTypes),
+            status: randomType(StatusTypes).name,
             resolution: randomType(ResolutionTypes),
             created: randomDate(),
             modified: randomDate(),

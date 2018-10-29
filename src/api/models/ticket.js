@@ -1,39 +1,40 @@
 import { UserTypes } from '../constants/Users';
 import { PriorityLevels, SeverityLevels } from '../constants/Ticket';
 import { StatusTypes, ResolutionTypes } from '../constants/Status';
-import { getEpochTime } from '../Utils';
+
+export const getType = (value, type) => {
+    // console.log('mark', value);
+    const next = typeof value === 'object' ? value.name : value
+    return type[next.toUpperCase().replace(' ', '_')];
+}
 
 export const ticketFields = ({
     id = null,
     summary = '',
     description = '',
-    assignee = UserTypes.MANAGER,
-    reporter = UserTypes.USER,
-    watchers = [],
+    assignee = 'Manager',
+    reporter = 'User',
     component = '',
-    priority = PriorityLevels.BUG,
-    serverity = SeverityLevels.MEDIUM,
+    priority = 'Bug',
+    serverity = 'Medium',
     labels = [],
-    attachments = [],
-    status = StatusTypes.OPEN,
-    resolution = ResolutionTypes.UNRESOLVED,
-    created = getEpochTime(),
-    modified = getEpochTime(),
+    status = 'Open',
+    resolution = 'Unresolved',
+    created = null,
+    modified = null,
     closed = null,
 }) => {
     return {
         id,
         summary,
         description,
-        assignee,
-        reporter,
-        watchers,
+        assignee: getType(assignee, UserTypes),
+        reporter: getType(reporter, UserTypes),
         component,
-        priority,
+        priority: getType(priority, PriorityLevels),
         serverity,
         labels,
-        attachments,
-        status,
+        status: getType(status, StatusTypes),
         resolution,
         created,
         modified,

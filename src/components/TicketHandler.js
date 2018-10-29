@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Button, Header, Message } from 'semantic-ui-react';
+import { Segment, Button, Header, Message, Divider } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { withAxios } from 'react-axios';
@@ -10,6 +10,7 @@ import { TicketForm } from './TicketForm';
 import { ticketFields } from '../api/models/ticket';
 import { UserTypes, UserProps } from '../api/constants/Users';
 import TicketProps from '../api/constants/TicketProps';
+import { getEpochTime, sqlNormalize } from '../api/Utils';
 
 export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Component {
     constructor(props) {
@@ -37,6 +38,12 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
         onSubmitTicket: PropTypes.func,
     }
 
+    UNSAFE_componentWillReceiveProps = nextProps => {
+        this.setState({
+            fields: this.getFields(),
+        });
+    };
+
     getFields = () => {
         if (!this.props.isEditable) {
             if (!(this.props.currentUser === UserTypes.NONE || this.props.currentUser === UserTypes.USER)) {
@@ -60,7 +67,7 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
     };
 
     onFieldChange = (event, data) => {
-
+        
         this.setState({
             fields: ticketFields({
                 ...this.state.fields,
@@ -72,6 +79,12 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
     toggleModal = () => {
         this.setState({
             isModalOpen: !this.state.isModalOpen,
+            message: {
+                header: 'Your Ticket was Successfully Submitted',
+                content: 'Please log in to see your reported tickets',
+                color: 'green',
+                visible: false,
+            }
         });
     };
 
@@ -79,6 +92,7 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
         if (!this.state.error && !this.state.networkError) {
             const self = this;
             setTimeout(() => {
+                // self.toggleMessage();
                 self.setState({
                     message: {
                         ...self.state.message,
@@ -94,7 +108,6 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
     };
 
     onSubmit = () => {
-        console.log(this.state.fields);
         this.setState({
             error: false,
             networkError: false,
@@ -111,9 +124,9 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
                 error: true,
             });
         } else {
-            axios.post(this.props.isEditable ? 'update' : 'create', {
-                ...this.state.fields,
-            })
+            const normalizedFields = sqlNormalize(this.props.isEditable, this.state.fields)
+            // console.log(normalizedFields);
+            axios.post(this.props.isEditable ? '/api/update' : '/api/create', normalizedFields)
             .then(response => {
                 this.setState({
                     message: {
@@ -127,6 +140,9 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
                     this.toggleModal();
                 }
                 this.toggleMessage();
+                if (this.props.hasOwnProperty('onReload')) {
+                    this.props.onReload();
+                }
             })
             .catch(err => {
                 this.setState({
@@ -158,6 +174,7 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
                 <Message header={this.state.message.header} content={this.state.message.content} color={this.state.message.color} hidden={!this.state.message.visible} />
                 <Segment>
                     <Header content='Create a Ticket' />
+                    <Divider fitted />
                     <TicketForm fields={this.state.fields} onFieldChange={this.onFieldChange} />
                 </Segment>
                 <Button fluid content='Create' onClick={this.onSubmit} primary />

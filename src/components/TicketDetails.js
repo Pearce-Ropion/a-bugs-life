@@ -7,6 +7,7 @@ import { TicketModal } from './TicketModal';
 import TicketProps from '../api/constants/TicketProps';
 import { StatusTag, TicketTag } from './Tags';
 import { TicketHandler } from './TicketHandler';
+import { UserTypes } from '../api/constants/Users';
 
 export class TicketDetails extends React.Component {
     constructor(props) {
@@ -22,7 +23,7 @@ export class TicketDetails extends React.Component {
     render = () => {
         return (
             <Grid padded='vertically'>
-                <Grid.Column width={12}>
+                <Grid.Column width={this.props.currentUser === UserTypes.USER ? 15 : 12}>
                     <Grid>
                         <Grid.Row columns={1}>
                             <Header content={this.props.ticket.summary} />
@@ -31,7 +32,7 @@ export class TicketDetails extends React.Component {
                             <Grid.Column>
                                 <Header as='h4' style={{ height: '35px' }}>
                                     Status
-                                    <StatusTag name={this.props.ticket.status.value} color={this.props.ticket.status.color} />
+                                    <StatusTag name={this.props.ticket.status} />
                                 </Header>
                                 <Header as='h4'>
                                     Resolution
@@ -54,25 +55,25 @@ export class TicketDetails extends React.Component {
                             <Grid.Column>
                                 <Header as='h4'>
                                     Priority
-                            <Header.Subheader content={this.props.ticket.priority.name} />
+                                    <Header.Subheader content={this.props.ticket.priority} />
                                 </Header>
                                 <Header as='h4'>
                                     Severity
-                            <Header.Subheader content={this.props.ticket.severity} />
+                                    <Header.Subheader content={this.props.ticket.severity} />
                                 </Header>
                                 <Header as='h4'>
                                     Component
-                            <Header.Subheader content={this.props.ticket.component} />
+                                    <Header.Subheader content={this.props.ticket.component} />
                                 </Header>
                             </Grid.Column>
                             <Grid.Column>
                                 <Header as='h4'>
                                     Assignee
-                            <Header.Subheader content={this.props.ticket.assignee.name} />
+                                    <Header.Subheader content={this.props.ticket.assignee} />
                                 </Header>
                                 <Header as='h4'>
                                     Reporter
-                            <Header.Subheader content={this.props.ticket.reporter.name} />
+                                    <Header.Subheader content={this.props.ticket.reporter} />
                                 </Header>
                             </Grid.Column>
                         </Grid.Row>
@@ -84,17 +85,6 @@ export class TicketDetails extends React.Component {
                                 </Header>
                             </Grid.Column>
                         </Grid.Row>
-                        {
-                            this.props.ticket.attachments.length
-                                ? <Grid.Row>
-                                    <Grid.Column>
-                                        <Header as='h4'>
-                                            Attachments
-                                        </Header>
-                                    </Grid.Column>
-                                </Grid.Row>
-                                : null
-                        }
                         <Grid.Row columns={3}>
                             <Grid.Column>
                                 <Header as='h4'>
@@ -120,26 +110,30 @@ export class TicketDetails extends React.Component {
                         </Grid.Row>
                     </Grid>
                 </Grid.Column>
-                <Grid.Column width={4}>
-                    <Segment.Group>
-                        <Segment basic>
-                            <TicketHandler isModal isEditable ticket={this.props.ticket} labels={this.props.labels} />
-                        </Segment>
-                        <Segment basic>
-                            <Button basic fluid content='Assign' />
-                        </Segment>
-                        <Segment basic>
-                            <Button.Group vertical fluid basic className='centerVerticalGroup'>
-                                <Button content='In Progress' />
-                                <Button content='Change Status' />
-                                <Button content='Close Ticket' />
-                            </Button.Group>
-                        </Segment>
-                        <Segment basic>
-                            <Button basic fluid content='Watch' />
-                        </Segment>
-                    </Segment.Group>
-                </Grid.Column>
+                {
+                    this.props.currentUser !== UserTypes.USER
+                        ? <Grid.Column width={4}>
+                            <Segment.Group>
+                                <Segment basic>
+                                    <TicketHandler isModal isEditable ticket={this.props.ticket} labels={this.props.labels} onReload={this.props.onReload} />
+                                </Segment>
+                                <Segment basic>
+                                    <Button basic fluid content='Assign' />
+                                </Segment>
+                                <Segment basic>
+                                    <Button.Group vertical fluid basic className='centerVerticalGroup'>
+                                        <Button content='In Progress' />
+                                        <Button content='Change Status' />
+                                        <Button content='Close Ticket' />
+                                    </Button.Group>
+                                </Segment>
+                                <Segment basic>
+                                    <Button basic fluid content='Watch' />
+                                </Segment>
+                            </Segment.Group>
+                        </Grid.Column>
+                        : null
+                }
             </Grid>
         );
     }

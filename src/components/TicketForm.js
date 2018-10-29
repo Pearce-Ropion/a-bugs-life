@@ -7,8 +7,8 @@ import TicketProps from '../api/constants/TicketProps';
 import { UserDropdownOptions } from '../api/constants/Users';
 import { sortByKey } from '../api/Utils';
 
-export const TicketForm = props =>
-    <Form>
+export const TicketForm = props => {
+    return <Form style={{ padding: '2em 2em 0'}}>
         <Form.Input 
             fluid
             name='summary'
@@ -24,30 +24,18 @@ export const TicketForm = props =>
             placeholder='Description'
             value={props.fields.description}
             onChange={props.onFieldChange} />
-        <Form.Group widths='equal'>
-            <Form.Dropdown
-                fluid
-                selection
-                search
-                allowAdditions
-                name='component'
-                label='Component'
-                placeholder='Select Multiple or Enter Your Own'
-                additionLabel='New Component: '
-                value={props.fields.component}
-                options={sortByKey(dropdownOptions.ComponentTypes, 'value')}
-                onChange={props.onFieldChange} />
-            <Form.Input
-                fluid
-                readOnly
-                name='attachments'
-                label='Attachments'
-                placeholder='Files...'
-                onChange={props.onFieldChange}
-                action={
-                    <Button content='Attach Files' color='teal' icon='file image' labelPosition='right' />
-                } />
-        </Form.Group>
+        <Form.Dropdown
+            fluid
+            selection
+            search
+            allowAdditions
+            name='component'
+            label='Component'
+            placeholder='Select Multiple or Enter Your Own'
+            additionLabel='New Component: '
+            value={props.fields.component}
+            options={sortByKey(dropdownOptions.ComponentTypes, 'value')}
+            onChange={props.onFieldChange} />
         {
             props.isEmployee &&
                 <React.Fragment>
@@ -99,9 +87,21 @@ export const TicketForm = props =>
                             options={dropdownOptions.SeverityLevels}
                             onChange={props.onFieldChange} />
                     </Form.Group>
+                    <Form.Group widths={2}>
+                        <Form.Dropdown
+                            fluid
+                            selection
+                            name='status'
+                            label='Status'
+                            placeholder='Status'
+                            value={props.fields.status.name}
+                            options={dropdownOptions.StatusTypes}
+                            onChange={props.onFieldChange} />
+                    </Form.Group>
                 </React.Fragment>
         }
     </Form>
+}
 
 TicketForm.defaultProps = {
     isEditable: false,

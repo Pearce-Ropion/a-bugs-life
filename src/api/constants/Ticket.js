@@ -1,5 +1,5 @@
 export const PriorityLevels = {
-    P0: {
+    TOP_PRIORITY: {
         short: 'P0',
         name: 'Top Priority',
         icon: {
@@ -7,7 +7,7 @@ export const PriorityLevels = {
             color: 'red',
         },
     },
-    P1: {
+    PRIORITY_1: {
         short: 'P1',
         name: 'Priority 1',
         icon: {
@@ -15,7 +15,7 @@ export const PriorityLevels = {
             color: 'orange',
         },
     },
-    P2: {
+    PRIORITY_2: {
         short: 'P2',
         name: 'Priority 2',
         icon: {
@@ -23,7 +23,7 @@ export const PriorityLevels = {
             color: 'yellow',
         },
     },
-    P3: {
+    PRIORITY_3: {
         short: 'P3',
         name: 'Priority 3',
         icon: {
@@ -31,7 +31,7 @@ export const PriorityLevels = {
             color: 'blue',
         },
     },
-    P4: {
+    PRIORITY_4: {
         short: 'P4',
         name: 'Priority 4',
         icon: {

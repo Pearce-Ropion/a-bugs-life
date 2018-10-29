@@ -44,6 +44,11 @@ export class Application extends React.Component {
                 activePane: Panes.DETAILS,
                 activeView: TicketViews.ALL,
             });
+            if (user.type === UserTypes.USER) {
+                this.setState({
+                    activeView: TicketViews.REPORTED,
+                });
+            }
         } else {
             this.setState({
                 loginError: true,

@@ -9,7 +9,7 @@ export const TicketModal = props =>
     <Modal
         open={props.isModalOpen}
         className='create'
-        header='Create a Ticket'
+        header={props.isEditable ? 'Update Ticket' : 'Create a Ticket'}
         trigger={
             props.isEditable
                 ? <Button basic fluid content='Edit' onClick={props.toggleModal} className='action' />

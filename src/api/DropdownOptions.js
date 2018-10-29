@@ -25,8 +25,8 @@ export const buildStatusOptions = options => {
     return Object.values(options).map((option, idx) => {
         return {
             key: idx,
-            value: option.value,
-            text: option.value,
+            value: option.name,
+            text: option.name,
         };
     });
 };

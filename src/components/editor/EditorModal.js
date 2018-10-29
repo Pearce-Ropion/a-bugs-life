@@ -6,24 +6,24 @@ export const EditorModal = props =>
     <Modal
         size='mini'
         className='editor'
-        open={props.isEditorModalOpen}
+        open={props.isOpen}
         header={`Edit ${props.property}`}
         trigger={props.trigger}
         content={props.content}
         actions={[
-            <Button key='cancel-editor-modal' content='Cancel' onClick={props.toggleEditorModal} />,
+            <Button key='cancel-editor-modal' content='Cancel' onClick={props.toggle} />,
             <Button key='update-editor-modal' content='Update' onClick={props.onUpdate} positive />,
         ]} />;
 
 EditorModal.defaultProps = {
-    isEditorModalOpen: false,
+    isOpen: false,
 }
 
 EditorModal.propTypes = {
-    isEditorModalOpen: PropTypes.bool,
+    isOpen: PropTypes.bool,
     property: PropTypes.string,
     trigger: PropTypes.node,
     content: PropTypes.node,
-    toggleEditorModal: PropTypes.func,
+    toggle: PropTypes.func,
     onUpdate: PropTypes.func,
 };

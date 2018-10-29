@@ -1,3 +1,7 @@
+import { StatusTypes } from "./constants/Status";
+import { PriorityLevels } from "./constants/Ticket";
+import { UserTypes } from "./constants/Users";
+
 export const capitalize = str => str.charAt(0).toUpperCase().concat(str.slice(1));
 export const getEpochTime = () => Math.round(new Date().getTime() / 1000);
 
@@ -30,4 +34,28 @@ export const getAllLabels = tickets => {
         labels,
         labelDropdownOptions,
     }
-}
+};
+
+export const sqlNormalize = (isUpdate, fields) => {
+    return {
+        id: isUpdate ? fields.id : null,
+        summary: fields.summary,
+        description: fields.description,
+        assignee: fields.assignee.name,
+        reporter: fields.reporter.name,
+        component: fields.component,
+        priority: fields.priority.name,
+        severity: fields.serverity,
+        labels: fields.labels,
+        attachments: fields.attachments,
+        status: fields.status.name,
+        resolution: fields.resolution,
+        created: isUpdate ? fields.created : getEpochTime(),
+        modified: getEpochTime(),
+        closed: fields.status.name === 'Closed' ? getEpochTime() : fields.closed,
+    }
+};
+
+export const getStatus = status => StatusTypes[status.toUpperCase().replace(' ', '_')];
+export const getPriority = priority => PriorityLevels[priority.toUpperCase().replace(' ', '_')];
+export const getUser = user => UserTypes[user.toUpperCase().replace(' ', '_')];

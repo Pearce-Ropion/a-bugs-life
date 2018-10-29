@@ -12,22 +12,15 @@ export const Navigation = props =>
     <Grid id='heading' padded>
         <Grid.Column width={11}>
             {
-                props.activePane === Panes.CREATE && <Header as='h1' inverted content={`A Bug's Life`} />
+                (props.activePane === Panes.CREATE || props.currentUser === UserTypes.USER) && <Header as='h1' inverted content={`A Bug's Life`} />
             }
             {
                 props.isLoggedIn && props.currentUser !== UserTypes.USER
                     ? <React.Fragment>
                         <Button basic inverted content='Dashboard' name='dashboard' onClick={props.changeActivePane} />
-                        <Button basic inverted content='Assigned' name='assigned' onClick={props.changeActiveView}  />
-                        {/* <Button basic inverted content='Watched' name='watched' onClick={props.changeActiveView}  /> */}
-                    </React.Fragment>
-                    : null
-            }
-            {
-                props.isLoggedIn
-                    ? <React.Fragment>
-                        <Button basic inverted content='Reported' name='reported' onClick={props.changeActiveView}  />
-                        <Button basic inverted content='View All' name='all' onClick={props.changeActiveView}  />
+                        <Button basic inverted content='View All' name='all' onClick={props.changeActiveView} />
+                        <Button basic inverted content='Assigned' name='assigned' onClick={props.changeActiveView} />
+                        <Button basic inverted content='Reported' name='reported' onClick={props.changeActiveView} />
                     </React.Fragment>
                     : null
             }
