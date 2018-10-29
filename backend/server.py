@@ -4,15 +4,15 @@ from io import open
 import json
 
 # import helper Python scripts
-import constants as c
 import database_accessor as db
+import constants as c
 
 # Server inherits methods from BaseHTTPRequestHandler class
 class Server(BaseHTTPRequestHandler):
 	# built into BaseHTTPRequestHandler, which runs when we receive a GET request
 	def do_GET(self):		
-		# change the path because 'index.html' is in the build directory
-		path = '/../build' + self.path
+		# sets the path based on dev environment or build environment
+		path = (c.dev_path if (c.environment == 'dev') else c.build_path) + self.path
 
 		try:
 			file_to_open = open(path[1:]).read()
