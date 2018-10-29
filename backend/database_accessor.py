@@ -28,10 +28,7 @@ def insert_into_db(data, table_name):
 	values_list = []
 	for attribute in attributes_list:
 		if attribute == 'labels':
-			if len(data[attribute]) > 0:
-				value = ','.join(data[attribute])
-			else:
-				value = None
+			value = ','.join(data['labels']) if (len(data['labels']) > 0) else None
 		else:
 			value = data[attribute]
 		values_list.append(value)
@@ -106,7 +103,7 @@ def get_table_data(table_name, filters=None):
 
 	db.close()
 
-	return (data if (len(data) > 0) else None)
+	return data
 
 def get_data_command(table_name, filters):
 	command = 'SELECT * FROM ' + table_name
