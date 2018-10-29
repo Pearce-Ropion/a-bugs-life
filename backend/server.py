@@ -11,10 +11,8 @@ import database_accessor as db
 class Server(BaseHTTPRequestHandler):
 	# built into BaseHTTPRequestHandler, which runs when we receive a GET request
 	def do_GET(self):		
-		# this is the correct path for a repository directly cloned from GitHub
-		# path = '/../app' + self.path
-		
-		path = '/../app/build' + self.path
+		# change the path because 'index.html' is in the build directory
+		path = '/../build' + self.path
 
 		try:
 			file_to_open = open(path[1:]).read()
