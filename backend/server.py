@@ -30,16 +30,18 @@ class Server(BaseHTTPRequestHandler):
 
 	# built into BaseHTTPRequestHandler, which runs when we receive a POST request
 	def do_POST(self):
+		exceptionHttpCode = 400
+
 		try:
 			# gets the path components after the '/api/' at the start of self.path
 			path_components = self.path[5:].split('/')
 			
 			if len(path_components) == 0 or len(path_components) > 2:
-				raise Exception
+				raise Exception("The path '" + self.path + "' is invalid.")
 
 			table_name = path_components[0]
 			if table_name not in c.table_list:
-				raise Exception
+				raise Exception("The table '" + table_name + "' is invalid.")
 
 			content_length = int(self.headers['Content-Length'])
 			post_body_bytes = self.rfile.read(content_length)
@@ -71,13 +73,18 @@ class Server(BaseHTTPRequestHandler):
 			if operation == 'create':
 				# removes the 'id' key because it will be null
 				data.pop('id', None)
+				
+				if (table_name == c.users_table) and (db.username_exists(data['username'])):
+					exceptionHttpCode = 409
+					raise Exception('The username already exists!')
+				
 				db.insert_into_db(data, table_name)
 			elif operation == 'update':
 				db.update_db(data, table_name)
 			elif operation == 'data':
 				response_data = db.get_table_data(table_name)
 			else:
-				raise Exception
+				raise Exception("The operation '" + operation + "' is invalid.")
 
 			self.send_response(200)
 			self.end_headers()
@@ -87,6 +94,6 @@ class Server(BaseHTTPRequestHandler):
 				response_data_bytes = response_data_string.encode()
 				self.wfile.write(response_data_bytes)
 		except Exception as e:
-			self.send_response(400)
+			self.send_response(exceptionHttpCode)
 			self.end_headers()
 			print 'Exception: ' + str(e)
