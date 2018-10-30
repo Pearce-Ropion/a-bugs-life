@@ -3,8 +3,8 @@ import argparse
 from BaseHTTPServer import HTTPServer
 
 # import helper Python script
-import server as my_server
 import constants as c
+import server as my_server
 
 # parses the arguments for address and port number
 parser = argparse.ArgumentParser()
