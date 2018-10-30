@@ -4,8 +4,8 @@ from io import open
 import json
 
 # import helper Python scripts
-import database_accessor as db
 import constants as c
+import database_accessor as db
 
 # Server inherits methods from BaseHTTPRequestHandler class
 class Server(BaseHTTPRequestHandler):
@@ -19,7 +19,8 @@ class Server(BaseHTTPRequestHandler):
 			self.send_response(200)
 		except:
 			file_to_open = 'File Not Found!'
-			# self.send_response(404)
+			self.send_response(404)
+			print 'Exception: ' + str(e)
 
 		# required by the BaseHTTPRequestHandler class
 		self.end_headers()
@@ -30,9 +31,14 @@ class Server(BaseHTTPRequestHandler):
 	# built into BaseHTTPRequestHandler, which runs when we receive a POST request
 	def do_POST(self):
 		try:
-			# removes the '/app/' from the start of self.path
-			path = self.path[5:]
-			if len(path) == 0:
+			# gets the path components after the '/api/' at the start of self.path
+			path_components = self.path[5:].split('/')
+			
+			if len(path_components) == 0 or len(path_components) > 2:
+				raise Exception
+
+			table_name = path_components[0]
+			if table_name not in c.table_list:
 				raise Exception
 
 			content_length = int(self.headers['Content-Length'])
@@ -60,14 +66,16 @@ class Server(BaseHTTPRequestHandler):
 			# else:
 			# 	raise Exception
 
-			if path == 'create':
+			operation = path_components[1]
+
+			if operation == 'create':
 				# removes the 'id' key because it will be null
 				data.pop('id', None)
-				db.insert_into_db(data, c.tickets_table)
-			elif path == 'update':
-				db.update_db(data, c.tickets_table)
-			elif path == 'tickets':
-				response_data = db.get_table_data(c.tickets_table)
+				db.insert_into_db(data, table_name)
+			elif operation == 'update':
+				db.update_db(data, table_name)
+			elif operation == 'data':
+				response_data = db.get_table_data(table_name)
 			else:
 				raise Exception
 
@@ -81,4 +89,4 @@ class Server(BaseHTTPRequestHandler):
 		except Exception as e:
 			self.send_response(400)
 			self.end_headers()
-			print 'Exception: ' + e
+			print 'Exception: ' + str(e)
