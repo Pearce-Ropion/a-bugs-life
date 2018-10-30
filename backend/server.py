@@ -17,7 +17,7 @@ class Server(BaseHTTPRequestHandler):
 		try:
 			file_to_open = open(path[1:]).read()
 			self.send_response(200)
-		except:
+		except Exception as e:
 			file_to_open = 'File Not Found!'
 			self.send_response(404)
 			print 'Exception: ' + str(e)
