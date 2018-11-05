@@ -68,7 +68,7 @@ export const sqlNormalizeUser = (isUpdate, fields) => {
         name: fields.firstname.concat(' ', fields.lastname),
         email: fields.email,
         password: fields.password,
-        role: fields.role,
+        role: fields.role.name,
     }
 }
 

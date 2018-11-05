@@ -4,10 +4,10 @@ import sqlite3
 # import helper Python script
 import constants as c
 
-def username_exists(username):
+def user_exists(email):
 	db = sqlite3.connect(c.database)
 	cursor = db.cursor()
-	cursor.execute('SELECT * FROM ' + c.users_table + " WHERE username='" + username + "'")
+	cursor.execute('SELECT * FROM ' + c.users_table + " WHERE email='" + email + "'")
 
 	exists = False
 	for row in cursor:
