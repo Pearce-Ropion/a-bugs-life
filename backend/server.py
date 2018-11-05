@@ -73,8 +73,8 @@ class Server(BaseHTTPRequestHandler):
 			if operation == 'create':
 				# removes the 'id' key because it will be null
 				data.pop('id', None)
-				
-				if (table_name == c.users_table) and (db.username_exists(data['username'])):
+
+				if (table_name == c.users_table) and (db.user_exists(data['email'])):
 					exceptionHttpCode = 409
 					raise Exception('The username already exists!')
 				
