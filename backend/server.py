@@ -4,8 +4,8 @@ from io import open
 import json
 
 # import helper Python scripts
-import database_accessor as db
 import constants as c
+import database_accessor as db
 
 # Server inherits methods from BaseHTTPRequestHandler class
 class Server(BaseHTTPRequestHandler):
@@ -17,9 +17,10 @@ class Server(BaseHTTPRequestHandler):
 		try:
 			file_to_open = open(path[1:]).read()
 			self.send_response(200)
-		except:
+		except Exception as e:
 			file_to_open = 'File Not Found!'
-			# self.send_response(404)
+			self.send_response(404)
+			print 'Exception: ' + str(e)
 
 		# required by the BaseHTTPRequestHandler class
 		self.end_headers()
@@ -29,11 +30,18 @@ class Server(BaseHTTPRequestHandler):
 
 	# built into BaseHTTPRequestHandler, which runs when we receive a POST request
 	def do_POST(self):
+		exceptionHttpCode = 400
+
 		try:
-			# removes the '/app/' from the start of self.path
-			path = self.path[5:]
-			if len(path) == 0:
-				raise Exception
+			# gets the path components after the '/api/' at the start of self.path
+			path_components = self.path[5:].split('/')
+			
+			if len(path_components) == 0 or len(path_components) > 2:
+				raise Exception("The path '" + self.path + "' is invalid.")
+
+			table_name = path_components[0]
+			if table_name not in c.table_list:
+				raise Exception("The table '" + table_name + "' is invalid.")
 
 			content_length = int(self.headers['Content-Length'])
 			post_body_bytes = self.rfile.read(content_length)
@@ -60,16 +68,23 @@ class Server(BaseHTTPRequestHandler):
 			# else:
 			# 	raise Exception
 
-			if path == 'create':
+			operation = path_components[1]
+
+			if operation == 'create':
 				# removes the 'id' key because it will be null
 				data.pop('id', None)
-				db.insert_into_db(data, c.tickets_table)
-			elif path == 'update':
-				db.update_db(data, c.tickets_table)
-			elif path == 'tickets':
-				response_data = db.get_table_data(c.tickets_table)
+				
+				if (table_name == c.users_table) and (db.username_exists(data['username'])):
+					exceptionHttpCode = 409
+					raise Exception('The username already exists!')
+				
+				db.insert_into_db(data, table_name)
+			elif operation == 'update':
+				db.update_db(data, table_name)
+			elif operation == 'data':
+				response_data = db.get_table_data(table_name)
 			else:
-				raise Exception
+				raise Exception("The operation '" + operation + "' is invalid.")
 
 			self.send_response(200)
 			self.end_headers()
@@ -79,6 +94,6 @@ class Server(BaseHTTPRequestHandler):
 				response_data_bytes = response_data_string.encode()
 				self.wfile.write(response_data_bytes)
 		except Exception as e:
-			self.send_response(400)
+			self.send_response(exceptionHttpCode)
 			self.end_headers()
-			print 'Exception: ' + e
+			print 'Exception: ' + str(e)

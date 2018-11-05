@@ -4,6 +4,20 @@ import sqlite3
 # import helper Python script
 import constants as c
 
+def username_exists(username):
+	db = sqlite3.connect(c.database)
+	cursor = db.cursor()
+	cursor.execute('SELECT * FROM ' + c.users_table + " WHERE username='" + username + "'")
+
+	exists = False
+	for row in cursor:
+		exists = True
+		break
+
+	db.close()
+
+	return exists
+
 def insert_into_db(data, table_name):
 	db = sqlite3.connect(c.database)
 
