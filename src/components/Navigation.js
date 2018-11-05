@@ -36,10 +36,12 @@ export const Navigation = props =>
                 currentUser={props.currentUser}
                 isLoggedIn={props.isLoggedIn}
                 isLoginModalOpen={props.isLoginModalOpen}
+                isUserModalOpen={props.isUserModalOpen}
                 loginError={props.loginError}
                 onLogin={props.onLogin}
                 onLogout={props.onLogout}
-                toggleLoginModal={props.toggleLoginModal} />
+                toggleLoginModal={props.toggleLoginModal}
+                toggleUserModal={props.toggleUserModal} />
         </Grid.Column>
     </Grid>
 
@@ -47,8 +49,10 @@ Navigation.propTypes = {
     currentUser: PropTypes.oneOf(Object.values(UserTypes)),
     isLoggedIn: PropTypes.bool,
     isLoginModalOpen: PropTypes.bool,
+    isUserModalOpen: PropTypes.bool,
     loginError: PropTypes.bool,
     onLogin: PropTypes.func,
     onLogout: PropTypes.func,
     toggleLoginModal: PropTypes.func,
+    toggleUserModal: PropTypes.func,
 };

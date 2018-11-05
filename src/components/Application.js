@@ -17,11 +17,12 @@ export class Application extends React.Component {
         this.tickets = getData(100),
         this.labels = getAllLabels(this.tickets),
         this.state = {
-            currentUser: UserTypes.NONE,
-            isLoggedIn: false,
             isLoginModalOpen: false,
+            isUserModalOpen: false,
             loginError: false,
+            isLoggedIn: false,
             filtered: this.tickets,
+            currentUser: UserTypes.NONE,
             activePane: Panes.CREATE,
             activeView: TicketViews.NONE,
         }
@@ -30,6 +31,12 @@ export class Application extends React.Component {
     toggleLoginModal = () => {
         this.setState({
             isLoginModalOpen: !this.state.isLoginModalOpen,
+        });
+    };
+
+    toggleUserModal = () => {
+        this.setState({
+            isUserModalOpen: !this.state.isUserModalOpen,
         });
     };
 
@@ -95,10 +102,12 @@ export class Application extends React.Component {
                 currentUser={this.state.currentUser}
                 isLoggedIn={this.state.isLoggedIn} 
                 isLoginModalOpen={this.state.isLoginModalOpen}
+                isUserModalOpen={this.state.isUserModalOpen}
                 loginError={this.state.loginError}
                 onLogin={this.onLogin}
                 onLogout={this.onLogout}
                 toggleLoginModal={this.toggleLoginModal}
+                toggleUserModal={this.toggleUserModal}
                 changeActivePane={this.changeActivePane}
                 changeActiveView={this.changeActiveView}
                 labels={this.labels} />

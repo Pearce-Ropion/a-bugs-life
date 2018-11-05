@@ -36,7 +36,13 @@ export const getAllLabels = tickets => {
     }
 };
 
-export const sqlNormalize = (isUpdate, fields) => {
+export const displayLabel = error => {
+    return {
+        display: error ? 'inline-block' : 'none',
+    };
+};
+
+export const sqlNormalizeTicket = (isUpdate, fields) => {
     return {
         id: isUpdate ? fields.id : null,
         summary: fields.summary,
@@ -55,6 +61,16 @@ export const sqlNormalize = (isUpdate, fields) => {
         closed: fields.status.name === 'Closed' ? getEpochTime() : fields.closed,
     }
 };
+
+export const sqlNormalizeUser = (isUpdate, fields) => {
+    return {
+        id: isUpdate ? fields.id : null,
+        name: fields.firstname.concat(' ', fields.lastname),
+        email: fields.email,
+        password: fields.password,
+        role: fields.role,
+    }
+}
 
 export const getStatus = status => StatusTypes[status.toUpperCase().replace(' ', '_')];
 export const getPriority = priority => PriorityLevels[priority.toUpperCase().replace(' ', '_')];

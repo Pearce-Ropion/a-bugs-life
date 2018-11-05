@@ -10,7 +10,7 @@ import { TicketForm } from './TicketForm';
 import { ticketFields } from '../api/models/ticket';
 import { UserTypes, UserProps } from '../api/constants/Users';
 import TicketProps from '../api/constants/TicketProps';
-import { getEpochTime, sqlNormalize } from '../api/Utils';
+import { sqlNormalizeTicket } from '../api/Utils';
 
 export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Component {
     constructor(props) {
@@ -124,7 +124,7 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
                 error: true,
             });
         } else {
-            const normalizedFields = sqlNormalize(this.props.isEditable, this.state.fields)
+            const normalizedFields = sqlNormalizeTicket(this.props.isEditable, this.state.fields)
             // console.log(normalizedFields);
             axios.post(this.props.isEditable ? '/api/update' : '/api/create', normalizedFields)
             .then(response => {
