@@ -81,7 +81,7 @@ class Server(BaseHTTPRequestHandler):
 				db.insert_into_db(data, table_name)
 			elif operation == 'update':
 				db.update_db(data, table_name)
-			elif operation == 'data':
+			elif operation == 'all':
 				response_data = db.get_table_data(table_name)
 			else:
 				raise Exception("The operation '" + operation + "' is invalid.")
