@@ -113,6 +113,10 @@ def get_table_data(table_name, filters=None):
 			rowObject[key] = value
 			counter += 1
 		
+		if table_name == c.users_table:
+			# this is for security purposes
+			rowObject.pop('password', None)
+		
 		data.append(rowObject)
 
 	db.close()
@@ -122,28 +126,35 @@ def get_table_data(table_name, filters=None):
 def get_data_command(table_name, filters):
 	command = 'SELECT * FROM ' + table_name
 	
-	if (filters is not None) and (len(filters) > 0):
+	if filters is not None:
 		command += ' WHERE '
-		if type(filters[0]) is str:
-			# there is only 1 filter
-			command += (filters[0] + '=' + str(filters[1]))
-		else:
-			# there are multiple filters to be added
-			for pair in filters:
-				command += str(pair[0])
-				if pair[1] is None:
-					command += ' IS NULL AND '
-				else:
-					if pair[0] == 'labels':
-						value = ','.join(pair[1])
-					else:
-						value = str(pair[1])
-					if type(pair[1]) is int:
-						command += ('=' + value + ' AND ')
-					else:
-						command += ("='" + value + "' AND ")
+		
+		# there are multiple filters to be added
+		for key in filters:
+			command += str(key)
+			value = filters[key]
 			
-			# removes the ' AND ' after the last filter
-			command = command[:-5]
+			if value is None:
+				command += ' IS NULL AND '
+			elif type(value) is list:
+				# this is a date filter
+				lower_bound, upper_bound = value[0], value[1]
+				if lower_bound is not None:
+					command += ('>=' + str(lower_bound) + ' AND ')
+				if upper_bound is not None:
+					if lower_bound is not None:
+						command += str(key)
+					command += ('<=' + str(upper_bound) + ' AND ')
+			else:
+				if key == 'labels':
+					value = ','.join(value)
+				
+				if type(value) is int:
+					command += ('=' + str(value) + ' AND ')
+				else:
+					command += ("='" + value + "' AND ")
+		
+		# removes the ' AND ' after the last filter
+		command = command[:-5]
 	
 	return command
