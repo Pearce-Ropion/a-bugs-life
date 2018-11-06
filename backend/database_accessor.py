@@ -114,7 +114,7 @@ def get_table_data(table_name, filters=None):
 			counter += 1
 		
 		if table_name == c.users_table:
-			# this is for security purposes
+			# this is for security, so the data sent back doesn't contain user's password
 			rowObject.pop('password', None)
 		
 		data.append(rowObject)
@@ -129,7 +129,7 @@ def get_data_command(table_name, filters):
 	if filters is not None:
 		command += ' WHERE '
 		
-		# there are multiple filters to be added
+		# traverses the filters
 		for key in filters:
 			command += str(key)
 			value = filters[key]
