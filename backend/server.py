@@ -46,27 +46,12 @@ class Server(BaseHTTPRequestHandler):
 			content_length = int(self.headers['Content-Length'])
 			post_body_bytes = self.rfile.read(content_length)
 			json_string = post_body_bytes.decode('utf8').replace("'", '"')
-			data = json.loads(json_string)
+			
+			data = None
+			if len(json_string) > 0:
+				data = json.loads(json_string)
 
 			response_data = None
-
-			# if path == 'test1':
-			# 	db.insert_into_db(data, c.tickets_table)
-			# elif path == 'test2':
-			# 	response_data = db.get_table_data(c.tickets_table)
-			# elif path == 'test3':
-			# 	filter1 = ('id', 2)
-			# 	print json.dumps(db.get_table_data(c.tickets_table, filter1), indent=4)
-
-			# 	filter2 = (
-			# 		('labels', ["test1","test2"]),
-			# 		('assignee', 'a1'),
-			# 		('severity', 10),
-			# 		('attachments', None)
-			# 	)
-			# 	print json.dumps(db.get_table_data(c.tickets_table, filter2), indent=4)
-			# else:
-			# 	raise Exception
 
 			operation = path_components[1]
 
@@ -83,6 +68,19 @@ class Server(BaseHTTPRequestHandler):
 				db.update_db(data, table_name)
 			elif operation == 'all':
 				response_data = db.get_table_data(table_name)
+			elif operation == 'get':
+				# passes in 'data' as the filter to get a user object from the users table
+				response_data = db.get_table_data(table_name, data)
+				
+				if table_name == c.users_table:
+					# if the user exists, return the first element of the 'response_data' list
+					if len(response_data) == 0:
+						response_data = {'valid': False}
+					else:
+						response_data = {
+							'valid': True,
+							'user': response_data[0]
+						}
 			else:
 				raise Exception("The operation '" + operation + "' is invalid.")
 
