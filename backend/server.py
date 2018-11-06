@@ -43,14 +43,14 @@ class Server(BaseHTTPRequestHandler):
 			if table_name not in c.table_list:
 				raise Exception("The table '" + table_name + "' is invalid.")
 
-			content_length = int(self.headers['Content-Length'])
-			post_body_bytes = self.rfile.read(content_length)
-			json_string = post_body_bytes.decode('utf8').replace("'", '"')
-			
 			data = None
-			if len(json_string) > 0:
-				data = json.loads(json_string)
 
+			content_length = int(self.headers['Content-Length'])
+			if content_length > 0:
+				post_body_bytes = self.rfile.read(content_length)
+				json_string = post_body_bytes.decode('utf8').replace("'", '"')
+				data = json.loads(json_string)
+			
 			response_data = None
 
 			operation = path_components[1]
