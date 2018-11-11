@@ -46,8 +46,8 @@ sample_data = {
 }
 
 # paths for GET Request
-dev_path = '/../dist/'
-build_path = '/../build/'
+dev_path = '../dist'
+build_path = '../build'
 
 # the current environment ('dev' or 'build'), which will be set after server.py runs
 environment = None
