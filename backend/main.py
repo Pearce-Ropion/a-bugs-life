@@ -23,10 +23,12 @@ args = parser.parse_args()
 # sets the environment variable in constants file
 c.environment = args.ENVIRONMENT
 
+# generates the URL of this web app
+url = args.ADDRESS + ':' + str(args.PORT_NUMBER) + '/index.html'
+print '\nApplication is running at this address:\n' + url + '\n'
+
 if args.ENVIRONMENT == 'build':
 	# open the webpage
-	url = args.ADDRESS + ':' + str(args.PORT_NUMBER) + '/index.html'
-	print '\nServer is running at this address:\n' + url + '\n'
 	webbrowser.open(url)
 
 # starts the HTTP Daemon
