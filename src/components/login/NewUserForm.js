@@ -1,10 +1,10 @@
 import React from 'react';
-import { Form, Label } from 'semantic-ui-react';
+import { Form, Label, Input } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import { displayLabel } from '../../api/Utils';
 
-export const UserForm = props =>
+export const NewUserForm = props =>
     <React.Fragment>
         <Form>
             <Form.Group>
@@ -34,7 +34,7 @@ export const UserForm = props =>
         </Form>
     </React.Fragment>;
 
-UserForm.propTypes = {
+NewUserForm.propTypes = {
     fields: PropTypes.shape({
         firstname: PropTypes.string,
         lastname: PropTypes.string,

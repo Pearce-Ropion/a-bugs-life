@@ -1,6 +1,7 @@
 export const Panes = {
     CREATE: Symbol('Create'),
     DETAILS: Symbol('Details'),
+    USERS: Symbol('Users'),
     DASHBOARD: Symbol('Dashboard'),
     REPORT: Symbol('Report'),
 };

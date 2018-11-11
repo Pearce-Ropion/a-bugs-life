@@ -18,7 +18,7 @@ export const TicketList = props =>
     <Segment style={{ borderRadius: 0, overflowY: 'scroll', height: 'calc(100vh - 64px)' }}>
         <List divided relaxed='very'>
             {
-                props.tickets.map(ticket =>
+                Object.values(props.tickets).map(ticket =>
                     <List.Item key={`ticket-${ticket.id}`}>
                         <PriorityPopup priority={ticket.priority} />
                         <List.Content>
@@ -28,7 +28,7 @@ export const TicketList = props =>
                                     <List.Description content={<StatusTag name={ticket.status} style={{ marginTop: '0.5em' }} />} />
                                 </Grid.Column>
                                 <Grid.Column width={3}>
-                                    <Button floated='right' icon='angle right' ticketid={ticket.id} allTickets={props.tickets} circular onClick={props.changeTicket} />
+                                    <Button floated='right' icon='angle right' ticketid={ticket.id} circular onClick={props.changeTicket} />
                                 </Grid.Column>
                             </Grid>
                         </List.Content>

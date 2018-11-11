@@ -60,7 +60,6 @@ export const UserProps = PropTypes.oneOf(Object.values(UserTypes));
 
 export const UserDropdownOptions = Object.keys(EmployeeTypes)
     .map(user => {
-        console.log(user);
         return {
             key: EmployeeTypes[user].name,
             value: EmployeeTypes[user].name,

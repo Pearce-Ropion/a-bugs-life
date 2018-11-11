@@ -16,10 +16,7 @@ export const TicketModal = props =>
                 : <Button basic inverted content='Create' onClick={props.toggleModal} className='create' />
         }
         content={
-            <React.Fragment>
-                <Message style={{ margin: '2em 2em 0' }} header={props.message.header} content={props.message.content} color={props.message.color} hidden={!props.message.visible} />
-                <TicketForm isEditable={props.isEditable} isEmployee={props.isEmployee} fields={props.fields} labels={props.labels} onFieldChange={props.onFieldChange} />
-            </React.Fragment>
+            <TicketForm isEditable={props.isEditable} isEmployee={props.isEmployee} fields={props.fields} labels={props.labels} onFieldChange={props.onFieldChange} />
         }
         actions={[
             <Button key='cancel-ticket-modal' content='Cancel' onClick={props.toggleModal} />,
