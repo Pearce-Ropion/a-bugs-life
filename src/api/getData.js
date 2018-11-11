@@ -1,4 +1,5 @@
 import faker from 'faker';
+import axios from 'axios';
 
 import { PriorityLevels, SeverityLevels, ComponentTypes } from './constants/Ticket'
 import { StatusTypes, ResolutionTypes } from './constants/Status'
@@ -23,8 +24,6 @@ export const getData = count => {
             id: i,
             summary: faker.hacker.phrase(),
             description: faker.lorem.paragraph(5),
-            // assignee: randomType(UserTypes, 1).name,
-            // reporter: randomType(UserTypes, 1).name,
             assignee: UserTypes.USER.name,
             reporter: UserTypes.USER.name,
             component: ComponentTypes[Math.floor(Math.random() * ComponentTypes.length)],
@@ -39,4 +38,12 @@ export const getData = count => {
         });
     };
     return data;
+};
+
+export const getTickets = async () => {
+    return await axios.post('/api/tickets/all');
+};
+
+export const getUsers = async () => {
+    return await axios.post('/api/users/all');
 };

@@ -2,8 +2,7 @@ import React from 'react'
 import { Grid, Button, Header } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
-import { TicketModal } from './TicketModal';
-import { Login } from './login/Login';
+import { LoginHandler } from './login/LoginHandler';
 import { UserTypes } from '../api/constants/Users';
 import { TicketHandler } from './TicketHandler';
 import { Panes } from '../api/constants/Panes';
@@ -15,14 +14,17 @@ export const Navigation = props =>
                 (props.activePane === Panes.CREATE || props.currentUser === UserTypes.USER) && <Header as='h1' inverted content={`A Bug's Life`} />
             }
             {
-                props.isLoggedIn && props.currentUser !== UserTypes.USER
-                    ? <React.Fragment>
+                props.isLoggedIn && props.currentUser !== UserTypes.USER &&
+                    <React.Fragment>
                         <Button basic inverted content='Dashboard' name='dashboard' onClick={props.changeActivePane} />
                         <Button basic inverted content='View All' name='all' onClick={props.changeActiveView} />
                         <Button basic inverted content='Assigned' name='assigned' onClick={props.changeActiveView} />
                         <Button basic inverted content='Reported' name='reported' onClick={props.changeActiveView} />
                     </React.Fragment>
-                    : null
+            }
+            {
+                props.currentUser === UserTypes.MANAGER &&
+                    <Button basic inverted content='Users' name='users' onClick={props.changeActivePane} />
             }
         </Grid.Column>
         <Grid.Column width={6} className='right'>
@@ -30,9 +32,14 @@ export const Navigation = props =>
                 props.isLoggedIn && <Header as='h5' inverted textAlign='left' content={`Welcome, ${props.currentUser.name}`} style={{ display: 'inline-block', marginRight: '2em' }} />
             }
             {
-                props.activePane !== Panes.CREATE && <TicketHandler isModal labels={props.labels} />
+                props.activePane !== Panes.CREATE &&
+                    <TicketHandler isModal
+                        labels={props.labels}
+                        currentUser={props.currentUser}
+                        onOpenMessage={props.onOpenMessage}
+                        refreshTickets={props.refreshTickets} />
             }
-            <Login 
+            <LoginHandler 
                 currentUser={props.currentUser}
                 isLoggedIn={props.isLoggedIn}
                 isLoginModalOpen={props.isLoginModalOpen}
@@ -40,6 +47,7 @@ export const Navigation = props =>
                 loginError={props.loginError}
                 onLogin={props.onLogin}
                 onLogout={props.onLogout}
+                onCreateUser={props.onCreateUser}
                 toggleLoginModal={props.toggleLoginModal}
                 toggleUserModal={props.toggleUserModal} />
         </Grid.Column>

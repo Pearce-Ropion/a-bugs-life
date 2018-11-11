@@ -1,12 +1,13 @@
 import { UserTypes } from '../constants/Users';
+import { getUser } from '../Utils';
 
 export const userFields = ({
     id = null,
     firstname = '',
     lastname = '',
-    email = '',
-    password = '',
-    role = UserTypes.USER,
+    email = 'm@m.com',
+    password = 'manager1',
+    role = 'User',
 }) => {
     return {
         id,
@@ -14,7 +15,7 @@ export const userFields = ({
         lastname,
         email,
         password,
-        role,
+        role: getUser(role),
     }
 };
 

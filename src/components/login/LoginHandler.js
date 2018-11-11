@@ -6,7 +6,7 @@ import { LoginForm } from './LoginForm';
 import { NewUserHandler } from './NewUserHandler';
 import { userFields, userFieldsError } from '../../api/models/user';    
 
-export class Login extends React.Component {
+export class LoginHandler extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -16,10 +16,12 @@ export class Login extends React.Component {
     };
 
     onFieldChange = (event, data) => {
+        // console.log(this.state.fields)
         this.setState({
             fields: userFields({
                 ...this.state.fields,
                 [data.name]: data.value,
+                role: this.state.fields.role.name,
             }),
         });
     };
@@ -50,9 +52,6 @@ export class Login extends React.Component {
     onLogin = () => {
         if (this.validateUser()) {
             this.props.onLogin(this.state.fields);
-            this.setState({
-                fields: userFields({}),
-            });
         }
     };
 
@@ -80,14 +79,14 @@ export class Login extends React.Component {
     };
 }
 
-Login.defaultProps = {
+LoginHandler.defaultProps = {
     isLoggedIn: false,
     loginError: false,
     isLoginModalOpen: false,
     isUserModalOpen: false,
 }
 
-Login.propTypes = {
+LoginHandler.propTypes = {
     isLoggedIn: PropTypes.bool,
     loginError: PropTypes.bool,
     isLoginModalOpen: PropTypes.bool,
@@ -96,4 +95,5 @@ Login.propTypes = {
     toggleUserModal: PropTypes.func,
     onLogin: PropTypes.func,
     onLogout: PropTypes.func,
+    onCreateUser: PropTypes.func,
 }

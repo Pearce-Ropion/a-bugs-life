@@ -6,7 +6,7 @@ import axios from 'axios';
 import { withAxios } from 'react-axios';
 // import bcrypt from 'bcrypt';
 
-import { UserForm } from './UserForm';
+import { NewUserForm } from './NewUserForm';
 import { userFields, userFieldsError } from '../../api/models/user';
 import { sqlNormalizeUser } from '../../api/Utils';
 
@@ -43,6 +43,7 @@ export const NewUserHandler = withAxios(class AxiosNewUserHandler extends React.
                 fields: userFields({
                     ...this.state.fields,
                     [data.name]: data.value,
+                    role: this.state.fields.role.name
                 }),
             });
         } else {
@@ -104,13 +105,15 @@ export const NewUserHandler = withAxios(class AxiosNewUserHandler extends React.
 
     onCreateUser = () => {
         if (this.validateUser()) {
-            const normalizedFields = sqlNormalizeUser(false, {
-                ...this.state.fields,
-                password: hash,
-            });
+            // const normalizedFields = sqlNormalizeUser(false, {
+            //     ...this.state.fields,
+            //     password: hash,
+            // });
+            const normalizedFields = sqlNormalizeUser(false, this.state.fields);
             axios.post('/api/users/create', normalizedFields)
                 .then(response => {
                     this.toggleUserModal();
+                    this.props.onCreateUser(true);
                 })
                 .catch(err => console.warn(err))
             // bcrypt.hash(this.state.fields.password, 10)
@@ -129,13 +132,13 @@ export const NewUserHandler = withAxios(class AxiosNewUserHandler extends React.
             open={this.props.isUserModalOpen}
             header='Create User'
             trigger={
-                <Segment basic fluid textAlign='right'
+                <Segment basic textAlign='right'
                     style={{ paddingTop: '0', marginTop: '0', paddingRight: '2em'}}>
                     <Label basic color='teal' as='a' content='Create New User' onClick={this.props.toggleUserModal} />
                 </Segment>
             }
             content={
-                <UserForm fields={this.state.fields} error={this.state.error} confirmation={this.state.confirmation} onFieldChange={this.onFieldChange} />
+                <NewUserForm fields={this.state.fields} error={this.state.error} confirmation={this.state.confirmation} onFieldChange={this.onFieldChange} />
             }
             actions={[
                 <Button key='cancel-user-modal' content='Cancel' onClick={this.props.toggleUserModal} />,

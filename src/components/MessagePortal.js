@@ -1,14 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Portal, Segment, Message } from 'semantic-ui-react';
+import { Portal, Message } from 'semantic-ui-react';
 
 export const MessagePortal = props =>
     <Portal open={props.isMessageOpen}>
-        <Segment raised style={{ position: 'fixed', top: '15%', zIndex: 1000, right: '15%' }}>
-          <Segment basic>
-            <Message color={props.color} header={props.header} content={props.content} onDismiss={props.onCloseMessage} />
-          </Segment>  
-        </Segment>
+        <Message 
+            style={{ width: '30%', position: 'fixed', top: '9%', zIndex: 1000, right: '3%' }}
+            color={props.message.color}
+            header={props.message.header}
+            content={props.message.content} 
+            onDismiss={props.onCloseMessage} />
     </Portal>;
 
 MessagePortal.defaultProps = {
@@ -17,8 +18,10 @@ MessagePortal.defaultProps = {
 
 MessagePortal.propTypes = {
     isMessageOpen: PropTypes.bool,
-    color: PropTypes.string,
-    header: PropTypes.string,
-    content: PropTypes.string,
+    message: PropTypes.shape({
+        color: PropTypes.string,
+        header: PropTypes.string,
+        content: PropTypes.string,
+    }),
     onCloseMessage: PropTypes.func,
 };

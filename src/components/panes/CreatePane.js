@@ -7,7 +7,7 @@ export const CreatePane = props =>
     <Grid centered>
         <Grid.Column width={3} />
         <Grid.Column width={10}>
-            <TicketHandler />
+            <TicketHandler onOpenMessage={props.onOpenMessage} refreshTickets={props.refreshTickets} />
         </Grid.Column>
         <Grid.Column width={3} />
     </Grid>

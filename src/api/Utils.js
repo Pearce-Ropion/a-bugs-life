@@ -65,7 +65,7 @@ export const sqlNormalizeTicket = (isUpdate, fields) => {
 export const sqlNormalizeUser = (isUpdate, fields) => {
     return {
         id: isUpdate ? fields.id : null,
-        name: fields.firstname.concat(' ', fields.lastname),
+        name: isUpdate ? fields.name : fields.firstname.concat(' ', fields.lastname),
         email: fields.email,
         password: fields.password,
         role: fields.role.name,
