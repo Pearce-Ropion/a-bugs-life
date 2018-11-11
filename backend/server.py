@@ -14,19 +14,51 @@ class Server(BaseHTTPRequestHandler):
 		# sets the path based on dev environment or build environment
 		path = (c.dev_path if (c.environment == 'dev') else c.build_path) + self.path
 
+		# load fonts properly
+		# https://stackoverflow.com/questions/40867447/python-simple-http-server-not-loading-font-awesome-fonts
 		try:
-			file_to_open = open(path[1:]).read()
-			self.send_response(200)
-		except Exception as e:
-			file_to_open = 'File Not Found!'
-			self.send_response(404)
-			print 'Exception: ' + str(e)
+			sendReply = False
+			if path.endswith(".html"):
+				mimetype = 'text/html'
+				sendReply = True
+			if path.endswith(".jpg"):
+				mimetype = 'image/jpg'
+				sendReply = True
+			if path.endswith(".png"):
+				mimetype = 'image/png'
+				sendReply = True
+			if path.endswith(".gif"):
+				mimetype = 'image/gif'
+				sendReply = True
+			if path.endswith(".svg"):
+				mimetype = 'image/svg+xml'
+				sendReply = True
+			if path.endswith(".css"):
+				mimetype = 'text/css'
+				sendReply = True
+			if path.endswith(".js"):
+				mimetype = 'application/javascript'
+				sendReply = True
+			if path.endswith(".ttf"):
+				mimetype = 'application/x-font-ttf'
+				sendReply = True
+			if path.endswith(".otf"):
+				mimetype = 'application/x-font-opentype'
+				sendReply = True
+			if path.endswith(".woff"):
+				mimetype = 'application/font-woff'
+				sendReply = True
 
-		# required by the BaseHTTPRequestHandler class
-		self.end_headers()
-		
-		# write the contents of the file onto the screen
-		self.wfile.write(file_to_open.encode('utf-8'))
+			if sendReply == True:
+				#Open the static file requested and send it
+				f = open(path, 'rb')
+				self.send_response(200)
+				self.send_header('Content-type',mimetype)
+				self.end_headers()
+				self.wfile.write(f.read())
+				f.close()
+		except IOError:
+			self.send_error(404, 'File Not Found: %s' % self.path)
 
 	# built into BaseHTTPRequestHandler, which runs when we receive a POST request
 	def do_POST(self):
