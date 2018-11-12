@@ -16,14 +16,17 @@ export const TicketForm = props => {
             placeholder='Summary'
             value={props.fields.summary}
             onChange={props.onFieldChange} />
-        <Form.TextArea
-            autoHeight
-            rows='5'
-            name='description'
-            label='Description'
-            placeholder='Description'
-            value={props.fields.description}
-            onChange={props.onFieldChange} />
+        {
+            !props.isEditable &&
+                <Form.TextArea
+                    autoHeight
+                    rows='5'
+                    name='description'
+                    label='Description'
+                    placeholder='Description'
+                    value={props.fields.description}
+                    onChange={props.onFieldChange} />
+        }
         <Form.Dropdown
             fluid
             selection
