@@ -72,6 +72,15 @@ export const sqlNormalizeUser = (isUpdate, fields) => {
     }
 }
 
+export const sqlNormalizeUserUpdate = fields => {
+    return {
+        id: fields.id,
+        name: fields.name,
+        email: fields.email,
+        role: fields.role.name,
+    }
+}
+
 export const getStatus = status => StatusTypes[status.toUpperCase().replace(' ', '_')];
 export const getPriority = priority => PriorityLevels[priority.toUpperCase().replace(' ', '_')];
 export const getUser = user => UserTypes[user.toUpperCase().replace(' ', '_')];

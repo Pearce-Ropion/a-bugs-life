@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 
 import { UserDropdownOptions, UserTypes } from '../../api/constants/Users';
-import { sqlNormalizeUser } from '../../api/Utils';
+import { sqlNormalizeUser, sqlNormalizeUserUpdate, getUser } from '../../api/Utils';
 
 export class UsersPane extends React.Component {
     constructor(props) {
@@ -24,8 +24,11 @@ export class UsersPane extends React.Component {
     }
 
     onUpdateRole = (event, data) => {
-        const user = sqlNormalizeUser(true, this.props.users.find(next => next.id === data.id));
-        console.log(user)
+        const user = sqlNormalizeUserUpdate({
+            ...this.props.users.find(next => next.id === data.id),
+            role: getUser(data.value)
+        });
+        console.log(user);
         axios.post('api/users/update', user)
             .then(response => response.data)
             .then(response => {
