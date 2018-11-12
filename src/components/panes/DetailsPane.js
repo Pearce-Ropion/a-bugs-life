@@ -35,9 +35,9 @@ export class DetailsPane extends React.Component {
         if (view === TicketViews.ALL) {
             filtered = tickets;
         } else if (view === TicketViews.ASSIGNED) {
-            filtered = tickets.filter(ticket => ticket.assignee === this.props.currentUser.name);
+            filtered = tickets.filter(ticket => ticket.assignee === this.props.currentUser.name || ticket.assignee === this.props.currentUser.role.name);
         } else if (view === TicketViews.REPORTED) {
-            filtered = tickets.filter(ticket => ticket.reporter === this.props.currentUser.name);
+            filtered = tickets.filter(ticket => ticket.reporter === this.props.currentUser.name || ticket.reporter === 'Anonymous' || ticket.reporter === this.props.currentUser.role.name);
         }
 
         if (!filtered) {

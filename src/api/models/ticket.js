@@ -1,7 +1,3 @@
-import { UserTypes } from '../constants/Users';
-import { PriorityLevels } from '../constants/Ticket';
-import { StatusTypes } from '../constants/Status';
-
 export const getType = (value, type) => {
     // console.log('mark', value);
     const next = typeof value === 'object' ? value.name : value
@@ -14,7 +10,7 @@ export const ticketFields = ({
     description = '',
     comments = '',
     assignee = 'Manager',
-    reporter = 'User',
+    reporter = 'Anonymous',
     component = '',
     priority = 'Bug',
     severity = 'Medium',
