@@ -5,8 +5,8 @@ export const userFields = ({
     id = null,
     firstname = '',
     lastname = '',
-    email = 'm@m.com',
-    password = 'manager1',
+    email = '',
+    password = '',
     role = 'User',
 }) => {
     return {
