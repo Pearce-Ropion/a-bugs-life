@@ -80,7 +80,9 @@ class Server(BaseHTTPRequestHandler):
 			content_length = int(self.headers['Content-Length'])
 			if content_length > 0:
 				post_body_bytes = self.rfile.read(content_length)
-				json_string = post_body_bytes.decode('utf8').replace("'", '"')
+				# no need for replacing because we will assume data based in will have double quotes
+				# json_string = post_body_bytes.decode('utf8').replace("'", '"')
+				json_string = post_body_bytes.decode('utf8')
 				data = json.loads(json_string)
 			
 			response_data = None
