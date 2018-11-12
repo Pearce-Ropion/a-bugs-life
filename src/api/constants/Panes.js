@@ -9,7 +9,6 @@ export const Panes = {
 export const TicketViews = {
     ALL: Symbol('All'),
     ASSIGNED: Symbol('Assgined'),
-    WATCHED: Symbol('Watched'),
     REPORTED: Symbol('Reported'),
     NONE: Symbol('None'),
 }

@@ -25,8 +25,18 @@ export default {
         content: 'Please reload the page and try again...',
     },
     UPDATE_TICKET_ERROR: {
-        color: 'orange',
+        color: 'yellow',
         header: 'There was an error updating the ticket',
+        content: 'Please reload the page and try again...',
+    },
+    UPDATE_USER_ROLE_SUCCESS: {
+        color: 'green',
+        header: 'Role Updated',
+        content: '',
+    },
+    UPDATE_USER_ROLE_ERROR: {
+        color: 'yellow',
+        header: 'There was an error updating the rolw',
         content: 'Please reload the page and try again...',
     },
 };

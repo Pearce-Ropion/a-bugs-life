@@ -45,7 +45,13 @@ export class Application extends React.Component {
                         tickets: response.data,
                     });
                 })
-                .catch(err => console.warn(err));
+                .catch(err => {
+                    console.warn('Error Fetching Tickets onMount\n', err)
+                    this.tickets = [];
+                    this.setState({
+                        tickets: [],
+                    });
+                });
         }
 
         if (!this.users.length) {
@@ -56,7 +62,13 @@ export class Application extends React.Component {
                         users: response.data,
                     });
                 })
-                .catch(err => console.warn(err));
+                .catch(err => {
+                    console.warn('Error Fetching User onMount\n', err)
+                    this.users = [];
+                    this.setState({
+                        users: [],
+                    });
+                });
         }
         this.labels = getAllLabels(this.tickets);
     }
@@ -69,7 +81,13 @@ export class Application extends React.Component {
                     tickets: response.data,
                 });
             })
-            .catch(err => console.warn(err));
+            .catch(err => {
+                console.warn('Error Fetching tickets onRefresh\n', err)
+                this.tickets = [];
+                this.setState({
+                    tickets: [],
+                });
+            });
     }
 
     toggleLoginModal = () => {
