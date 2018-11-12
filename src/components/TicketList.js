@@ -43,5 +43,5 @@ TicketList.defaultProps = {
 }
 
 TicketList.propTypes = {
-    tickets: PropTypes.arrayOf(PropTypes.shape(TicketProps)),
+    tickets: PropTypes.objectOf(PropTypes.shape(TicketProps)),
 }

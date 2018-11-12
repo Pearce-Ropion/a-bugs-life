@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import { StatusTypes } from "./constants/Status";
 import { PriorityLevels } from "./constants/Ticket";
 import { UserTypes } from "./constants/Users";
@@ -13,34 +15,6 @@ export const sortByKey = (arr, key) => {
     });
 };
 
-export const getAllLabels = tickets => {
-    const labels = [];
-    tickets.forEach(ticket => {
-        ticket.labels.forEach(label => {
-            labels.push(capitalize(label));
-        });
-    });
-    const unique = [...new Set(labels)];
-    const tempOptions = unique.map((label, idx) => {
-        return {
-            key: `label-${idx}`,
-            value: label,
-            text: label,
-        };
-    });
-
-    const labelDropdownOptions = sortByKey(tempOptions, 'value');
-    return {
-        labels,
-        labelDropdownOptions,
-    }
-};
-
-export const displayLabel = error => {
-    return {
-        display: error ? 'inline-block' : 'none',
-    };
-};
 
 export const sqlNormalizeTicket = (isUpdate, fields) => {
     return {
@@ -48,18 +22,17 @@ export const sqlNormalizeTicket = (isUpdate, fields) => {
         summary: fields.summary,
         description: fields.description,
         comments: fields.comments,
-        assignee: fields.assignee.name,
-        reporter: fields.reporter.name,
+        assignee: fields.assignee,
+        reporter: fields.reporter,
         component: fields.component,
-        priority: fields.priority.name,
-        severity: fields.serverity,
+        priority: fields.priority,
+        severity: fields.severity,
         labels: fields.labels,
-        attachments: fields.attachments,
-        status: fields.status.name,
+        status: fields.status,
         resolution: fields.resolution,
         created: isUpdate ? fields.created : getEpochTime(),
         modified: getEpochTime(),
-        closed: fields.status.name === 'Closed' ? getEpochTime() : fields.closed,
+        closed: fields.status === 'Closed' ? getEpochTime() : fields.closed,
     };
 };
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { Form, Segment, Message, Label } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
-import { displayLabel } from '../../api/Utils';
+import { displayLabel } from '../../api/Labels';
 
 export const LoginForm = props =>
     <React.Fragment>

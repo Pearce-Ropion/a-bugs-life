@@ -49,6 +49,11 @@ export const StatusTypes = {
         name: 'Code Review',
         color: 'yellow',
     },
+    TEST_READY: {
+        type: Symbol('TEST_READY'),
+        name: 'Test Ready',
+        color: 'yellow',
+    },
     TESTING: {
         type: Symbol('TESTING'),
         name: 'Testing',
@@ -63,12 +68,12 @@ export const StatusTypes = {
 
 export const ResolutionTypes = {
     FIXED: 'Fixed',
-    WONT_FIX: 'Won\'t Fix',
+    WONT_FIX: 'Wont Fix',
     DUPLICATE: 'Duplicate',
     INCOMPLETE: 'Incomplete',
-    CANT_REPRODUCE: 'Can\'t Reproduce',
+    CANT_REPRODUCE: 'Cant Reproduce',
     DONE: 'Done',
-    WONT_DO: 'Won\'t Do',
+    WONT_DO: 'Wont Do',
     NOT_A_BUG: 'Not A Bug',
     KILLED: 'Killed',
     APPROVED: 'Approved',

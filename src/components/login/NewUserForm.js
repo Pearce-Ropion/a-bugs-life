@@ -2,7 +2,7 @@ import React from 'react';
 import { Form, Label, Input } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
-import { displayLabel } from '../../api/Utils';
+import { displayLabel } from '../../api/Labels';
 
 export const NewUserForm = props =>
     <React.Fragment>

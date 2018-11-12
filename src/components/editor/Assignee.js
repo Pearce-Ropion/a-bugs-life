@@ -8,33 +8,38 @@ import { EditorHandler } from './EditorHandler';
 
 export const AssigneeForm = props =>
     <Form>
-        <Search fluid compact
+        <Form.Field fluid
+            control={Search}
+            placeholder={props.property}
             loading={props.isSearchLoading}
-            onResultSelect={props.onResultSelect}
+            onResultSelect={props.onSearchSelect}
             onSearchChange={props.onSearchChange}
-            results={props.users}
-            value={props.field} />
+            results={props.searchResults}
+            value={props.field}
+            error={props.error} />
     </Form>;
 
 AssigneeForm.propTypes = {
-    fields: PropTypes.shape({
-        assignee: PropTypes.shape({
-            name: PropTypes.string,
-        }),
+    isSearchLoading: PropTypes.bool,
+    property: PropTypes.string,
+    field: PropTypes.string,
+    error: PropTypes.bool,
+    searchResults: PropTypes.arrayOf({
+        title: PropTypes.string,
+        role: PropTypes.string,
     }),
-    onFieldChange: PropTypes.func,
+    onSearchChange: PropTypes.func.isRequired,
+    onSearchSelect: PropTypes.func.isRequired,
 };
 
 export const AssigneeEditor = props =>
     <EditorHandler
         property='Assignee'
-        values={props.fields}
+        button='Re-Assign'
         content={AssigneeForm}
+        original={props.original}
         {...props} />
     
 AssigneeEditor.propTypes = {
-    values: PropTypes.arrayOf(PropTypes.string),
-    toggleEditorModal: PropTypes.func,
-    onUpdate: PropTypes.func,
-    // ticket, onOpenMessage, users
+    original: PropTypes.string.isRequired,
 };

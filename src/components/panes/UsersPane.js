@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 
 import { UserDropdownOptions, UserTypes } from '../../api/constants/Users';
-import { sqlNormalizeUser, sqlNormalizeUserUpdate, getUser } from '../../api/Utils';
+import { sqlNormalizeUser, getUser } from '../../api/Utils';
+import Messages from '../../api/constants/Messages';
 
 export class UsersPane extends React.Component {
     constructor(props) {
@@ -14,28 +15,32 @@ export class UsersPane extends React.Component {
         };
     };
 
-    static defaultProps = {
+    static propTypes = {
         users: PropTypes.arrayOf(PropTypes.shape({
             id: PropTypes.number,
             name: PropTypes.string,
             email: PropTypes.string,
             role: PropTypes.oneOf(Object.values(UserTypes)),
         })),
-    }
+        onOpenMessage: PropTypes.func.isRequired,
+        refreshUsers: PropTypes.func.isRequired,
+    };
 
     onUpdateRole = (event, data) => {
-        const user = sqlNormalizeUserUpdate({
+        const user = sqlNormalizeUser(true, {
             ...this.props.users.find(next => next.id === data.id),
-            role: getUser(data.value)
+            role: getUser(data.value),
         });
-        console.log(user);
         axios.post('api/users/update', user)
-            .then(response => response.data)
             .then(response => {
-
+                this.props.onOpenMessage(Messages.UPDATE_USER_ROLE_SUCCESS);
+                this.props.refreshUsers();
             })
-            .catch(err => console.warn(err));
-    }
+            .catch(err => {
+                this.props.onOpenMessage(Messages.UPDATE_USER_ROLE_ERROR);
+                console.warn('Error updating user role\n', err);
+            });
+    };
 
     render = () => {
         return (
@@ -63,7 +68,7 @@ export class UsersPane extends React.Component {
                                                 <Dropdown fluid compact selection search
                                                     id={user.id}
                                                     placeholder='Role'
-                                                    value={user.role.name}
+                                                    value={user.role}
                                                     options={UserDropdownOptions}
                                                     onChange={this.onUpdateRole} />
                                             </Table.Cell>

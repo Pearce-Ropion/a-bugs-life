@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Divider, Button } from 'semantic-ui-react';
+import { Form, Search, Divider } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import dropdownOptions from '../api/DropdownOptions';
@@ -49,19 +49,19 @@ export const TicketForm = props => {
                         value={props.fields.comments}
                         onChange={props.onFieldChange} />
                     <Form.Group widths='equal'>
-                        <Form.Dropdown
-                            fluid
-                            selection
-                            search
+                        <Form.Field fluid
+                            control={Search}
                             name='assignee'
                             label='Assignee'
                             placeholder='Assginee'
-                            icon='search'
-                            value={props.fields.assignee.name}
-                            options={UserDropdownOptions}
-                            onChange={props.onFieldChange} />
+                            loading={props.assigneeLoading}
+                            value={props.fields.assignee}
+                            onSearchChange={props.onSearchChange}
+                            onResultSelect={props.onSearchSelect}
+                            results={props.assigneeResults} />
                         <Form.Dropdown
                             fluid
+                            disabled
                             selection
                             search
                             multiple
@@ -71,8 +71,9 @@ export const TicketForm = props => {
                             placeholder='Select or Enter Your Own'
                             additionLabel='New Label: '
                             icon='search'
+                            onAddItem={props.onAddItem}
                             value={props.fields.labels}
-                            options={props.labels.labelDropdownOptions}
+                            options={props.labels}
                             onChange={props.onFieldChange} />
                     </Form.Group>
                     <Form.Group widths='equal'>
@@ -82,7 +83,7 @@ export const TicketForm = props => {
                             name='priority'
                             label='Priority'
                             placeholder='Priority'
-                            value={props.fields.priority.name}
+                            value={props.fields.priority}
                             options={dropdownOptions.PriorityLevels}
                             onChange={props.onFieldChange} />
                         <Form.Dropdown
@@ -102,7 +103,7 @@ export const TicketForm = props => {
                             name='status'
                             label='Status'
                             placeholder='Status'
-                            value={props.fields.status.name}
+                            value={props.fields.status}
                             options={dropdownOptions.StatusTypes}
                             onChange={props.onFieldChange} />
                     </Form.Group>

@@ -1,12 +1,10 @@
 import React from 'react';
-import { Grid, Header, Label, Segment, Button } from 'semantic-ui-react';
+import { Grid, Header, Label } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
 import TicketProps from '../api/constants/TicketProps';
 import { StatusTag, TicketTag } from './Tags';
-import { TicketHandler } from './TicketHandler';
-import { UserTypes } from '../api/constants/Users';
 
 export const TicketDetails = props =>
     <Grid padded='vertically'>
