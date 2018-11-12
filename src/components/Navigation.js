@@ -7,14 +7,16 @@ import { UserTypes } from '../api/constants/Users';
 import { TicketHandler } from './TicketHandler';
 import { Panes } from '../api/constants/Panes';
 
+import { getUser } from '../api/Utils';
+
 export const Navigation = props =>
     <Grid id='heading' padded>
         <Grid.Column width={10}>
             {
-                (props.activePane === Panes.CREATE || props.currentUser === UserTypes.USER) && <Header as='h1' inverted content={`A Bug's Life`} />
+                (props.activePane === Panes.CREATE || props.currentUser.role === UserTypes.USER) && <Header as='h1' inverted content={`A Bug's Life`} />
             }
             {
-                props.isLoggedIn && props.currentUser !== UserTypes.USER &&
+                props.isLoggedIn && props.currentUser.role !== UserTypes.USER &&
                     <React.Fragment>
                         <Button basic inverted content='Dashboard' name='dashboard' onClick={props.changeActivePane} />
                         <Button basic inverted content='View All' name='all' onClick={props.changeActiveView} />
@@ -23,7 +25,7 @@ export const Navigation = props =>
                     </React.Fragment>
             }
             {
-                props.currentUser === UserTypes.MANAGER &&
+                props.currentUser.role === UserTypes.MANAGER &&
                     <Button basic inverted content='Users' name='users' onClick={props.changeActivePane} />
             }
         </Grid.Column>
@@ -35,6 +37,7 @@ export const Navigation = props =>
                 props.activePane !== Panes.CREATE &&
                     <TicketHandler isModal
                         labels={props.labels}
+                        users={props.users}
                         currentUser={props.currentUser}
                         onOpenMessage={props.onOpenMessage}
                         refreshTickets={props.refreshTickets} />
@@ -54,7 +57,12 @@ export const Navigation = props =>
     </Grid>
 
 Navigation.propTypes = {
-    currentUser: PropTypes.oneOf(Object.values(UserTypes)),
+    currentUser: PropTypes.shape({
+        id: PropTypes.number,
+        name: PropTypes.string,
+        email: PropTypes.string,
+        role: PropTypes.oneOf(Object.values(UserTypes)),
+    }),
     isLoggedIn: PropTypes.bool,
     isLoginModalOpen: PropTypes.bool,
     isUserModalOpen: PropTypes.bool,

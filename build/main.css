@@ -423,5 +423,8 @@ body {
   .centerVerticalGroup > .button {
     display: -webkit-box !important; }
 
+#ticket-menu {
+  margin-top: 1rem !important; }
+
 
 /*# sourceMappingURL=main.css.map*/

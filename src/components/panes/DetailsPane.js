@@ -8,7 +8,7 @@ import { TicketList } from '../TicketList';
 import { TicketDetails } from '../TicketDetails';
 import TicketProps from '../../api/constants/TicketProps';
 import { TicketViews } from '../../api/constants/Panes';
-import { UserTypes } from '../../api/constants/Users';
+import { UserTypes, UserProps } from '../../api/constants/Users';
 import { getUser } from '../../api/Utils';
 import { TicketMenu } from '../TicketMenu';
 
@@ -16,15 +16,12 @@ export class DetailsPane extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            filtered: this.filterTickets(),
-            activeTicketId: this.props.tickets[0].id,
+            activeTicketId: this.props.tickets.length ? this.props.tickets[0].id : null,
         };
     };
 
     static propTypes = {
-        currentUser: PropTypes.shape({
-            type: PropTypes.symbol,
-        }),
+        currentUser: PropTypes.shape(UserProps),
         tickets: PropTypes.arrayOf(PropTypes.shape(TicketProps)),
         labels: PropTypes.object,
         view: PropTypes.oneOf(Object.values(TicketViews)),
@@ -38,10 +35,9 @@ export class DetailsPane extends React.Component {
         if (view === TicketViews.ALL) {
             filtered = tickets;
         } else if (view === TicketViews.ASSIGNED) {
-            filtered = tickets.filter(ticket => getUser(ticket.assignee).type === this.props.currentUser.type);
+            filtered = tickets.filter(ticket => ticket.assignee === this.props.currentUser.name);
         } else if (view === TicketViews.REPORTED) {
-            console.log(view);
-            filtered = tickets.filter(ticket => getUser(ticket.reporter).type === this.props.currentUser.type);
+            filtered = tickets.filter(ticket => ticket.reporter === this.props.currentUser.name);
         }
 
         if (!filtered) {
@@ -62,23 +58,29 @@ export class DetailsPane extends React.Component {
     }
 
     getCurrentTicket = tickets => {
+        
     }
 
     render = () => {
+        let { activeTicketId } = this.state;
         const filtered = this.filterTickets(this.props.tickets)
-        if (Object.keys(filtered).length) {
+        const tickets = Object.values(filtered);
+        if (tickets.length) {
+            if (tickets.find(ticket => ticket.id === activeTicketId) === undefined) {
+                activeTicketId = tickets[0].id
+            }
             return <Grid centered id='details'>
                 <Grid.Column width={4}>
                     <TicketList tickets={filtered} changeTicket={this.changeTicket} />
                 </Grid.Column>
-                <Grid.Column width={this.props.currentUser === UserTypes.USER ? 12 : 9}>
-                    <TicketDetails ticket={filtered[this.state.activeTicketId]} />
+                <Grid.Column width={this.props.currentUser.role === UserTypes.USER ? 12 : 9}>
+                    <TicketDetails ticket={filtered[activeTicketId]} />
                 </Grid.Column>
                 {
-                    this.props.currentUser !== UserTypes.USER &&
+                    this.props.currentUser.role !== UserTypes.USER &&
                         <Grid.Column width={3}>
                             <TicketMenu 
-                                ticket={filtered[this.state.activeTicketId]}
+                                ticket={filtered[activeTicketId]}
                                 users={this.props.users}
                                 labels={this.props.labels}
                                 currentUser={this.props.currentUser}
@@ -88,7 +90,13 @@ export class DetailsPane extends React.Component {
                 }
             </Grid>
         } else {
-            return <Segment basic content={<Message warning header='There are no tickets available' content='Create a ticket using the button above' /> } />
+            return (
+                <Grid centered>
+                    <Grid.Column width={12}>
+                        <Segment basic content={<Message warning header='There are no tickets available' content='Create a ticket using the button above' />} />
+                    </Grid.Column>
+                </Grid>
+            );
         }
     };
 };

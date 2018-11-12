@@ -27,36 +27,15 @@ export const EmployeeTypes = {
     TESTER: UserTypes.TESTER,
     DEVELOPER: UserTypes.DEVELOPER,
     MANAGER: UserTypes.MANAGER,
+    USER: UserTypes.USER,
 };
 
-export const Credentials = {
-    USER: {
-        type: UserTypes.USER,
-        name: 'User',
-        username: 'user',
-        password: 'user',
-    },
-    TESTER: {
-        type: UserTypes.TESTER,
-        name: 'Tester',
-        username: 'tester',
-        password: 'tester',
-    },
-    DEVELOPER: {
-        type: UserTypes.DEVELOPER,
-        name: 'Developer',
-        username: 'developer',
-        password: 'developer',
-    },
-    MANGER: {
-        type: UserTypes.MANAGER,
-        name: 'Manager',
-        username: 'manager',
-        password: 'manager',
-    },
+export const UserProps = {
+    id: PropTypes.number,
+    name: PropTypes.string,
+    email: PropTypes.string,
+    role: PropTypes.oneOf(Object.values(UserTypes)),
 };
-
-export const UserProps = PropTypes.oneOf(Object.values(UserTypes));
 
 export const UserDropdownOptions = Object.keys(EmployeeTypes)
     .map(user => {

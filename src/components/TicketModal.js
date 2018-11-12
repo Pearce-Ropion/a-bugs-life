@@ -16,7 +16,17 @@ export const TicketModal = props =>
                 : <Button basic inverted content='Create' onClick={props.toggleModal} className='create' />
         }
         content={
-            <TicketForm isEditable={props.isEditable} isEmployee={props.isEmployee} fields={props.fields} labels={props.labels} onFieldChange={props.onFieldChange} />
+            <TicketForm
+                fields={props.fields}
+                labels={props.labels}
+                isEditable={props.isEditable}
+                isEmployee={props.isEmployee}
+                assigneeLoading={props.assigneeLoading}
+                assigneeResults={props.assigneeResults}
+                onSearchChange={props.onSearchChange}
+                onSearchSelect={props.onSearchSelect}
+                onAddItem={props.onAddItem}
+                onFieldChange={props.onFieldChange} />
         }
         actions={[
             <Button key='cancel-ticket-modal' content='Cancel' onClick={props.toggleModal} />,

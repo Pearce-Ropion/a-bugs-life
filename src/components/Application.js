@@ -8,20 +8,22 @@ import { DetailsPane } from './panes/DetailsPane';
 
 import { UserTypes } from '../api/constants/Users';
 import { Panes, TicketViews } from '../api/constants/Panes';
-import { getAllLabels, getUser } from '../api/Utils';
-import { userFields } from '../api/models/user';
+import { getUser } from '../api/Utils';
+import { getAllLabels } from '../api/Labels';
 import { UsersPane } from './panes/UsersPane';
 import { getTickets, getUsers } from '../api/getData';
 import { MessagePortal } from './MessagePortal';
 import Messages from '../api/constants/Messages';
+import { ChangeUser } from './ChangeUser';
 
 export class Application extends React.Component {
     constructor(props) {
         super(props);
         this.tickets = [];
         this.users = [];
-        this.labels = [],
+        this.labels = [];
         this.state = {
+            debug: true,
             isMessageOpen: false,
             isLoginModalOpen: false,
             isUserModalOpen: false,
@@ -30,7 +32,12 @@ export class Application extends React.Component {
             message: Messages.CREATE_TICKET_SUCCESS,
             users: [],
             tickets: [],
-            currentUser: UserTypes.NONE,
+            currentUser: {
+                id: 0,
+                name: 'User',
+                email: 'u@u.com',
+                role: UserTypes.NONE,
+            },
             activePane: Panes.CREATE,
             activeView: TicketViews.NONE,
         }
@@ -38,38 +45,47 @@ export class Application extends React.Component {
 
     componentDidMount = () => {
         if (!this.tickets.length) {
-            getTickets()
-                .then(response => {
-                    this.tickets = response.data;
-                    this.setState({
-                        tickets: response.data,
-                    });
-                })
-                .catch(err => console.warn(err));
+            this.refreshTickets()
         }
 
         if (!this.users.length) {
-            getUsers()
-                .then(response => {
-                    this.users = response.data;
-                    this.setState({
-                        users: response.data,
-                    });
-                })
-                .catch(err => console.warn(err));
+            this.refreshUsers()
         }
-        this.labels = getAllLabels(this.tickets);
     }
 
     refreshTickets = () => {
         getTickets()
             .then(response => {
                 this.tickets = response.data;
+                this.labels = getAllLabels(response.data);
                 this.setState({
                     tickets: response.data,
                 });
             })
-            .catch(err => console.warn(err));
+            .catch(err => {
+                console.warn('Error Fetching tickets onRefresh\n', err)
+                this.tickets = [];
+                this.setState({
+                    tickets: [],
+                });
+            });
+    }
+
+    refreshUsers = () => {
+        getUsers()
+            .then(response => {
+                this.users = response.data;
+                this.setState({
+                    users: response.data,
+                });
+            })
+            .catch(err => {
+                console.warn('Error Fetching User onMount\n', err)
+                this.users = [];
+                this.setState({
+                    users: [],
+                });
+            });
     }
 
     toggleLoginModal = () => {
@@ -92,9 +108,11 @@ export class Application extends React.Component {
             .then(response => response.data)
             .then(response => {
                 if (response.valid) {
-                    const user = response.user;
                     this.setState({
-                        currentUser: getUser(user.role),
+                        currentUser: {
+                            ...response.user,
+                            role: getUser(response.user.role),
+                        },
                         isLoggedIn: true,
                         isLoginModalOpen: false,
                         loginError: false,
@@ -102,7 +120,7 @@ export class Application extends React.Component {
                         activeView: TicketViews.ALL,
                     });
 
-                    if (user.role === UserTypes.USER) {
+                    if (getUser(response.user.role) === UserTypes.USER) {
                         this.setState({
                             activeView: TicketViews.REPORTED,
                         });
@@ -118,7 +136,11 @@ export class Application extends React.Component {
     
     onLogout = () => {
         this.setState({
-            currentUser: UserTypes.NONE,
+            currentUser: {
+                name: 'No Logged In',
+                email: null,
+                role: UserTypes.NONE,
+            },
             isLoggedIn: false,
             activePane: Panes.CREATE,
         });
@@ -148,7 +170,7 @@ export class Application extends React.Component {
     getActivePane = () => {
         const { activePane } = this.state;
         if (activePane === Panes.CREATE) {
-            return <CreatePane onOpenMessage={this.onOpenMessage} refreshTickets={this.refreshTickets} />
+            return <CreatePane users={this.users} labels={this.labels} currentUser={this.state.currentUser} onOpenMessage={this.onOpenMessage} refreshTickets={this.refreshTickets} />
         } else if (activePane === Panes.DETAILS) {
             return <DetailsPane
                 view={this.state.activeView}
@@ -159,7 +181,10 @@ export class Application extends React.Component {
                 users={this.users}
                 labels={this.labels} />
         } else if (activePane === Panes.USERS) {
-            return <UsersPane users={this.users} />
+            return <UsersPane
+                users={this.users}
+                onOpenMessage={this.onOpenMessage}
+                refreshUsers={this.refreshUsers} />
         }
         return null;
     };
@@ -176,6 +201,40 @@ export class Application extends React.Component {
             activePane: Panes.DETAILS,
             activeView: TicketViews[data.name.toUpperCase()],
         });
+    };
+
+    onUserChange = (event, data) => {
+        if (data.value === 'None') {
+            this.setState({
+                currentUser: {
+                    name: 'No Logged In',
+                    email: null,
+                    role: UserTypes.NONE,
+                },
+                isLoggedIn: false,
+                activePane: Panes.CREATE,
+            });
+        } else {
+            const user = this.users.find(user => user.role === data.value);
+            this.setState({
+                currentUser: {
+                    ...user,
+                    role: getUser(user.role),
+                },
+                isLoggedIn: true,
+                loginError: false,
+                activePane: Panes.DETAILS,
+                activeView: TicketViews.ALL,
+            });
+
+            if (getUser(user.role) === UserTypes.USER) {
+                console.log(this.tickets);
+                this.setState({
+                    activeView: TicketViews.REPORTED,
+                });
+            }
+        }
+        this.forceUpdate();
     };
 
     render = () => (
@@ -196,11 +255,18 @@ export class Application extends React.Component {
                 changeActiveView={this.changeActiveView}
                 onOpenMessage={this.onOpenMessage}
                 refreshTickets={this.refreshTickets}
+                users={this.users}
                 labels={this.labels} />
             <MessagePortal
                 isMessageOpen={this.state.isMessageOpen}
                 message={this.state.message}
                 onCloseMessage={this.onCloseMessage} />
+            {
+                this.state.debug &&
+                    <ChangeUser
+                        currentUser={this.state.currentUser}
+                        onUserChange={this.onUserChange} />
+            }
             {
                 this.getActivePane()
             }

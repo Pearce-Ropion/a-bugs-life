@@ -1,6 +1,6 @@
 import { UserTypes } from '../constants/Users';
-import { PriorityLevels, SeverityLevels } from '../constants/Ticket';
-import { StatusTypes, ResolutionTypes } from '../constants/Status';
+import { PriorityLevels } from '../constants/Ticket';
+import { StatusTypes } from '../constants/Status';
 
 export const getType = (value, type) => {
     // console.log('mark', value);
@@ -12,11 +12,12 @@ export const ticketFields = ({
     id = null,
     summary = '',
     description = '',
+    comments = '',
     assignee = 'Manager',
     reporter = 'User',
     component = '',
     priority = 'Bug',
-    serverity = 'Medium',
+    severity = 'Medium',
     labels = [],
     status = 'Open',
     resolution = 'Unresolved',
@@ -28,16 +29,45 @@ export const ticketFields = ({
         id,
         summary,
         description,
-        assignee: getType(assignee, UserTypes),
-        reporter: getType(reporter, UserTypes),
+        comments,
+        assignee,
+        reporter,
         component,
-        priority: getType(priority, PriorityLevels),
-        serverity,
+        priority,
+        severity,
         labels,
-        status: getType(status, StatusTypes),
+        status,
         resolution,
         created,
         modified,
         closed,
-    }
+    };
+};
+
+export const ticketFieldErrors = ({
+    summary = false,
+    description = false,
+    comments = false,
+    assignee = false,
+    component = false,
+    priority = false,
+    severity = 'empty',
+    labels = 'empty',
+    status = false,
+    resolution = 'empty',
+}) => {
+    return {
+        id,
+        summary,
+        description,
+        comments,
+        assignee,
+        reporter,
+        component,
+        priority,
+        severity,
+        labels,
+        status,
+        resolution,
+    };
 };

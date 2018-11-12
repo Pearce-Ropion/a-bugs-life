@@ -14,6 +14,7 @@ import { UserTypes, UserProps } from '../api/constants/Users';
 import TicketProps from '../api/constants/TicketProps';
 import { sqlNormalizeTicket } from '../api/Utils';
 import Messages from '../api/constants/Messages';
+import { LabelProps } from '../api/Labels';
 
 export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Component {
     constructor(props) {
@@ -21,14 +22,18 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
         this.state = {
             isModalOpen: false,
             fields: this.getTicket(this.props.ticket),
+            isAssigneeLoading: false,
+            assigneeResults: [],
+            labels: this.props.labels.labelDropdownOptions,
         };
     };
 
     static propTypes = {
         isModal: PropTypes.bool,
         isEditable: PropTypes.bool,
-        currentUser: UserProps,
+        currentUser: PropTypes.shape(UserProps),
         ticket: PropTypes.shape(TicketProps),
+        labels: LabelProps,
         onSubmitTicket: PropTypes.func,
         refreshTickets: PropTypes.func.isRequired,
         onOpenMessage: PropTypes.func.isRequired,
@@ -45,10 +50,10 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
     getTicket = ticket => {
         const { isEditable, currentUser } = this.props;
         if (!isEditable) {
-            if (!(currentUser === UserTypes.NONE || currentUser === UserTypes.USER)) {
+            if (!(currentUser.role === UserTypes.NONE || currentUser.role === UserTypes.USER)) {
                 return ticketFields({
                     ...ticket,
-                    reporter: currentUser,
+                    reporter: currentUser.name,
                 });
             }
         }
@@ -57,17 +62,63 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
         });
     };
 
-    getFields = (ticket, fields) => ({
-        ...ticket,
-        ...fields,
-    });
-
     onFieldChange = (event, data) => {
         this.setState({
             fields: ticketFields({
                 ...this.state.fields,
                 [data.name]: data.value,
             }),
+        });
+    };
+
+    onSearchChange = (event, data) => {
+        this.setState({
+            isAssigneeLoading: true,
+            fields: ticketFields({
+                ...this.state.fields,
+                assignee: data.value,
+            }),
+        });
+
+        setTimeout(() => {
+            if (this.state.fields.assignee.length < 1) {
+                this.setState({
+                    isAssigneeLoading: false,
+                });
+            } else {
+                const re = new RegExp(_.escapeRegExp(data.value), 'i');
+                const isMatch = result => re.test(result.title);
+
+                this.setState({
+                    isAssigneeLoading: false,
+                    assigneeResults: _.filter(this.props.users.map(user => {
+                        return {
+                            title: user.name,
+                            role: user.role,
+                        };
+                    }), isMatch),
+                });
+            }
+        }, 300);
+    };
+
+    onSearchSelect = (event, data) => {
+        this.onFieldChange(event, {
+            name: data.name,
+            value: data.result.title
+        });
+    };
+
+    onAddItem = (event, data) => {
+        this.setState({
+            labels: [
+                ...this.state.labels,
+                {
+                    key: data.value,
+                    value: data.value,
+                    text: data.value,
+                },
+            ],
         });
     };
 
@@ -104,24 +155,28 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
     };
 
     render = () => {
-        // console.log('field', this.state.fields)
-        // console.log('ticket', this.props.ticket);
-        // const ticketFields = this.getTicket(this.props.ticket);
         return this.props.isModal
             ? <TicketModal
-                isEmployee={!(this.props.currentUser === UserTypes.NONE || this.props.currentUser === UserTypes.USER)}
+                isEmployee={!(this.props.currentUser.role === UserTypes.NONE || this.props.currentUser.role === UserTypes.USER)}
                 isEditable={this.props.isEditable}
                 isModalOpen={this.state.isModalOpen}
                 fields={this.state.fields}
                 onFieldChange={this.onFieldChange}
                 toggleModal={this.toggleModal}
                 onSubmit={this.onSubmit}
-                labels={this.props.labels} />
+                assigneeLoading={this.state.isAssigneeLoading}
+                assigneeResults={this.state.assigneeResults}
+                onSearchChange={this.onSearchChange}
+                onSearchSelect={this.onSearchSelect}
+                onAddItem={this.onAddItem}
+                labels={this.state.labels} />
             : <React.Fragment>
                 <Segment>
                     <Header content='Create a Ticket' />
                     <Divider fitted />
-                    <TicketForm fields={this.state.fields} onFieldChange={this.onFieldChange} />
+                    <TicketForm
+                        fields={this.state.fields}
+                        onFieldChange={this.onFieldChange} />
                 </Segment>
                 <Button fluid content='Create' onClick={this.onSubmit} primary />
             </React.Fragment>;

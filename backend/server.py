@@ -58,7 +58,7 @@ class Server(BaseHTTPRequestHandler):
 				self.wfile.write(f.read())
 				f.close()
 		except IOError:
-			self.send_error(404, 'File Not Found: %s' % self.path)
+			self.send_error(404, 'File Not Found: %s' % path)
 
 	# built into BaseHTTPRequestHandler, which runs when we receive a POST request
 	def do_POST(self):
