@@ -40,6 +40,14 @@ export const TicketForm = props => {
             props.isEmployee &&
                 <React.Fragment>
                     <Divider />
+                    <Form.TextArea
+                        autoHeight
+                        rows='5'
+                        name='comments'
+                        label='Comments'
+                        placeholder='Comments'
+                        value={props.fields.comments}
+                        onChange={props.onFieldChange} />
                     <Form.Group widths='equal'>
                         <Form.Dropdown
                             fluid

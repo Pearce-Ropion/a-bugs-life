@@ -47,6 +47,7 @@ export const sqlNormalizeTicket = (isUpdate, fields) => {
         id: isUpdate ? fields.id : null,
         summary: fields.summary,
         description: fields.description,
+        comments: fields.comments,
         assignee: fields.assignee.name,
         reporter: fields.reporter.name,
         component: fields.component,
@@ -59,27 +60,21 @@ export const sqlNormalizeTicket = (isUpdate, fields) => {
         created: isUpdate ? fields.created : getEpochTime(),
         modified: getEpochTime(),
         closed: fields.status.name === 'Closed' ? getEpochTime() : fields.closed,
-    }
+    };
 };
 
 export const sqlNormalizeUser = (isUpdate, fields) => {
-    return {
+    const user = {
         id: isUpdate ? fields.id : null,
         name: isUpdate ? fields.name : fields.firstname.concat(' ', fields.lastname),
         email: fields.email,
+        role: fields.role.name,
+    };
+    return isUpdate ? user : {
+        ...user,
         password: fields.password,
-        role: fields.role.name,
-    }
-}
-
-export const sqlNormalizeUserUpdate = fields => {
-    return {
-        id: fields.id,
-        name: fields.name,
-        email: fields.email,
-        role: fields.role.name,
-    }
-}
+    };
+};
 
 export const getStatus = status => StatusTypes[status.toUpperCase().replace(' ', '_')];
 export const getPriority = priority => PriorityLevels[priority.toUpperCase().replace(' ', '_')];

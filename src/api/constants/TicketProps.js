@@ -4,6 +4,7 @@ export default {
     id: PropTypes.number,
     summary: PropTypes.string,
     description: PropTypes.string,
+    comments: PropTypes.string,
     assignee: PropTypes.string,
     reporter: PropTypes.string,
     component: PropTypes.string,
