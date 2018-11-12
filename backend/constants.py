@@ -10,7 +10,7 @@ table_list = [tickets_table, users_table]
 
 # table attributes
 attributes = {
-    tickets_table: ['id', 'summary','description', 'assignee', 'reporter', 'component', 'priority', 'severity', 'labels', 'status', 'resolution', 'created', 'modified', 'closed'],
+    tickets_table: ['id', 'summary', 'description', 'comments', 'assignee', 'reporter', 'component', 'priority', 'severity', 'labels', 'status', 'resolution', 'created', 'modified', 'closed'],
 	users_table: ['id', 'name', 'email', 'password', 'role']
 }
 
@@ -19,6 +19,7 @@ tickets_sample_data = {
     'id': 0,
     'summary': 'sample summary',
     'description': 'sample description',
+    'comments': 'sample comments',
     'assignee': 'sample assignee',
     'reporter': 'sample reporter',
     'component': 'sample component',
