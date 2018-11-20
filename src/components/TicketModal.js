@@ -18,6 +18,7 @@ export const TicketModal = props =>
         content={
             <TicketForm
                 fields={props.fields}
+                errors={props.errors}
                 labels={props.labels}
                 isEditable={props.isEditable}
                 isEmployee={props.isEmployee}

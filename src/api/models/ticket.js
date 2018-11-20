@@ -41,16 +41,21 @@ export const ticketFields = ({
 };
 
 export const ticketFieldErrors = ({
+    id = null,
     summary = false,
     description = false,
     comments = false,
     assignee = false,
+    reporter = null,
     component = false,
     priority = false,
-    severity = 'empty',
-    labels = 'empty',
+    severity = false,
+    labels = null,
     status = false,
-    resolution = 'empty',
+    resolution = false,
+    created = null,
+    modified = null,
+    closed = null,
 }) => {
     return {
         id,
@@ -65,5 +70,8 @@ export const ticketFieldErrors = ({
         labels,
         status,
         resolution,
+        created,
+        modified,
+        closed,
     };
 };

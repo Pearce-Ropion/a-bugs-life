@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 
 import dropdownOptions from '../api/DropdownOptions';
 import TicketProps from '../api/constants/TicketProps';
-import { UserDropdownOptions } from '../api/constants/Users';
 import { sortByKey } from '../api/Utils';
 
 export const TicketForm = props => {
@@ -15,6 +14,7 @@ export const TicketForm = props => {
             label='Summary'
             placeholder='Summary'
             value={props.fields.summary}
+            error={props.errors.summary}
             onChange={props.onFieldChange} />
         {
             !props.isEditable &&
@@ -25,6 +25,7 @@ export const TicketForm = props => {
                     label='Description'
                     placeholder='Description'
                     value={props.fields.description}
+                    error={props.errors.description}
                     onChange={props.onFieldChange} />
         }
         <Form.Dropdown
@@ -37,6 +38,7 @@ export const TicketForm = props => {
             placeholder='Select Multiple or Enter Your Own'
             additionLabel='New Component: '
             value={props.fields.component}
+            error={props.errors.component}
             options={sortByKey(dropdownOptions.ComponentTypes, 'value')}
             onChange={props.onFieldChange} />
         {
@@ -50,6 +52,7 @@ export const TicketForm = props => {
                         label='Comments'
                         placeholder='Comments'
                         value={props.fields.comments}
+                        error={props.errors.comments}
                         onChange={props.onFieldChange} />
                     <Form.Group widths='equal'>
                         <Form.Field fluid
@@ -59,6 +62,7 @@ export const TicketForm = props => {
                             placeholder='Assginee'
                             loading={props.assigneeLoading}
                             value={props.fields.assignee}
+                            error={props.errors.assignee}
                             onSearchChange={props.onSearchChange}
                             onResultSelect={props.onSearchSelect}
                             results={props.assigneeResults} />
@@ -76,6 +80,7 @@ export const TicketForm = props => {
                             icon='search'
                             onAddItem={props.onAddItem}
                             value={props.fields.labels}
+                            error={props.errors.labels}
                             options={props.labels}
                             onChange={props.onFieldChange} />
                     </Form.Group>
@@ -87,6 +92,7 @@ export const TicketForm = props => {
                             label='Priority'
                             placeholder='Priority'
                             value={props.fields.priority}
+                            error={props.errors.priority}
                             options={dropdownOptions.PriorityLevels}
                             onChange={props.onFieldChange} />
                         <Form.Dropdown
@@ -96,6 +102,7 @@ export const TicketForm = props => {
                             label='Severity'
                             placeholder='Severity'
                             value={props.fields.severity}
+                            error={props.errors.severity}
                             options={dropdownOptions.SeverityLevels}
                             onChange={props.onFieldChange} />
                     </Form.Group>
@@ -107,6 +114,7 @@ export const TicketForm = props => {
                             label='Status'
                             placeholder='Status'
                             value={props.fields.status}
+                            error={props.errors.status}
                             options={dropdownOptions.StatusTypes}
                             onChange={props.onFieldChange} />
                     </Form.Group>
@@ -124,5 +132,6 @@ TicketForm.propTypes = {
     isEditable: PropTypes.bool,
     isEmployee: PropTypes.bool,
     fields: PropTypes.shape(TicketProps),
+    errors: PropTypes.objectOf(PropTypes.bool),
     onFieldChange: PropTypes.func,
 }

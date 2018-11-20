@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Button, Header, Message, Divider } from 'semantic-ui-react';
+import { Segment, Button, Header, Divider } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { withAxios } from 'react-axios';
@@ -9,8 +9,8 @@ import _ from 'lodash';
 import { TicketModal } from './TicketModal';
 import { TicketForm } from './TicketForm';
 
-import { ticketFields } from '../api/models/ticket';
-import { UserTypes, UserProps } from '../api/constants/Users';
+import { ticketFields, ticketFieldErrors } from '../api/models/ticket';
+import { UserTypes, CurrentUserProps } from '../api/constants/Users';
 import TicketProps from '../api/constants/TicketProps';
 import { sqlNormalizeTicket } from '../api/Utils';
 import Messages from '../api/constants/Messages';
@@ -22,6 +22,7 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
         this.state = {
             isModalOpen: false,
             fields: this.getTicket(this.props.ticket),
+            errors: ticketFieldErrors({}),
             isAssigneeLoading: false,
             assigneeResults: [],
             labels: this.props.labels.labelDropdownOptions,
@@ -31,13 +32,13 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
     static propTypes = {
         isModal: PropTypes.bool,
         isEditable: PropTypes.bool,
-        currentUser: PropTypes.shape(UserProps),
+        currentUser: PropTypes.shape(CurrentUserProps),
         ticket: PropTypes.shape(TicketProps),
         labels: LabelProps,
         onSubmitTicket: PropTypes.func,
         refreshTickets: PropTypes.func.isRequired,
         onOpenMessage: PropTypes.func.isRequired,
-    }
+    };
 
     componentDidUpdate = (prevProps, prevState) => {
         if (this.props.ticket !== prevProps.ticket) {
@@ -129,7 +130,23 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
     };
 
     validateForm = () => {
-        return true;
+        const newError = ticketFieldErrors({});
+        Object.entries(this.state.fields).forEach(([key, field]) => {
+            if (key === 'summary' || key === 'description' || key === 'component') {
+                if (!field.length) {
+                    newError[key] = true;
+                }
+            }
+            if (this.props.currentUser.role !== UserTypes.NONE) {
+                if (key === 'assignee') {
+                    newError[key] = true;
+                }
+            }
+        });
+        this.setState({
+            error: newError,
+        });
+        return !Object.values(newError).includes(true);
     };
 
     onSubmit = () => {
@@ -161,6 +178,7 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
                 isEditable={this.props.isEditable}
                 isModalOpen={this.state.isModalOpen}
                 fields={this.state.fields}
+                errors={this.state.errors}
                 onFieldChange={this.onFieldChange}
                 toggleModal={this.toggleModal}
                 onSubmit={this.onSubmit}
@@ -176,6 +194,7 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
                     <Divider fitted />
                     <TicketForm
                         fields={this.state.fields}
+                        errors={this.state.errors}
                         onFieldChange={this.onFieldChange} />
                 </Segment>
                 <Button fluid content='Create' onClick={this.onSubmit} primary />
