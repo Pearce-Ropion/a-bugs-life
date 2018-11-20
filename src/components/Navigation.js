@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { LoginHandler } from './login/LoginHandler';
 import { UserTypes } from '../api/constants/Users';
 import { TicketHandler } from './TicketHandler';
-import { Panes } from '../api/constants/Panes';
+import { Panes, TicketViews } from '../api/constants/Panes';
 
 import { getUser } from '../api/Utils';
 
@@ -18,15 +18,35 @@ export const Navigation = props =>
             {
                 props.isLoggedIn && props.currentUser.role !== UserTypes.USER &&
                     <React.Fragment>
-                        <Button basic inverted content='Dashboard' name='dashboard' onClick={props.changeActivePane} />
-                        <Button basic inverted content='View All' name='all' onClick={props.changeActiveView} />
-                        <Button basic inverted content='Assigned' name='assigned' onClick={props.changeActiveView} />
-                        <Button basic inverted content='Reported' name='reported' onClick={props.changeActiveView} />
+                        <Button basic inverted 
+                            color={props.activePane === Panes.DASHBOARD ? 'olive' : null}
+                            content='Dashboard'
+                            name='dashboard'
+                            onClick={props.changeActivePane} />
+                        <Button basic inverted
+                            color={props.activeView === TicketViews.ALL ? 'olive' : null}
+                            content='View All'
+                            name='all'
+                            onClick={props.changeActiveView} />
+                        <Button basic inverted
+                            color={props.activeView === TicketViews.ASSIGNED ? 'olive' : null}
+                            content='Assigned'
+                            name='assigned'
+                            onClick={props.changeActiveView} />
+                        <Button basic inverted
+                            color={props.activeView === TicketViews.REPORTED ? 'olive' : null}
+                            content='Reported'
+                            name='reported'
+                            onClick={props.changeActiveView} />
                     </React.Fragment>
             }
             {
                 props.currentUser.role === UserTypes.MANAGER &&
-                    <Button basic inverted content='Users' name='users' onClick={props.changeActivePane} />
+                    <Button basic inverted
+                        color={props.activePane === Panes.USERS ? 'olive' : null}
+                        content='Users'
+                        name='users'
+                        onClick={props.changeActivePane} />
             }
         </Grid.Column>
         <Grid.Column width={6} className='right'>

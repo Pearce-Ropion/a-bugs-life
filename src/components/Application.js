@@ -241,6 +241,7 @@ export class Application extends React.Component {
         <React.Fragment>
             <Navigation
                 activePane={this.state.activePane}
+                activeView={this.state.activeView}
                 currentUser={this.state.currentUser}
                 isLoggedIn={this.state.isLoggedIn} 
                 isLoginModalOpen={this.state.isLoginModalOpen}
