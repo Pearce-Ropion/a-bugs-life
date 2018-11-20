@@ -1,7 +1,6 @@
 import React from 'react';
-import { Grid, Button, Message, Dimmer, Loader, Segment } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { Post } from 'react-axios';
+import { Grid, Message, Segment } from 'semantic-ui-react';
 import memoize from 'memoize-one';
 
 import { TicketList } from '../TicketList';
