@@ -46,7 +46,7 @@ export const TicketMenu = props =>
                     }).status}
                     onOpenMessage={props.onOpenMessage}
                     refreshTickets={props.refreshTickets} />
-                { !props.ticket.closed && <ResolutionEditor
+                { props.ticket.status !== 'Closed' && <ResolutionEditor
                     type='dropdown'
                     ticket={props.ticket}
                     original={ticketFields({

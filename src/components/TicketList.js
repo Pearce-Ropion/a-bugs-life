@@ -44,4 +44,5 @@ TicketList.defaultProps = {
 
 TicketList.propTypes = {
     tickets: PropTypes.objectOf(PropTypes.shape(TicketProps)),
+    changeTicket: PropTypes.func.isRequired,
 }

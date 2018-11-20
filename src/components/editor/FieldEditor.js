@@ -21,12 +21,14 @@ export const FieldEditor = withAxios(class AxiosFieldEditor extends React.Compon
         content: PropTypes.string.isRequired,
         onOpenMessage: PropTypes.func.isRequired,
         refreshTickets: PropTypes.func.isRequired,
+        extraUpdates: PropTypes.object,
     }
 
     onUpdate = () => {
         const ticket = ticketFields({
             ...this.props.ticket,
             [this.props.field]: this.props.value,
+            ...this.props.extraUpdates,
         });
         const normalized = sqlNormalizeTicket(true, ticket);
 
