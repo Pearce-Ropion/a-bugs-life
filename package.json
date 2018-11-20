@@ -23,6 +23,8 @@
 	},
 	"dependencies": {
 		"@babel/polyfill": "^7.0.0",
+		"@nivo/bar": "^0.51.5",
+		"@nivo/pie": "^0.51.0",
 		"axios": "^0.18.0",
 		"bcrypt": "^3.0.2",
 		"email-validator": "^2.0.4",
