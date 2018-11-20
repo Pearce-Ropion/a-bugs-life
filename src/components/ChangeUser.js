@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Portal, Segment, Dropdown } from 'semantic-ui-react';
-import { UserProps } from '../api/constants/Users';
+import { CurrentUserProps } from '../api/constants/Users';
 
 export const ChangeUser = props =>
     <Portal open={true}>
-        <Segment style={{ width: '25%', position: 'fixed', bottom: '3%', top: 'auto', zIndex: 1000, right: '3%' }}>
+        <Segment style={{ width: '13%', position: 'fixed', bottom: '3%', top: 'auto', zIndex: 1000, right: '3%' }}>
             <Dropdown selection search fluid compact
                 options={[
                     { key: 'manager', value: 'Manager', text: 'Manager' },
@@ -21,6 +21,6 @@ export const ChangeUser = props =>
 
 
 ChangeUser.propTypes = {
-    currentUser: PropTypes.shape(UserProps).isRequired,
+    currentUser: PropTypes.shape(CurrentUserProps).isRequired,
     onUserChange: PropTypes.func.isRequired,
 };
