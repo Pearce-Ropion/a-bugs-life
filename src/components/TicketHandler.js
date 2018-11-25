@@ -135,11 +135,13 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
             if (key === 'summary' || key === 'description' || key === 'component') {
                 if (!field.length) {
                     newError[key] = true;
+                    console.log('error detected at: ', key);
                 }
             }
             if (this.props.currentUser.role !== UserTypes.NONE) {
-                if (key === 'assignee') {
+                if (key === 'assignee' && !field.length) {
                     newError[key] = true;
+                    console.log('error detected at: ', key);
                 }
             }
         });
