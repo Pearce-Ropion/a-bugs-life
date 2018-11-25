@@ -1,7 +1,10 @@
+/* eslint-disable react/display-name */
 import React from 'react';
 import { Popup, Icon } from 'semantic-ui-react';
+import { getPriority } from '../../../api/Utils';
 
-export const cellFormatter = () => ({name, icon}) => {
+export const cellFormatter = () => data => {
+    const { name, icon} = getPriority(data);
     return (
         <Popup
             content={name}

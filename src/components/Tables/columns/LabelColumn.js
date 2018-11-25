@@ -1,10 +1,11 @@
+/* eslint-disable react/display-name */
 import React from 'react';
-import { Popup, Icon } from 'semantic-ui-react';
 
-import { EpicTag } from '../../Tags';
+import { StatusTag } from '../../Tags';
+import { getStatus } from '../../../api/Utils';
 
-export const cellFormatter = () => ({ epic }) => {
-    <EpicTag epic={epic} />
+export const cellFormatter = () => data => {
+    return <StatusTag name={data} />
 }
 
 export default ({ property, className = 'tiny centered', }) => {
