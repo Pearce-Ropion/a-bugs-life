@@ -29,7 +29,7 @@ export class UsersPane extends React.Component {
     onUpdateRole = (event, data) => {
         const user = sqlNormalizeUser(true, {
             ...this.props.users.find(next => next.id === data.id),
-            role: getUser(data.value),
+            role: getRole(data.value),
         });
         axios.post('api/users/update', user)
             .then(response => {

@@ -7,8 +7,6 @@ import { UserTypes } from '../api/constants/Users';
 import { TicketHandler } from './TicketHandler';
 import { Panes, TicketViews } from '../api/constants/Panes';
 
-import { getUser } from '../api/Utils';
-
 export const Navigation = props =>
     <Grid id='heading' padded>
         <Grid.Column width={10}>
@@ -70,7 +68,9 @@ export const Navigation = props =>
                 loginError={props.loginError}
                 onLogin={props.onLogin}
                 onLogout={props.onLogout}
+                onOpenMessage={props.onOpenMessage}
                 onCreateUser={props.onCreateUser}
+                refreshUsers={props.refreshUsers}
                 toggleLoginModal={props.toggleLoginModal}
                 toggleUserModal={props.toggleUserModal} />
         </Grid.Column>
