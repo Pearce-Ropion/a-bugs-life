@@ -8,20 +8,21 @@ import { DetailsPane } from './panes/DetailsPane';
 
 import { UserTypes } from '../api/constants/Users';
 import { Panes, TicketViews } from '../api/constants/Panes';
-import { getUser } from '../api/Utils';
+import { getRole } from '../api/Utils';
 import { getAllLabels } from '../api/Labels';
 import { UsersPane } from './panes/UsersPane';
 import { getTickets, getUsers } from '../api/getData';
 import { MessagePortal } from './MessagePortal';
 import Messages from '../api/constants/Messages';
 import { ChangeUser } from './ChangeUser';
+import { DashboardPane } from './panes/DashboardPane';
 
 export class Application extends React.Component {
     constructor(props) {
         super(props);
         this.tickets = [];
         this.users = [];
-        this.labels = [];
+        this.labels = {};
         this.state = {
             debug: true,
             isMessageOpen: false,
@@ -40,6 +41,7 @@ export class Application extends React.Component {
             },
             activePane: Panes.CREATE,
             activeView: TicketViews.NONE,
+            activeTicket: 1,
         }
     }
 
@@ -111,7 +113,7 @@ export class Application extends React.Component {
                     this.setState({
                         currentUser: {
                             ...response.user,
-                            role: getUser(response.user.role),
+                            role: getRole(response.user.role),
                         },
                         isLoggedIn: true,
                         isLoginModalOpen: false,
@@ -120,7 +122,7 @@ export class Application extends React.Component {
                         activeView: TicketViews.ALL,
                     });
 
-                    if (getUser(response.user.role) === UserTypes.USER) {
+                    if (getRole(response.user.role) === UserTypes.USER) {
                         this.setState({
                             activeView: TicketViews.REPORTED,
                         });
@@ -170,7 +172,12 @@ export class Application extends React.Component {
     getActivePane = () => {
         const { activePane } = this.state;
         if (activePane === Panes.CREATE) {
-            return <CreatePane users={this.users} labels={this.labels} currentUser={this.state.currentUser} onOpenMessage={this.onOpenMessage} refreshTickets={this.refreshTickets} />
+            return <CreatePane
+                users={this.users}
+                labels={this.labels}
+                currentUser={this.state.currentUser}
+                onOpenMessage={this.onOpenMessage}
+                refreshTickets={this.refreshTickets} />
         } else if (activePane === Panes.DETAILS) {
             return <DetailsPane
                 view={this.state.activeView}
@@ -179,12 +186,16 @@ export class Application extends React.Component {
                 refreshTickets={this.refreshTickets}
                 tickets={this.tickets}
                 users={this.users}
-                labels={this.labels} />
+                labels={this.labels}
+                onChangeTicket={this.onChangeTicket}
+                activeTicket={this.state.activeTicket} />
         } else if (activePane === Panes.USERS) {
             return <UsersPane
                 users={this.users}
                 onOpenMessage={this.onOpenMessage}
                 refreshUsers={this.refreshUsers} />
+        } else if (activePane === Panes.DASHBOARD) {
+            return <DashboardPane tickets={this.tickets} onOpenTicket={this.onChangeTicket} />
         }
         return null;
     };
@@ -193,6 +204,7 @@ export class Application extends React.Component {
         this.setState({
             activePane: Panes[data.name.toUpperCase()],
             activeView: TicketViews.NONE,
+            activeTicket: 0,
         });
     };
 
@@ -200,6 +212,7 @@ export class Application extends React.Component {
         this.setState({
             activePane: Panes.DETAILS,
             activeView: TicketViews[data.name.toUpperCase()],
+            activeTicket: 0,
         });
     };
 
@@ -219,7 +232,7 @@ export class Application extends React.Component {
             this.setState({
                 currentUser: {
                     ...user,
-                    role: getUser(user.role),
+                    role: getRole(user.role),
                 },
                 isLoggedIn: true,
                 loginError: false,
@@ -227,7 +240,7 @@ export class Application extends React.Component {
                 activeView: TicketViews.ALL,
             });
 
-            if (getUser(user.role) === UserTypes.USER) {
+            if (getRole(user.role) === UserTypes.USER) {
                 console.log(this.tickets);
                 this.setState({
                     activeView: TicketViews.REPORTED,
@@ -236,6 +249,14 @@ export class Application extends React.Component {
         }
         this.forceUpdate();
     };
+
+    onChangeTicket = id => {
+        this.setState({
+            activePane: Panes.DETAILS,
+            activeView: TicketViews.ALL,
+            activeTicket: id,
+        });
+    }
 
     render = () => (
         <React.Fragment>
@@ -255,6 +276,7 @@ export class Application extends React.Component {
                 changeActivePane={this.changeActivePane}
                 changeActiveView={this.changeActiveView}
                 onOpenMessage={this.onOpenMessage}
+                refreshUsers={this.refreshUsers}
                 refreshTickets={this.refreshTickets}
                 users={this.users}
                 labels={this.labels} />
