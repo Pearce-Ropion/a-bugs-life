@@ -5,12 +5,13 @@ import { Segment, Button } from 'semantic-ui-react';
 import { TicketHandler } from './TicketHandler';
 import TicketProps from '../api/constants/TicketProps';
 import { AssigneeEditor } from './editor/Assignee';
-import { UserProps, UserTypes } from '../api/constants/Users';
+import { UserProps, UserTypes, CurrentUserProps } from '../api/constants/Users';
 import { ticketFields } from '../api/models/ticket';
 import { FieldEditor } from './editor/FieldEditor';
 import { StatusEditor } from './editor/Status';
 import { ResolutionEditor } from './editor/Resolution';
 import { ResolutionTypes, StatusTypes } from '../api/constants/Status';
+import { LabelProps } from '../api/Labels';
 
 export const TicketMenu = props =>
     <Segment.Group id='ticket-menu'>
@@ -100,8 +101,8 @@ export const TicketMenu = props =>
 TicketMenu.propTypes = {
     users: PropTypes.arrayOf(PropTypes.shape(UserProps)),
     ticket: PropTypes.shape(TicketProps),
-    labels: PropTypes.arrayOf(PropTypes.string),
-    currentUser: PropTypes.shape(UserProps),
+    labels: LabelProps,
+    currentUser: PropTypes.shape(CurrentUserProps),
     onOpenMessage: PropTypes.func.isRequired,
     refreshTickets: PropTypes.func.isRequired,
 };

@@ -31,7 +31,7 @@ export const EditorHandler = withAxios(class AxiosEditorHandler extends React.Co
         type: PropTypes.string.isRequired,
         original: PropTypes.string.isRequired,
         ticket: PropTypes.shape(TicketProps).isRequired,
-        values: PropTypes.arrayOf(PropTypes.string),
+        values: PropTypes.array,
         content: PropTypes.func.isRequired,
         property: PropTypes.string.isRequired,
         onOpenMessage: PropTypes.func.isRequired,
