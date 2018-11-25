@@ -7,9 +7,12 @@ import TicketProps from '../api/constants/TicketProps';
 import { StatusTag, TicketTag } from './Tags';
 
 export const TicketDetails = props =>
-    <Grid padded='vertically'>
+    <Grid padded='horizontally'>
         <Grid.Row columns={1}>
-            <Header content={props.ticket.summary} />
+            <Header>
+                {props.ticket.summary}
+                <Header.Subheader content={`Ticket #: ${props.ticket.id}`} />
+            </Header>
         </Grid.Row>
         <Grid.Row columns={3}>
             <Grid.Column>
