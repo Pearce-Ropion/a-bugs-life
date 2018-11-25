@@ -49,6 +49,11 @@ export const sqlNormalizeUser = (isUpdate, fields) => {
     };
 };
 
+export const getTicketKey = {
+    status: status => StatusTypes[status.toUpperCase().replace(' ', '_')],
+    priority: priority => PriorityLevels[priority.toUpperCase().replace(' ', '_')],
+};
+
 export const getStatus = status => StatusTypes[status.toUpperCase().replace(' ', '_')];
 export const getPriority = priority => PriorityLevels[priority.toUpperCase().replace(' ', '_')];
-export const getUser = user => UserTypes[user.toUpperCase().replace(' ', '_')];
+export const getRole = role => UserTypes[role.toUpperCase().replace(' ', '_')];

@@ -12,13 +12,12 @@ export const PriorityPopup = props => {
         content={priority.name}
         trigger={<List.Icon {...priority.icon} size='large' vertically='middle' />} />
 }
-    
 
 export const TicketList = props =>
-    <Segment style={{ borderRadius: 0, overflowY: 'scroll', height: 'calc(100vh - 64px)' }}>
+    <Segment style={{ borderRadius: 0, overflowY: 'scroll', height: 'calc(100vh - 69px - 68px)' }}>
         <List divided relaxed='very'>
             {
-                Object.values(props.tickets).map(ticket =>
+                props.tickets.map(ticket =>
                     <List.Item key={`ticket-${ticket.id}`}>
                         <PriorityPopup priority={ticket.priority} />
                         <List.Content>
@@ -38,11 +37,7 @@ export const TicketList = props =>
         </List>
     </Segment>
 
-TicketList.defaultProps = {
-    tickets: [],
-}
-
 TicketList.propTypes = {
-    tickets: PropTypes.objectOf(PropTypes.shape(TicketProps)),
-    changeTicket: PropTypes.func.isRequired,
-}
+    tickets: PropTypes.arrayOf(PropTypes.shape(TicketProps)).isRequired,
+    changeTicket: PropTypes.func.isRequired
+};
