@@ -15,7 +15,7 @@ const randomType = (obj, skip = 0) => {
 }
 
 const randomString = (count, fn) => new Array(count).fill(0).map(() => capitalize(fn()));
-const randomDate = () => moment(new Date(randomNumber(2005, 2018), randomNumber(0, 11), randomNumber(0, 29), randomNumber(0, 23), randomNumber(0, 59)));
+const randomDate = () => moment(new Date(randomNumber(2005, 2018), randomNumber(0, 10), randomNumber(0, 24), randomNumber(0, 23), randomNumber(0, 59)));
 
 export const genData = () => {
     const date = randomDate();
