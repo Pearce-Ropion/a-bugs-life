@@ -1,28 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Message, Segment, Input, Dropdown, Button, Divider, Container } from 'semantic-ui-react';
+import { Grid, Message, Segment, Divider } from 'semantic-ui-react';
 import _ from 'lodash';
 import memoize from 'memoize-one';
 
-import { TicketList } from '../TicketList';
-import { TicketDetails } from '../TicketDetails';
+import { TicketList } from '../details/TicketList';
+import { TicketDetails } from '../details/TicketDetails';
+import { TicketMenu } from '../details/TicketMenu';
+import { TicketSorter } from '../details/TicketSorter';
+import { TicketSearch } from '../details/TicketSearch';
+
 import TicketProps from '../../api/constants/TicketProps';
+import { LabelProps } from '../../api/Labels';
 import { TicketViews } from '../../api/constants/Panes';
-import { UserTypes, CurrentUserProps } from '../../api/constants/Users';
-import { TicketMenu } from '../TicketMenu';
-import { TicketSorter } from '../TicketSorter';
+import { UserTypes, CurrentUserProps, UserProps } from '../../api/constants/Users';
 import { sortDDoptions, sortOptions } from '../../api/DropdownOptions';
 import { getTicketKey } from '../../api/Utils';
-import { LabelProps } from '../../api/Labels';
 
 export class DetailsPane extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             sortBy: '',
-            searching: false,
+            isSearching: false,
             search: {
-                search: '',
+                string: '',
                 category: '',
             },
         };
@@ -31,35 +33,35 @@ export class DetailsPane extends React.Component {
     static propTypes = {
         currentUser: PropTypes.shape(CurrentUserProps),
         tickets: PropTypes.arrayOf(PropTypes.shape(TicketProps)),
-        activeTicket: PropTypes.number.isRequired,
+        activeTicket: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
         labels: LabelProps,
         view: PropTypes.oneOf(Object.values(TicketViews)),
+        users: PropTypes.shape(UserProps),
+        onOpenMessage: PropTypes.func.isRequired,
+        refreshTickets: PropTypes.func.isRequired,
         onChangeTicket: PropTypes.func.isRequired,
     };
     
-    filterTickets = tickets => {
-        const { view } = this.props;
+    filterTickets = memoize((tickets, view, currentUser, searchString, searchCategory, isSearching, sortBy) => {
         let filtered = [];
-        // const filteredTickets = {};
 
         if (view === TicketViews.ALL) {
             filtered = tickets;
         } else if (view === TicketViews.ASSIGNED) {
-            filtered = tickets.filter(ticket => ticket.assignee === this.props.currentUser.name || ticket.assignee === this.props.currentUser.role.name);
+            filtered = tickets.filter(ticket => ticket.assignee === currentUser.name || ticket.assignee === currentUser.role.name);
         } else if (view === TicketViews.REPORTED) {
-            filtered = tickets.filter(ticket => ticket.reporter === this.props.currentUser.name || ticket.reporter === 'Anonymous' || ticket.reporter === this.props.currentUser.role.name);
+            filtered = tickets.filter(ticket => ticket.reporter === currentUser.name || ticket.reporter === 'Anonymous' || ticket.reporter === currentUser.role.name);
         }
 
-        if (this.state.search.search !== '' && this.state.searching) {
-            const re = new RegExp(_.escapeRegExp(this.state.search.search), 'i');
-            filtered = _.filter(filtered, ticket => re.test(ticket[this.state.search.category]));
+        if (searchString !== '' && isSearching) {
+            const re = new RegExp(_.escapeRegExp(searchString), 'i');
+            filtered = _.filter(filtered, ticket => re.test(ticket[searchCategory]));
         }
 
         if (!filtered) {
             filtered = [];
         } else {
-            const { sortBy } = this.state;
-            filtered = this.sortTickets(filtered, this.state.sortBy.length ? this.state.sortBy : 'modified');
+            filtered = this.sortTickets(filtered, sortBy.length ? sortBy : 'modified');
             if (!sortBy.length || sortBy === 'modified' || sortBy === 'created') {
                 filtered.reverse();
             }
@@ -68,7 +70,7 @@ export class DetailsPane extends React.Component {
         filtered.forEach(ticket => filterTickets.set(ticket.id, ticket));
 
         return filterTickets;
-    };
+    });
 
     changeTicket = (event, data) => {
         this.props.onChangeTicket(data.ticketid);
@@ -80,25 +82,19 @@ export class DetailsPane extends React.Component {
         });
     };
 
-    sortTickets = (tickets, category) =>
+    sortTickets = memoize((tickets, category) =>
         sortOptions[category] === 'base'
             ? _.sortBy(tickets, [category])
-            : _.sortBy(tickets, [ticket => getTicketKey[category](ticket[category])[sortOptions[category]]]);
+            : _.sortBy(tickets, [ticket => getTicketKey[category](ticket[category])[sortOptions[category]]]));
         
-
-    onSearchChange = (event, data) => {
-        this.setState({
-            search: {
-                ...this.state.search,
-                [data.name]: data.value,
-            },
-        });
-    };
-
-    onSearch = () => {
-        if (this.state.search.search !== '') {
+    onSearch = (string, category) => {
+        if (string !== '' && category !== '') {
             this.setState({
-                searching: true,
+                search: {
+                    string,
+                    category,
+                },
+                isSearching: true,
             });
         }
     };
@@ -106,57 +102,43 @@ export class DetailsPane extends React.Component {
     clearSearch = () => {
         this.setState({
             search: {
-                search: '',
+                string: '',
                 category: '',
             },
-            searching: false,
+            isSearching: false,
         });
     };
 
     render = () => {
         const categoryOptions = sortDDoptions();
-        console.log(categoryOptions);
         let { activeTicket } = this.props;
-        // console.log(activeTicket);
-        const filtered = this.filterTickets(this.props.tickets) // Map
-        const tickets = [...filtered.values()]; // Array
-        if (tickets.length) {
-            if (![...filtered.keys()].includes(activeTicket)) {
-                activeTicket = tickets[0].id;
+        if (typeof activeTicket === 'string') {
+            activeTicket = parseInt(activeTicket, 10);
+        }
+        const filtered = this.filterTickets(
+            this.props.tickets,
+            this.props.view,
+            this.props.currentUser,
+            this.state.search.string,
+            this.state.search.category,
+            this.state.isSearching,
+            this.state.sortBy
+        ); // Map
+        if (filtered.size) {
+            if (!filtered.has(activeTicket) || activeTicket === -1) {
+                activeTicket = filtered.keys().next().value;
             }
             return <Grid centered id='details'>
                 <Grid.Column width={4} style={{ paddingBottom: '0' }}>
                     <Segment.Group>
                         <TicketSorter sortCategory={this.state.sortBy} categoryOptions={categoryOptions} onSortChange={this.onSortChange} />
-                        <TicketList tickets={tickets} changeTicket={this.changeTicket} />
+                        <TicketList tickets={[...filtered.values()]} changeTicket={this.changeTicket} activeTicket={activeTicket} />
                     </Segment.Group>
                 </Grid.Column>
                 <Grid.Column width={this.props.currentUser.role === UserTypes.USER ? 12 : 9} style={{ paddingBottom: '0' }}>
                     <Segment.Group style={{ border: 'none', WebkitBoxShadow: 'none', boxShadow: 'none' }}>
                         <Segment basic>
-                            <Container>
-                                <Input fluid
-                                    value={this.state.search.search}
-                                    placeholder='Search...'
-                                    name='search'
-                                    onChange={this.onSearchChange}
-                                    action={
-                                        <React.Fragment>
-                                            <Dropdown compact selection button
-                                                name='category'
-                                                placeholder='category'
-                                                content='Category'
-                                                value={this.state.search.category}
-                                                options={categoryOptions.slice(0, 4).concat(categoryOptions.slice(6, 8))}
-                                                onChange={this.onSearchChange} />
-                                            {
-                                                this.state.searching
-                                                    ? <Button content='Clear' icon='close' labelPosition='right' color='red' onClick={this.clearSearch} />
-                                                    : <Button content='Search' icon='search' labelPosition='right' color='teal' onClick={this.onSearch} />
-                                            }
-                                        </React.Fragment>
-                                    } />
-                            </Container>
+                            <TicketSearch isSearching={this.state.isSearching} onSearch={this.onSearch} clearSearch={this.clearSearch} />
                         </Segment>
                         <Divider fitted />
                         <Segment basic padded>
