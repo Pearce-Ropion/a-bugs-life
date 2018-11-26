@@ -1,3 +1,6 @@
+# Vineet Joshi
+# This is a class file for Server, which extends the BaseHTTPRequestHandler class and overrides the callback methods for GET and POST requests.
+
 # import standard Python libraries
 from BaseHTTPServer import BaseHTTPRequestHandler
 from io import open
