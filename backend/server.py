@@ -17,46 +17,21 @@ class Server(BaseHTTPRequestHandler):
 		# load fonts properly
 		# https://stackoverflow.com/questions/40867447/python-simple-http-server-not-loading-font-awesome-fonts
 		try:
-			sendReply = False
-			if path.endswith(".html"):
-				mimetype = 'text/html'
-				sendReply = True
-			if path.endswith(".jpg"):
-				mimetype = 'image/jpg'
-				sendReply = True
-			if path.endswith(".png"):
-				mimetype = 'image/png'
-				sendReply = True
-			if path.endswith(".gif"):
-				mimetype = 'image/gif'
-				sendReply = True
-			if path.endswith(".svg"):
-				mimetype = 'image/svg+xml'
-				sendReply = True
-			if path.endswith(".css"):
-				mimetype = 'text/css'
-				sendReply = True
-			if path.endswith(".js"):
-				mimetype = 'application/javascript'
-				sendReply = True
-			if path.endswith(".ttf"):
-				mimetype = 'application/x-font-ttf'
-				sendReply = True
-			if path.endswith(".otf"):
-				mimetype = 'application/x-font-opentype'
-				sendReply = True
-			if path.endswith(".woff"):
-				mimetype = 'application/font-woff'
-				sendReply = True
-
-			if sendReply == True:
-				#Open the static file requested and send it
-				f = open(path, 'rb')
-				self.send_response(200)
-				self.send_header('Content-type', mimetype)
-				self.end_headers()
-				self.wfile.write(f.read())
-				f.close()
+			lookup = c.pathend_to_mimetype
+			for key in lookup:
+				extension = '.' + key
+				if path.endswith(extension):
+					mimetype = lookup[key]
+					
+					# open the static file requested and send it
+					f = open(path, 'rb')
+					self.send_response(200)
+					self.send_header('Content-type', mimetype)
+					self.end_headers()
+					self.wfile.write(f.read())
+					f.close()
+                    
+					break
 		except IOError:
 			self.send_error(404, 'File Not Found: %s' % path)
 
@@ -80,8 +55,6 @@ class Server(BaseHTTPRequestHandler):
 			content_length = int(self.headers['Content-Length'])
 			if content_length > 0:
 				post_body_bytes = self.rfile.read(content_length)
-				# no need for replacing because we will assume data based in will have double quotes
-				# json_string = post_body_bytes.decode('utf8').replace("'", '"')
 				json_string = post_body_bytes.decode('utf8')
 				data = json.loads(json_string)
 			

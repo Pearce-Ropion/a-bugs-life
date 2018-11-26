@@ -52,3 +52,17 @@ build_path = '../build'
 
 # the current environment ('dev' or 'build'), which will be set after server.py runs
 environment = None
+
+# the mapping from path end to mimetype (used to load fonts properly)
+pathend_to_mimetype = {
+	"html": "text/html",
+	"jpg": "image/jpg",
+	"png": "image/png",
+	"gif": "image/gif",
+	"svg": "image/svg+xml",
+	"css": "text/css",
+	"js": "application/javascript",
+	"ttf": "application/x-font-ttf",
+	"otf": "application/x-font-opentype",
+	"woff": "application/font-woff"
+}
