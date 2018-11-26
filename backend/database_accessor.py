@@ -43,9 +43,12 @@ def insert_into_db(data, table_name):
 	command = command[:-1]
 	
 	command += ') VALUES('
+	
 	# insert '?,' for each of the attributes in the table
 	# IMPORTANT: by parameterizing the query, this avoids SQL injection!
+	# (see Python docs: https://docs.python.org/2/library/sqlite3.html)
 	command += ('?,' * len(attributes_list))
+	
 	command = command[:-1]
 	command += ')'
 
