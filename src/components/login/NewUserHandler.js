@@ -9,6 +9,7 @@ import { withAxios } from 'react-axios';
 import { NewUserForm } from './NewUserForm';
 import { userFields, userFieldsError } from '../../api/models/user';
 import { sqlNormalizeUser } from '../../api/Utils';
+import Messages from '../../api/constants/Messages';
 
 export const NewUserHandler = withAxios(class AxiosNewUserHandler extends React.Component {
     constructor(props) {
@@ -30,6 +31,8 @@ export const NewUserHandler = withAxios(class AxiosNewUserHandler extends React.
     static propTypes = {
         isUserModalOpen: PropTypes.bool,
         toggleUserModal: PropTypes.func.isRequired,
+        onOpenMessage: PropTypes.func.isRequired,
+        refreshUsers: PropTypes.func.isRequired,
         onCreateUser: PropTypes.func.isRequired,
     }
 
@@ -114,6 +117,8 @@ export const NewUserHandler = withAxios(class AxiosNewUserHandler extends React.
                 .then(response => {
                     this.toggleUserModal();
                     this.props.onCreateUser(true);
+                    this.props.onOpenMessage(Messages.CREATE_USER_SUCCESS);
+                    this.props.refreshUsers();
                 })
                 .catch(err => console.warn(err))
             // bcrypt.hash(this.state.fields.password, 10)

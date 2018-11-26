@@ -55,6 +55,10 @@ export class LoginHandler extends React.Component {
         }
     };
 
+    onCreateUser = () => {
+        this.toggleLoginModal();
+    }
+
     render = () => {
         return <Modal
             size='mini'
@@ -69,7 +73,13 @@ export class LoginHandler extends React.Component {
             content={
                 <React.Fragment>
                     <LoginForm fields={this.state.fields} error={this.state.error} loginError={this.props.loginError} onFieldChange={this.onFieldChange} />
-                    <NewUserHandler key='create-login-modal' isUserModalOpen={this.props.isUserModalOpen} toggleUserModal={this.props.toggleUserModal} onCreateUser={this.props.onCreateUser} />
+                    <NewUserHandler 
+                        key='create-login-modal' 
+                        isUserModalOpen={this.props.isUserModalOpen} 
+                        toggleUserModal={this.props.toggleUserModal} 
+                        onOpenMessage={this.props.onOpenMessage} 
+                        refreshUsers={this.props.refreshUsers}
+                        onCreateUser={this.onCreateUser} />
                 </React.Fragment>
             }
             actions={[
@@ -95,5 +105,7 @@ LoginHandler.propTypes = {
     toggleUserModal: PropTypes.func,
     onLogin: PropTypes.func,
     onLogout: PropTypes.func,
+    onOpenMessage: PropTypes.func,
+    refreshUsers: PropTypes.func,
     onCreateUser: PropTypes.func,
 }

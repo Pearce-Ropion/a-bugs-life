@@ -1,10 +1,14 @@
 import React from 'react';
-import { Grid, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { TicketHandler } from '../TicketHandler';
+import { Grid } from 'semantic-ui-react';
 
-export const CreatePane = props =>
-    <Grid centered>
+import { TicketHandler } from '../ticket/TicketHandler';
+
+import { LabelProps } from '../../api/Labels';
+import { UserProps, CurrentUserProps } from '../../api/constants/Users';
+
+export const CreatePane = props => {
+    return <Grid centered>
         <Grid.Column width={3} />
         <Grid.Column width={10}>
             <TicketHandler
@@ -16,3 +20,13 @@ export const CreatePane = props =>
         </Grid.Column>
         <Grid.Column width={3} />
     </Grid>
+}
+    
+
+CreatePane.propTypes = {
+    labels: LabelProps.isRequired,
+    users: PropTypes.arrayOf(PropTypes.shape(UserProps)).isRequired,
+    currentUser: PropTypes.shape(CurrentUserProps).isRequired,
+    onOpenMessage: PropTypes.func.isRequired,
+    refreshTickets: PropTypes.func.isRequired,
+};

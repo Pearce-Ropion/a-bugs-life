@@ -3,11 +3,11 @@ import { Grid, Button, Header } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import { LoginHandler } from './login/LoginHandler';
-import { UserTypes } from '../api/constants/Users';
-import { TicketHandler } from './TicketHandler';
-import { Panes } from '../api/constants/Panes';
+import { TicketHandler } from './ticket/TicketHandler';
 
-import { getUser } from '../api/Utils';
+import { UserTypes, UserProps } from '../api/constants/Users';
+import { Panes, TicketViews } from '../api/constants/Panes';
+import { LabelProps } from '../api/Labels';
 
 export const Navigation = props =>
     <Grid id='heading' padded>
@@ -16,17 +16,40 @@ export const Navigation = props =>
                 (props.activePane === Panes.CREATE || props.currentUser.role === UserTypes.USER) && <Header as='h1' inverted content={`A Bug's Life`} />
             }
             {
+                props.currentUser.role === UserTypes.MANAGER &&
+                    <Button basic inverted
+                        color={props.activePane === Panes.DASHBOARD ? 'olive' : null}
+                        content='Dashboard'
+                        name='dashboard'
+                        onClick={props.changeActivePane} />
+            }
+            {
                 props.isLoggedIn && props.currentUser.role !== UserTypes.USER &&
                     <React.Fragment>
-                        <Button basic inverted content='Dashboard' name='dashboard' onClick={props.changeActivePane} />
-                        <Button basic inverted content='View All' name='all' onClick={props.changeActiveView} />
-                        <Button basic inverted content='Assigned' name='assigned' onClick={props.changeActiveView} />
-                        <Button basic inverted content='Reported' name='reported' onClick={props.changeActiveView} />
+                        <Button basic inverted
+                            color={props.activeView === TicketViews.ALL ? 'olive' : null}
+                            content='View All'
+                            name='all'
+                            onClick={props.changeActiveView} />
+                        <Button basic inverted
+                            color={props.activeView === TicketViews.ASSIGNED ? 'olive' : null}
+                            content='Assigned'
+                            name='assigned'
+                            onClick={props.changeActiveView} />
+                        <Button basic inverted
+                            color={props.activeView === TicketViews.REPORTED ? 'olive' : null}
+                            content='Reported'
+                            name='reported'
+                            onClick={props.changeActiveView} />
                     </React.Fragment>
             }
             {
                 props.currentUser.role === UserTypes.MANAGER &&
-                    <Button basic inverted content='Users' name='users' onClick={props.changeActivePane} />
+                    <Button basic inverted
+                        color={props.activePane === Panes.USERS ? 'olive' : null}
+                        content='Users'
+                        name='users'
+                        onClick={props.changeActivePane} />
             }
         </Grid.Column>
         <Grid.Column width={6} className='right'>
@@ -50,19 +73,25 @@ export const Navigation = props =>
                 loginError={props.loginError}
                 onLogin={props.onLogin}
                 onLogout={props.onLogout}
+                onOpenMessage={props.onOpenMessage}
                 onCreateUser={props.onCreateUser}
+                refreshUsers={props.refreshUsers}
                 toggleLoginModal={props.toggleLoginModal}
                 toggleUserModal={props.toggleUserModal} />
         </Grid.Column>
     </Grid>
 
 Navigation.propTypes = {
+    labels: LabelProps,
+    users: PropTypes.shape(UserProps),
     currentUser: PropTypes.shape({
         id: PropTypes.number,
         name: PropTypes.string,
         email: PropTypes.string,
         role: PropTypes.oneOf(Object.values(UserTypes)),
     }),
+    activePane: PropTypes.oneOf(Object.values(Panes)),
+    activeView: PropTypes.oneOf(Object.values(TicketViews)),
     isLoggedIn: PropTypes.bool,
     isLoginModalOpen: PropTypes.bool,
     isUserModalOpen: PropTypes.bool,
@@ -71,4 +100,10 @@ Navigation.propTypes = {
     onLogout: PropTypes.func,
     toggleLoginModal: PropTypes.func,
     toggleUserModal: PropTypes.func,
+    changeActivePane: PropTypes.func,
+    changeActiveView: PropTypes.func,
+    onOpenMessage: PropTypes.func,
+    onCreateUser: PropTypes.func,
+    refreshTickets: PropTypes.func,
+    refreshUsers: PropTypes.func,
 };

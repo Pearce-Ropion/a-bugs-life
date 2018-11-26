@@ -34,8 +34,15 @@ export const UserProps = {
     id: PropTypes.number,
     name: PropTypes.string,
     email: PropTypes.string,
-    role: PropTypes.oneOf(Object.values(UserTypes)),
+    role: PropTypes.string,
 };
+
+export const CurrentUserProps = {
+    id: PropTypes.number,
+    name: PropTypes.string,
+    email: PropTypes.string,
+    role: PropTypes.oneOf(Object.values(UserTypes)),
+}
 
 export const UserDropdownOptions = Object.keys(EmployeeTypes)
     .map(user => {

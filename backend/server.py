@@ -53,7 +53,7 @@ class Server(BaseHTTPRequestHandler):
 				#Open the static file requested and send it
 				f = open(path, 'rb')
 				self.send_response(200)
-				self.send_header('Content-type',mimetype)
+				self.send_header('Content-type', mimetype)
 				self.end_headers()
 				self.wfile.write(f.read())
 				f.close()

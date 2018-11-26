@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 import { EditorHandler } from './EditorHandler';
+
 import DropdownOptions from '../../api/DropdownOptions';
 
 export const removeOptions = types => {

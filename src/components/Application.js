@@ -1,27 +1,28 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import axios from 'axios';
+import { Button } from 'semantic-ui-react';
 
 import { Navigation } from './Navigation';
+import { MessagePortal } from './MessagePortal';
+import { ChangeUser } from './ChangeUser';
 import { CreatePane } from './panes/CreatePane';
 import { DetailsPane } from './panes/DetailsPane';
+import { UsersPane } from './panes/UsersPane';
+import { DashboardPane } from './panes/DashboardPane';
 
 import { UserTypes } from '../api/constants/Users';
 import { Panes, TicketViews } from '../api/constants/Panes';
-import { getUser } from '../api/Utils';
+import { getRole } from '../api/Utils';
 import { getAllLabels } from '../api/Labels';
-import { UsersPane } from './panes/UsersPane';
-import { getTickets, getUsers } from '../api/getData';
-import { MessagePortal } from './MessagePortal';
+import { getTickets, getUsers, genData } from '../api/getData';
 import Messages from '../api/constants/Messages';
-import { ChangeUser } from './ChangeUser';
 
 export class Application extends React.Component {
     constructor(props) {
         super(props);
         this.tickets = [];
         this.users = [];
-        this.labels = [];
+        this.labels = {};
         this.state = {
             debug: true,
             isMessageOpen: false,
@@ -40,6 +41,7 @@ export class Application extends React.Component {
             },
             activePane: Panes.CREATE,
             activeView: TicketViews.NONE,
+            activeTicket: -1,
         }
     }
 
@@ -111,7 +113,7 @@ export class Application extends React.Component {
                     this.setState({
                         currentUser: {
                             ...response.user,
-                            role: getUser(response.user.role),
+                            role: getRole(response.user.role),
                         },
                         isLoggedIn: true,
                         isLoginModalOpen: false,
@@ -120,7 +122,7 @@ export class Application extends React.Component {
                         activeView: TicketViews.ALL,
                     });
 
-                    if (getUser(response.user.role) === UserTypes.USER) {
+                    if (getRole(response.user.role) === UserTypes.USER) {
                         this.setState({
                             activeView: TicketViews.REPORTED,
                         });
@@ -146,10 +148,6 @@ export class Application extends React.Component {
         });
     };
 
-    onCreateUser = valid => {
-        
-    }
-
     onOpenMessage = message => {
         const self = this;
         this.setState({
@@ -170,7 +168,12 @@ export class Application extends React.Component {
     getActivePane = () => {
         const { activePane } = this.state;
         if (activePane === Panes.CREATE) {
-            return <CreatePane users={this.users} labels={this.labels} currentUser={this.state.currentUser} onOpenMessage={this.onOpenMessage} refreshTickets={this.refreshTickets} />
+            return <CreatePane
+                users={this.users}
+                labels={this.labels}
+                currentUser={this.state.currentUser}
+                onOpenMessage={this.onOpenMessage}
+                refreshTickets={this.refreshTickets} />
         } else if (activePane === Panes.DETAILS) {
             return <DetailsPane
                 view={this.state.activeView}
@@ -179,12 +182,16 @@ export class Application extends React.Component {
                 refreshTickets={this.refreshTickets}
                 tickets={this.tickets}
                 users={this.users}
-                labels={this.labels} />
+                labels={this.labels}
+                onChangeTicket={this.onChangeTicket}
+                activeTicket={this.state.activeTicket} />
         } else if (activePane === Panes.USERS) {
             return <UsersPane
                 users={this.users}
                 onOpenMessage={this.onOpenMessage}
                 refreshUsers={this.refreshUsers} />
+        } else if (activePane === Panes.DASHBOARD) {
+            return <DashboardPane tickets={this.tickets} onOpenTicket={this.onChangeTicket} />
         }
         return null;
     };
@@ -193,6 +200,7 @@ export class Application extends React.Component {
         this.setState({
             activePane: Panes[data.name.toUpperCase()],
             activeView: TicketViews.NONE,
+            activeTicket: -1,
         });
     };
 
@@ -200,6 +208,7 @@ export class Application extends React.Component {
         this.setState({
             activePane: Panes.DETAILS,
             activeView: TicketViews[data.name.toUpperCase()],
+            activeTicket: -1,
         });
     };
 
@@ -219,7 +228,7 @@ export class Application extends React.Component {
             this.setState({
                 currentUser: {
                     ...user,
-                    role: getUser(user.role),
+                    role: getRole(user.role),
                 },
                 isLoggedIn: true,
                 loginError: false,
@@ -227,8 +236,7 @@ export class Application extends React.Component {
                 activeView: TicketViews.ALL,
             });
 
-            if (getUser(user.role) === UserTypes.USER) {
-                console.log(this.tickets);
+            if (getRole(user.role) === UserTypes.USER) {
                 this.setState({
                     activeView: TicketViews.REPORTED,
                 });
@@ -237,10 +245,36 @@ export class Application extends React.Component {
         this.forceUpdate();
     };
 
+    onChangeTicket = id => {
+        if (this.state.activePane !== Panes.DETAILS) {
+            this.setState({
+                activePane: Panes.DETAILS,
+                activeView: TicketViews.ALL,
+            });
+        }
+        this.setState({
+            activeTicket: id,
+        });
+    };
+
+    generate = (event, data, counter = 1) => {
+        if (counter < 300) {
+            setTimeout(() => {
+                const data = genData();
+                axios.post('/api/tickets/create', data)
+                    .then(() => {
+                        console.log(data);
+                        this.generate({}, {}, ++counter);
+                    })
+            }, 200);
+        }
+    };
+
     render = () => (
         <React.Fragment>
             <Navigation
                 activePane={this.state.activePane}
+                activeView={this.state.activeView}
                 currentUser={this.state.currentUser}
                 isLoggedIn={this.state.isLoggedIn} 
                 isLoginModalOpen={this.state.isLoginModalOpen}
@@ -254,6 +288,7 @@ export class Application extends React.Component {
                 changeActivePane={this.changeActivePane}
                 changeActiveView={this.changeActiveView}
                 onOpenMessage={this.onOpenMessage}
+                refreshUsers={this.refreshUsers}
                 refreshTickets={this.refreshTickets}
                 users={this.users}
                 labels={this.labels} />
@@ -270,6 +305,7 @@ export class Application extends React.Component {
             {
                 this.getActivePane()
             }
+            <Button onClick={this.generate} content='Generate' />
         </React.Fragment>
             
     );

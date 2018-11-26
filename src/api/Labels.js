@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import { sortByKey } from './Utils';
+import { sortByKey, capitalize } from './Utils';
 
 export const getAllLabels = tickets => {
     const labels = [];

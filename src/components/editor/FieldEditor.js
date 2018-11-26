@@ -14,6 +14,10 @@ export const FieldEditor = withAxios(class AxiosFieldEditor extends React.Compon
         super(props);
     };
 
+    static defaultProps = {
+        additionalSemProps: {},
+    };
+
     static propTypes = {
         value: PropTypes.string,
         ticket: PropTypes.shape(TicketProps).isRequired,
@@ -21,12 +25,15 @@ export const FieldEditor = withAxios(class AxiosFieldEditor extends React.Compon
         content: PropTypes.string.isRequired,
         onOpenMessage: PropTypes.func.isRequired,
         refreshTickets: PropTypes.func.isRequired,
+        extraUpdates: PropTypes.object,
+        additionalSemProps: PropTypes.object,
     }
 
     onUpdate = () => {
         const ticket = ticketFields({
             ...this.props.ticket,
             [this.props.field]: this.props.value,
+            ...this.props.extraUpdates,
         });
         const normalized = sqlNormalizeTicket(true, ticket);
 
@@ -42,7 +49,7 @@ export const FieldEditor = withAxios(class AxiosFieldEditor extends React.Compon
 
     render = () => {
         return (
-            <Button fluid basic disabled={this.props.ticket.status === this.props.value} content={this.props.content} field={this.props.field} onClick={this.onUpdate} />
+            <Button fluid basic {...this.props.additionalSemProps} disabled={this.props.ticket.status === this.props.value} content={this.props.content} field={this.props.field} onClick={this.onUpdate} />
         );
     };
 });

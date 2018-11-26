@@ -39,4 +39,9 @@ export default {
         header: 'There was an error updating the rolw',
         content: 'Please reload the page and try again...',
     },
+    CREATE_USER_SUCCESS: {
+        color: 'green',
+        header: 'User Created Successfully',
+        content: 'Please log in.',
+    },
 };

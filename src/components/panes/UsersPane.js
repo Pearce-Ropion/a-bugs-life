@@ -3,8 +3,8 @@ import { Grid, Table, Dropdown, Message } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 
-import { UserDropdownOptions, UserTypes } from '../../api/constants/Users';
-import { sqlNormalizeUser, getUser } from '../../api/Utils';
+import { UserDropdownOptions, UserProps } from '../../api/constants/Users';
+import { sqlNormalizeUser, getRole } from '../../api/Utils';
 import Messages from '../../api/constants/Messages';
 
 export class UsersPane extends React.Component {
@@ -16,12 +16,7 @@ export class UsersPane extends React.Component {
     };
 
     static propTypes = {
-        users: PropTypes.arrayOf(PropTypes.shape({
-            id: PropTypes.number,
-            name: PropTypes.string,
-            email: PropTypes.string,
-            role: PropTypes.oneOf(Object.values(UserTypes)),
-        })),
+        users: PropTypes.arrayOf(PropTypes.shape(UserProps)),
         onOpenMessage: PropTypes.func.isRequired,
         refreshUsers: PropTypes.func.isRequired,
     };
@@ -29,7 +24,7 @@ export class UsersPane extends React.Component {
     onUpdateRole = (event, data) => {
         const user = sqlNormalizeUser(true, {
             ...this.props.users.find(next => next.id === data.id),
-            role: getUser(data.value),
+            role: getRole(data.value),
         });
         axios.post('api/users/update', user)
             .then(response => {
