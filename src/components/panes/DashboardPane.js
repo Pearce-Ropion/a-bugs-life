@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Segment, Label, Button } from 'semantic-ui-react';
+import { Grid, Segment, Label } from 'semantic-ui-react';
 import { ResponsivePie } from '@nivo/pie'
 import _ from 'lodash';
 

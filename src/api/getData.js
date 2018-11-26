@@ -17,7 +17,7 @@ const randomType = (obj, skip = 0) => {
 const randomString = (count, fn) => new Array(count).fill(0).map(() => capitalize(fn()));
 const randomDate = () => moment(new Date(randomNumber(2005, 2018), randomNumber(0, 11), randomNumber(0, 29), randomNumber(0, 23), randomNumber(0, 59)));
 
-export const getData = () => {
+export const genData = () => {
     const date = randomDate();
     const modifyDate = randomNumber(1, 100) > 20 ? date.add(randomNumber(1, 5), 'days') : date;
     const isClosed = randomNumber(1, 100) > 80;

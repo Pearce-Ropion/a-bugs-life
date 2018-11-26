@@ -14,7 +14,7 @@ import { UserTypes } from '../api/constants/Users';
 import { Panes, TicketViews } from '../api/constants/Panes';
 import { getRole } from '../api/Utils';
 import { getAllLabels } from '../api/Labels';
-import { getTickets, getUsers } from '../api/getData';
+import { getTickets, getUsers, genData } from '../api/getData';
 import Messages from '../api/constants/Messages';
 
 export class Application extends React.Component {
@@ -260,7 +260,7 @@ export class Application extends React.Component {
     generate = (event, data, counter = 1) => {
         if (counter < 200) {
             setTimeout(() => {
-                const data = getData();
+                const data = genData();
                 axios.post('/api/tickets/create', data)
                     .then(() => {
                         console.log(data);
