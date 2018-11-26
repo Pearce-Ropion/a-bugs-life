@@ -3,9 +3,11 @@ import { Grid, Button, Header } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import { LoginHandler } from './login/LoginHandler';
-import { UserTypes } from '../api/constants/Users';
-import { TicketHandler } from './TicketHandler';
+import { TicketHandler } from './ticket/TicketHandler';
+
+import { UserTypes, UserProps } from '../api/constants/Users';
 import { Panes, TicketViews } from '../api/constants/Panes';
+import { LabelProps } from '../api/Labels';
 
 export const Navigation = props =>
     <Grid id='heading' padded>
@@ -14,13 +16,16 @@ export const Navigation = props =>
                 (props.activePane === Panes.CREATE || props.currentUser.role === UserTypes.USER) && <Header as='h1' inverted content={`A Bug's Life`} />
             }
             {
+                props.currentUser.role === UserTypes.MANAGER &&
+                    <Button basic inverted
+                        color={props.activePane === Panes.DASHBOARD ? 'olive' : null}
+                        content='Dashboard'
+                        name='dashboard'
+                        onClick={props.changeActivePane} />
+            }
+            {
                 props.isLoggedIn && props.currentUser.role !== UserTypes.USER &&
                     <React.Fragment>
-                        <Button basic inverted 
-                            color={props.activePane === Panes.DASHBOARD ? 'olive' : null}
-                            content='Dashboard'
-                            name='dashboard'
-                            onClick={props.changeActivePane} />
                         <Button basic inverted
                             color={props.activeView === TicketViews.ALL ? 'olive' : null}
                             content='View All'
@@ -77,12 +82,16 @@ export const Navigation = props =>
     </Grid>
 
 Navigation.propTypes = {
+    labels: LabelProps,
+    users: PropTypes.shape(UserProps),
     currentUser: PropTypes.shape({
         id: PropTypes.number,
         name: PropTypes.string,
         email: PropTypes.string,
         role: PropTypes.oneOf(Object.values(UserTypes)),
     }),
+    activePane: PropTypes.oneOf(Object.values(Panes)),
+    activeView: PropTypes.oneOf(Object.values(TicketViews)),
     isLoggedIn: PropTypes.bool,
     isLoginModalOpen: PropTypes.bool,
     isUserModalOpen: PropTypes.bool,
@@ -91,4 +100,10 @@ Navigation.propTypes = {
     onLogout: PropTypes.func,
     toggleLoginModal: PropTypes.func,
     toggleUserModal: PropTypes.func,
+    changeActivePane: PropTypes.func,
+    changeActiveView: PropTypes.func,
+    onOpenMessage: PropTypes.func,
+    onCreateUser: PropTypes.func,
+    refreshTickets: PropTypes.func,
+    refreshUsers: PropTypes.func,
 };
