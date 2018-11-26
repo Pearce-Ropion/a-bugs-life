@@ -33,8 +33,7 @@ Application is running at this address:
 > NOTE: The address listed in this readme will not work. You must use the address that was printed to the console upon running the app.
 
 ### Usage Guide
-For the next section, you can use the login information from **Table 1** to login into each type of user available. For the purposes of demonstration, an additional dropdown menu has been added at the bottom right of the screen to allow for convenient switching between user types.
-> Note: This additional dropdown would not be included in the app in a production setting as it would make the application insecure by voiding the need for a login system.
+For the next section, you can use the login information from **Table 1** to login into each type of user available.
 
 **Table 1**: Default User Login Information
 | User Type | Email | Password |
@@ -62,12 +61,9 @@ For the next section, you can use the login information from **Table 1** to logi
 > The default window shown for non-employees is all of the bugs reported by the currently logged-in user
 
 #### The Lifecycle of a Bug Report
-In this section we will follow a bug report through its expected lifecycle. In this use case we will be assuming that the reported bug is a valid bug.
-> This guide is made under the assumption that you are using the additional dropdown menu located on the bottom right of the screen to switch between user types.
+In this section we will follow a bug report through its expected lifecycle. In this use case we will be assuming that the reported bug is a valid bug. In order to switch user account, you will have to log out of each user type and log into the next user type as the guide proceeds.
 
-> If you are **not** using the additional user-type switcher, you will have to log out of each user type and log into the next user type as the guide proceeds. This is very time consuming an can get annoying.
-
-Start by logging into a `User` account. You can do so using the login button or by using the user-type switcher in the bottom right.
+Start by logging into a `User` account. You can do so using the login button  on the top right
 1. Click `Create` on the top right
 2. Fill in a `summary`, `description` of the problem and select a `component` from the dropdown menu
 3. Click `Create`
@@ -75,7 +71,6 @@ Start by logging into a `User` account. You can do so using the login button or 
 4. The new bug report will show up on your list of reported bugs to the left
 5. In the center of the screen you will be able to see details about the bug report including the its current status
 6. Switch to the `Manager` account
-    * You are welcome to do this in whatever way you see fit
 7. You should see the bug report you just created at the top of the list on the left
 8. Assign the bug report to a tester by clicking the `Re-Assign` button on thr right side of the screen
     * An additional step would be to first click the `Assign to Me` button to assign the bug report to the `Manager`
@@ -115,7 +110,6 @@ The bug report overview page, which is only visible to managers, shows the statu
 
 The following steps can be followed to access the bug report overview:
 1. Click the `Log In` button in the top right
-    * You can skip **step 1 - 2** by using the additional dropdown menu to switch to the `Manager` account
 2. Login to manager using the email `m@m.com` and password `manager1`
 3. Click the `Dashboard` button in the top left
 
