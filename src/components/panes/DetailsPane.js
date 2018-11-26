@@ -70,7 +70,7 @@ export class DetailsPane extends React.Component {
         filtered.forEach(ticket => filterTickets.set(ticket.id, ticket));
 
         return filterTickets;
-    });
+    }, _.isEqual);
 
     changeTicket = (event, data) => {
         this.props.onChangeTicket(data.ticketid);
@@ -82,10 +82,10 @@ export class DetailsPane extends React.Component {
         });
     };
 
-    sortTickets = memoize((tickets, category) =>
+    sortTickets = (tickets, category) =>
         sortOptions[category] === 'base'
             ? _.sortBy(tickets, [category])
-            : _.sortBy(tickets, [ticket => getTicketKey[category](ticket[category])[sortOptions[category]]]));
+            : _.sortBy(tickets, [ticket => getTicketKey[category](ticket[category])[sortOptions[category]]]);
         
     onSearch = (string, category) => {
         if (string !== '' && category !== '') {

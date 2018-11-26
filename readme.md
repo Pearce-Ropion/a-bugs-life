@@ -16,6 +16,7 @@ A Bugs Life is a web-based bug reporting and ticket management solution develope
 **A Bugs Life Requires a Javascript enabled browser and Python 2.7 to run**
 
 1). Downloaded the main `.zip` file from [here](https://github.com/Pearce-Ropion/a-bugs-life) or from the Camino upload.
+
 2). Follow the following commands:
 ```sh
 $ unzip aBugsLife-1.0.0.zip
@@ -106,7 +107,7 @@ Start by logging into a `User` account. You can do so using the login button or 
 Make sure to check the **Bug Report Overview** Section to see how to generate reports for managers
 
 #### Bug Report Overview (manager only)
-The bug report overview page, which is only visible to managers, shows the status of all bugs that have been reported in the system. This is illustrated in pie chart which displays the number of bugs within each category and per category tables that show the different bug reports within each these categories along with their statuses:
+The bug report overview page, which is only visible to managers, shows the status of all bugs that have been reported in the system. This is illustrated in a pie chart which displays the number of bugs within each category and per category tables that show the different bug reports within each these categories along with their statuses:
   - Bug reports that are **Open** or have statuses that are similar to being Open
   - Bug reports that are related to the bug being **Tested**
   - Bug reports that are related to the bug fix being in **Development**
