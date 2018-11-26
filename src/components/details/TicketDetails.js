@@ -3,8 +3,9 @@ import { Grid, Header, Label } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
-import TicketProps from '../api/constants/TicketProps';
-import { StatusTag, TicketTag } from './Tags';
+import { StatusTag, TicketTag } from '../utils/Tags';
+
+import TicketProps from '../../api/constants/TicketProps';
 
 export const TicketDetails = props =>
     <Grid padded='horizontally'>

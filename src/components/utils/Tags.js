@@ -1,7 +1,8 @@
 import React from 'react';
 import { Label } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { StatusTypes } from '../api/constants/Status';
+
+import { StatusTypes } from '../../api/constants/Status';
 
 export const TicketTag = props => <Label content={props.tag} className='ticket-tag' />;
 

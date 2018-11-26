@@ -3,7 +3,7 @@ import { Modal, Button, Segment, Message } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import { TicketForm } from './TicketForm';
-import TicketProps from '../api/constants/TicketProps';
+import TicketProps from '../../api/constants/TicketProps';
 
 export const TicketModal = props =>
     <Modal

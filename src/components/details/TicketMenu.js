@@ -1,17 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Segment, Button } from 'semantic-ui-react';
+import { Segment, Button, ButtonGroup } from 'semantic-ui-react';
 
-import { TicketHandler } from './TicketHandler';
-import TicketProps from '../api/constants/TicketProps';
-import { AssigneeEditor } from './editor/Assignee';
-import { UserProps, UserTypes, CurrentUserProps } from '../api/constants/Users';
-import { ticketFields } from '../api/models/ticket';
-import { FieldEditor } from './editor/FieldEditor';
-import { StatusEditor } from './editor/Status';
-import { ResolutionEditor } from './editor/Resolution';
-import { ResolutionTypes, StatusTypes } from '../api/constants/Status';
-import { LabelProps } from '../api/Labels';
+import { TicketHandler } from '../ticket/TicketHandler';
+import { AssigneeEditor } from '../editor/Assignee';
+import { FieldEditor } from '../editor/FieldEditor';
+import { StatusEditor } from '../editor/Status';
+import { ResolutionEditor } from '../editor/Resolution';
+
+import TicketProps from '../../api/constants/TicketProps';
+import { UserProps, UserTypes, CurrentUserProps } from '../../api/constants/Users';
+import { ticketFields } from '../../api/models/ticket';
+import { ResolutionTypes, StatusTypes } from '../../api/constants/Status';
+import { LabelProps } from '../../api/Labels';
 
 export const TicketMenu = props =>
     <Segment.Group id='ticket-menu'>
@@ -25,20 +26,44 @@ export const TicketMenu = props =>
                 refreshTickets={props.refreshTickets} />
         </Segment>
         <Segment basic>
-            <AssigneeEditor
-                type='search'
-                ticket={props.ticket}
-                original={ticketFields({
-                    ...props.ticket,
-                }).assignee}
-                values={props.users}
-                onOpenMessage={props.onOpenMessage}
-                refreshTickets={props.refreshTickets} />
+            <Button.Group vertical fluid basic className='centerVerticalGroup'>
+                <AssigneeEditor
+                    type='search'
+                    ticket={props.ticket}
+                    original={ticketFields({
+                        ...props.ticket,
+                    }).assignee}
+                    values={props.users}
+                    onOpenMessage={props.onOpenMessage}
+                    refreshTickets={props.refreshTickets} />
+                <FieldEditor content='Assign to Me' field='assignee' value={props.currentUser.name} ticket={props.ticket} onOpenMessage={props.onOpenMessage} refreshTickets={props.refreshTickets} />
+            </Button.Group>
+            
         </Segment>
+        {
+            (props.currentUser.role === UserTypes.DEVELOPER || props.currentUser.role === UserTypes.TESTER) && 
+                <Segment basic>
+                    <Button.Group vertical fluid basic className='centerVerticalGroup'>
+                    {
+                        props.currentUser.role === UserTypes.DEVELOPER &&
+                        <React.Fragment>
+                            <FieldEditor content='In Progress' field='status' value='In Progress' ticket={props.ticket} onOpenMessage={props.onOpenMessage} refreshTickets={props.refreshTickets} />
+                            <FieldEditor content='Code Complete' field='status' value='Code Complete' ticket={props.ticket} onOpenMessage={props.onOpenMessage} refreshTickets={props.refreshTickets} />
+                            <FieldEditor content='Code Review' field='status' value='Code Review' ticket={props.ticket} onOpenMessage={props.onOpenMessage} refreshTickets={props.refreshTickets} />
+                        </React.Fragment>
+                    }
+                    {
+                        props.currentUser.role === UserTypes.TESTER &&
+                        <React.Fragment>
+                            <FieldEditor content='In Testing' field='status' value='Testing' ticket={props.ticket} onOpenMessage={props.onOpenMessage} refreshTickets={props.refreshTickets} />
+                            <FieldEditor content='Tesing Bugfix' field='status' value='QA Testing' ticket={props.ticket} onOpenMessage={props.onOpenMessage} refreshTickets={props.refreshTickets} />
+                        </React.Fragment>
+                    }
+                    </Button.Group>
+                </Segment>
+        }
         <Segment basic>
             <Button.Group vertical fluid basic className='centerVerticalGroup'>
-                { props.currentUser.role === UserTypes.DEVELOPER && <FieldEditor content='In Progress' field='status' value='In Progress' ticket={props.ticket} onOpenMessage={props.onOpenMessage} refreshTickets={props.refreshTickets} /> }
-                { props.currentUser.role === UserTypes.TESTER && <FieldEditor content='In Testing' field='status' value='Testing' ticket={props.ticket} onOpenMessage={props.onOpenMessage} refreshTickets={props.refreshTickets} /> }
                 <StatusEditor
                     type='dropdown'
                     ticket={props.ticket}
@@ -47,7 +72,7 @@ export const TicketMenu = props =>
                     }).status}
                     onOpenMessage={props.onOpenMessage}
                     refreshTickets={props.refreshTickets} />
-                { props.ticket.status !== 'Closed' && <ResolutionEditor
+                {props.ticket.status !== 'Closed' && <ResolutionEditor
                     type='dropdown'
                     ticket={props.ticket}
                     original={ticketFields({
@@ -55,7 +80,7 @@ export const TicketMenu = props =>
                     }).resolution}
                     extraUpdates={{ status: StatusTypes.CLOSED.name }}
                     onOpenMessage={props.onOpenMessage}
-                    refreshTickets={props.refreshTickets} /> }
+                    refreshTickets={props.refreshTickets} />}
             </Button.Group>
         </Segment>
         {
@@ -93,6 +118,7 @@ export const TicketMenu = props =>
                                 ticket={props.ticket}
                                 onOpenMessage={props.onOpenMessage}
                                 refreshTickets={props.refreshTickets} />
+                            <FieldEditor content='Blocked' field='status' value='Blocked' ticket={props.ticket} onOpenMessage={props.onOpenMessage} refreshTickets={props.refreshTickets} />
                         </Button.Group>
                     </Segment>
         }

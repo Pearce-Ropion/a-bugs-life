@@ -1,20 +1,22 @@
 import React from 'react';
-import { Segment, Button, Header, Divider } from 'semantic-ui-react';
+import { Segment, Button, Header, Divider, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { withAxios } from 'react-axios';
-import memoize from 'memoize-one';
 import _ from 'lodash';
 
 import { TicketModal } from './TicketModal';
 import { TicketForm } from './TicketForm';
 
-import { ticketFields, ticketFieldErrors } from '../api/models/ticket';
-import { UserTypes, CurrentUserProps } from '../api/constants/Users';
-import TicketProps from '../api/constants/TicketProps';
-import { sqlNormalizeTicket } from '../api/Utils';
-import Messages from '../api/constants/Messages';
-import { LabelProps } from '../api/Labels';
+import { ticketFields, ticketFieldErrors } from '../../api/models/ticket';
+import { UserTypes, CurrentUserProps } from '../../api/constants/Users';
+import TicketProps from '../../api/constants/TicketProps';
+import { sqlNormalizeTicket } from '../../api/Utils';
+import Messages from '../../api/constants/Messages';
+import { LabelProps } from '../../api/Labels';
+
+const userFieldFactory = ({ fname = '', lname = '' }) => ({ fname, lname });
+const userErrorFactory = ({ fname = false, lname = false }) => ({ fname, lname });
 
 export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Component {
     constructor(props) {
@@ -22,7 +24,9 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
         this.state = {
             isModalOpen: false,
             fields: this.getTicket(this.props.ticket),
+            userFields: userFieldFactory({}),
             errors: ticketFieldErrors({}),
+            userErrors: userErrorFactory({}),
             isAssigneeLoading: false,
             assigneeResults: [],
             labels: this.props.labels.labelDropdownOptions,
@@ -68,6 +72,23 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
             fields: ticketFields({
                 ...this.state.fields,
                 [data.name]: data.value,
+            }),
+            errors: ticketFieldErrors({
+                ...this.state.errors,
+                [data.name]: false,
+            }),
+        });
+    };
+
+    onUserFieldChange = (event, data) => {
+        this.setState({
+            userFields: userFieldFactory({
+                ...this.state.userFields,
+                [data.name]: data.value,
+            }),
+            userErrors: userErrorFactory({
+                ...this.state.userErrors,
+                [data.name]: false,
             }),
         });
     };
@@ -131,35 +152,56 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
 
     validateForm = () => {
         const newError = ticketFieldErrors({});
+        const newUserError = userErrorFactory({});
         Object.entries(this.state.fields).forEach(([key, field]) => {
             if (key === 'summary' || key === 'description' || key === 'component') {
                 if (!field.length) {
                     newError[key] = true;
-                    console.log('error detected at: ', key);
+                    // console.log('error detected at: ', key);
                 }
             }
             if (this.props.currentUser.role !== UserTypes.NONE) {
                 if (key === 'assignee' && !field.length) {
                     newError[key] = true;
-                    console.log('error detected at: ', key);
+                    // console.log('error detected at: ', key);
                 }
             }
         });
         this.setState({
             error: newError,
         });
-        return !Object.values(newError).includes(true);
+        const valid = !Object.values(newError).includes(true);
+
+        if (this.props.currentUser.role === UserTypes.NONE) {
+            Object.entries(this.state.userFields).forEach(([key, field]) => {
+                if (!field.length) {
+                    newUserError[key] = true;
+                }
+            });
+            this.setState({
+                userErrors: newUserError,
+            });
+            const userValid = !Object.values(newUserError).includes(true);
+            return valid && userValid;
+        }
+        return valid;
     };
 
     onSubmit = () => {
         if (!this.validateForm()) {
             this.props.onOpenMessage(Messages.TICKET_FIELD_ERROR);
         } else {
-            const normalizedFields = sqlNormalizeTicket(this.props.isEditable, this.state.fields)
+            let { fields } = this.state;
+            if (this.props.currentUser.role === UserTypes.NONE) {
+                fields.reporter = this.state.userFields.fname.concat(' ', this.state.userFields.lname);
+            }
+
+            const normalizedFields = sqlNormalizeTicket(this.props.isEditable, fields)
             axios.post(this.props.isEditable ? '/api/tickets/update' : '/api/tickets/create', normalizedFields)
             .then(response => {
                 this.setState({
                     fields: this.props.isEditable ? this.getTicket(this.props.ticket) : ticketFields({}),
+                    userFields: userFieldFactory({}),
                 });
                 if (this.state.isModalOpen) {
                     this.toggleModal();
@@ -191,14 +233,36 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
                 onAddItem={this.onAddItem}
                 labels={this.state.labels} />
             : <React.Fragment>
-                <Segment>
-                    <Header content='Create a Ticket' />
-                    <Divider fitted />
-                    <TicketForm
-                        fields={this.state.fields}
-                        errors={this.state.errors}
-                        onFieldChange={this.onFieldChange} />
-                </Segment>
+                <Segment.Group>
+                    <Segment>
+                        <Header content='Create a Ticket' />
+                        <Divider fitted />
+                        <TicketForm
+                            fields={this.state.fields}
+                            errors={this.state.errors}
+                            onFieldChange={this.onFieldChange} />
+                    </Segment>
+                    <Segment>
+                        <Form style={{ padding: '0 2em 0' }}>
+                            <Form.Group widths='equal'>
+                                <Form.Input fluid
+                                    name='fname'
+                                    label='First Name'
+                                    placeholder='First Name'
+                                    value={this.state.userFields.fname}
+                                    error={this.state.userErrors.fname}
+                                    onChange={this.onUserFieldChange} />
+                                <Form.Input fluid
+                                    name='lname'
+                                    label='Last Name'
+                                    placeholder='Last Name'
+                                    value={this.state.userFields.lname}
+                                    error={this.state.userErrors.lname}
+                                    onChange={this.onUserFieldChange} />
+                            </Form.Group>
+                        </Form>
+                    </Segment>
+                </Segment.Group>
                 <Button fluid content='Create' onClick={this.onSubmit} primary />
             </React.Fragment>;
     };

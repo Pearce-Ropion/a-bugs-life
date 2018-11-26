@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Table, AutoSizer, Column, CellMeasurerCache, CellMeasurer } from 'react-virtualized';
-import { Popup, Icon, Container, Label } from 'semantic-ui-react';
+import { Popup, Icon, Container } from 'semantic-ui-react';
+
+import { StatusTag } from '../utils/Tags';
 
 import { getPriority } from '../../api/Utils';
-import { StatusTag } from '../Tags';
 
 import 'react-virtualized/styles.css';
 
@@ -42,9 +43,9 @@ export class TicketTable extends React.Component {
         };
 
         if (dataKey === 'status') {
-            styles['justify-content'] = 'flex-end';
+            styles['justifyContent'] = 'flex-end';
         } else if (dataKey === 'id') {
-            styles['justify-content'] = 'center';
+            styles['justifyContent'] = 'center';
         }
         
         return <CellMeasurer
