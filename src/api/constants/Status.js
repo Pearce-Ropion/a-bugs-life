@@ -9,11 +9,6 @@ export const StatusTypes = {
         name: 'In Progress',
         color: 'yellow',
     },
-    RESOLVED: {
-        type: Symbol('RESOLVED'),
-        name: 'Resolved',
-        color: 'green',
-    },
     CLOSED: {
         type: Symbol('CLOSED'),
         name: 'Closed',
