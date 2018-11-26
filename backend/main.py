@@ -1,5 +1,8 @@
 #!/usr/bin/env
 
+# Vineet Joshi
+# This file is the entry point into starting the backend server. Execute 'python main.py -h' to view descriptions of optional script parameters.
+
 # import standard Python libraries
 import argparse
 from BaseHTTPServer import HTTPServer
@@ -27,9 +30,10 @@ c.environment = args.ENVIRONMENT
 url = args.ADDRESS + ':' + str(args.PORT_NUMBER) + '/index.html'
 print '\nApplication is running at this address:\n' + url + '\n'
 
-if args.ENVIRONMENT == 'build':
-	# open the webpage
-	webbrowser.open(url)
+# Automatically opening a web browser doesn't work on Design Center Linux machines, so this code is commented out
+# if args.ENVIRONMENT == 'build':
+# 	# open the webpage
+# 	webbrowser.open(url)
 
 # starts the HTTP Daemon
 http_daemon = HTTPServer((args.ADDRESS, args.PORT_NUMBER), my_server.Server)

@@ -1,3 +1,6 @@
+# Vineet Joshi
+# This file contains helper functions for developers to access the database file.
+
 # import standard Python library for SQLite
 import sqlite3
 
@@ -12,7 +15,9 @@ from random import randint
 import constants as c
 import database_accessor
 
-# print database information (names of tables and their attributes)
+# This function prints database information (names of tables and their attributes).
+# Parameters: [none]
+# Return Type: void
 def print_database_information():
 	db = sqlite3.connect(c.database)
 
@@ -34,7 +39,9 @@ def print_database_information():
 
 	db.close()
 
-# print the contents of the given table
+# This function print the contents of the given table.
+# Parameters: the table name of the table to print
+# Return Type: void
 def print_table(table_name):
 	db = sqlite3.connect(c.database)
 
@@ -55,6 +62,9 @@ def print_table(table_name):
 
 	db.close()
 
+# This function clears the contents of the specified table.
+# Parameters: the table name of the table to clear
+# Return Type: void
 def clear_db(table_name):
 	db = sqlite3.connect(c.database)
 
@@ -69,6 +79,9 @@ def clear_db(table_name):
 
 	print "The table '" + table_name + "' has been cleared."
 
+# This function fills the specified table with a specified number of sample data fields.
+# Parameters: the table name of the table to fill, and the number of data fields to fill
+# Return Type: void
 def fill_db(table_name, num_data):
 	for counter in range(1, num_data + 1):
 		data = c.sample_data[table_name].copy()
@@ -94,9 +107,15 @@ def fill_db(table_name, num_data):
 
 	print "The table '" + table_name + "' has been filled with " + str(num_data) + (' entry' if (num_data == 1) else ' entries') + " of sample data."
 
+# This is a helper function used by 'clear_or_fill_prompt' to check if the given index is valid.
+# Parameters: the index to check the validity of
+# Return Type: boolean indicating whether the index is valid or not
 def is_valid(index):
 	return (index >= 0 and index < len(c.table_list))
 
+# This is a helper function used by code in main to prompt user for clearing or filling a table.
+# Parameters: the intent of the user (either 'clear' or 'fill')
+# Return Type: void
 def clear_or_fill_prompt(intent):
 	database_number = -1
 	while is_valid(database_number) == False:

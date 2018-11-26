@@ -1,3 +1,6 @@
+# Vineet Joshi
+# This file contains constants used by other backend files.
+
 # database file
 database = 'bugs.db'
 
