@@ -1,7 +1,9 @@
 import React from 'react';
-import { Grid, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { TicketHandler } from '../TicketHandler';
+import { Grid } from 'semantic-ui-react';
+
+import { TicketHandler } from '../ticket/TicketHandler';
+
 import { LabelProps } from '../../api/Labels';
 import { UserProps, CurrentUserProps } from '../../api/constants/Users';
 
