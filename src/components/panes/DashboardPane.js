@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Segment, Label, Button } from 'semantic-ui-react';
-import _ from 'lodash';
-import { TicketTable } from '../tables/TicketTable';
-import TicketProps from '../../api/constants/TicketProps';
-import Axios from 'axios';
-import { getData } from '../../api/getData';
 import { ResponsivePie } from '@nivo/pie'
+import _ from 'lodash';
+
+import { TicketTable } from '../table/TicketTable';
+
+import TicketProps from '../../api/constants/TicketProps';
 import { capitalize } from '../../api/Utils';
 
 export class DashboardPane extends React.Component {
@@ -21,10 +21,6 @@ export class DashboardPane extends React.Component {
         this.state = {
 
         };
-    };
-
-    static defaultProps = {
-
     };
 
     static propTypes = {

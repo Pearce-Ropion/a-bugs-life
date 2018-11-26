@@ -6,6 +6,7 @@ import { withAxios } from 'react-axios';
 import axios from 'axios';
 
 import { ToggleEditor } from './ToggleEditor';
+
 import { sqlNormalizeTicket } from '../../api/Utils';
 import Messages from '../../api/constants/Messages';
 import TicketProps from '../../api/constants/TicketProps';

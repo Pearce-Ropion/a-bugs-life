@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Portal, Segment, Dropdown } from 'semantic-ui-react';
+
 import { CurrentUserProps } from '../api/constants/Users';
 
 export const ChangeUser = props =>
