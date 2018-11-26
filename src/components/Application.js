@@ -258,7 +258,7 @@ export class Application extends React.Component {
     };
 
     generate = (event, data, counter = 1) => {
-        if (counter < 200) {
+        if (counter < 300) {
             setTimeout(() => {
                 const data = genData();
                 axios.post('/api/tickets/create', data)
