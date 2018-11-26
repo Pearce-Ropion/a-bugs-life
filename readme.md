@@ -15,13 +15,14 @@ A Bugs Life is a web-based bug reporting and ticket management solution develope
 
 **A Bugs Life Requires a Javascript enabled browser and Python 2.7 to run**
 
-1). Downloaded the main `.zip` file from [here](https://github.com/Pearce-Ropion/a-bugs-life) or from the Camino upload.
+1). Clone the repository from https://github.com/Pearce-Ropion/a-bugs-life
 
 2). Follow the following commands:
 ```sh
-$ unzip aBugsLife-1.0.0.zip
-$ cd backend
-$ python main.py 
+$ git clone https://github.com/Pearce-Ropion/a-bugs-life.git
+$ cd a-bugs-life/
+$ cd backend/
+$ python main.py
 ```
 
 3). Once the server is running, it will print the following to console.
