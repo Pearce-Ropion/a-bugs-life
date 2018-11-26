@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import { Button } from 'semantic-ui-react';
 
 import { Navigation } from './Navigation';
 import { MessagePortal } from './MessagePortal';
@@ -254,7 +255,20 @@ export class Application extends React.Component {
         this.setState({
             activeTicket: id,
         });
-    }
+    };
+
+    generate = (event, data, counter = 1) => {
+        if (counter < 200) {
+            setTimeout(() => {
+                const data = getData();
+                axios.post('/api/tickets/create', data)
+                    .then(() => {
+                        console.log(data);
+                        this.generate({}, {}, ++counter);
+                    })
+            }, 200);
+        }
+    };
 
     render = () => (
         <React.Fragment>
@@ -291,6 +305,7 @@ export class Application extends React.Component {
             {
                 this.getActivePane()
             }
+            <Button onClick={this.generate} content='Generate' />
         </React.Fragment>
             
     );

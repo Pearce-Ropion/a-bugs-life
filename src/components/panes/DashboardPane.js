@@ -54,21 +54,7 @@ export class DashboardPane extends React.Component {
                 color: value.color,
             };
         });
-    }
-
-    // generate = (event, data, counter = 1) => {
-    //     console.log(counter);
-    //     if (counter < 200) {
-    //         setTimeout(() => {
-    //             const data = getData();
-    //             Axios.post('/api/tickets/create', data)
-    //                 .then(() => {
-    //                     console.log(counter, data);
-    //                     this.generate({}, {}, counter++);
-    //                 })
-    //         }, 200);
-    //     }
-    // }
+    };
 
     render = () => {
         const open = this.splitTickets('open');
@@ -127,7 +113,6 @@ export class DashboardPane extends React.Component {
                         </Segment>
                     }
                 </Grid.Column>
-                {/* <Button onClick={this.generate} content='Generate' /> */}
             </Grid>
         );
     }

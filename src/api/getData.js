@@ -4,7 +4,6 @@ import moment from 'moment';
 
 import { PriorityLevels, SeverityLevels, ComponentTypes } from './constants/Ticket'
 import { StatusTypes, ResolutionTypes } from './constants/Status'
-import { UserTypes } from './constants/Users'
 import { capitalize } from './Utils';
 
 const randomNumber = (min, max) => faker.random.number({ min, max });
@@ -20,6 +19,15 @@ const randomDate = () => moment(new Date(randomNumber(2005, 2018), randomNumber(
 
 export const getData = () => {
     const date = randomDate();
+    const modifyDate = randomNumber(1, 100) > 20 ? date.add(randomNumber(1, 5), 'days') : date;
+    const isClosed = randomNumber(1, 100) > 80;
+    let status = '', resolution = '';
+    while (status === 'Closed' || status === '') {
+        status = randomType(StatusTypes).name;
+    }
+    while (resolution === 'Unresolved' || resolution === '') {
+        resolution = randomType(ResolutionTypes);
+    }
     return {
         summary: faker.hacker.phrase(),
         description: faker.lorem.paragraph(3),
@@ -30,11 +38,11 @@ export const getData = () => {
         priority: randomType(PriorityLevels).name,
         severity: randomType(SeverityLevels),
         labels: randomString(3, faker.lorem.word),
-        status: randomType(StatusTypes).name,
-        resolution: randomType(ResolutionTypes),
+        status: isClosed ? 'Closed' : status,
+        resolution: isClosed ? resolution : 'Unresolved',
         created: date.unix(),
-        modified: randomNumber(1, 100) > 75 ? date.add(randomNumber(1, 5), 'days').unix() : date.unix(),
-        closed: randomNumber(1, 100) > 80 ? date.add(randomNumber(6, 10), 'days').unix() : null,
+        modified: modifyDate.unix(),
+        closed: isClosed ? modifyDate.add(randomNumber(1, 5), 'days').unix() : null,
     };
 };
 
