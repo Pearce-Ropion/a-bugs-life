@@ -1,9 +1,15 @@
+# Vineet Joshi
+# This file contains functions that access the database through various operations, such as inserting, updating, and retrieving.
+
 # import standard Python library for SQLite
 import sqlite3
 
 # import helper Python script
 import constants as c
 
+# This function checks whether the user, with the indicated email, exists in the database or not.
+# Parameters: the email of the user to check the existence of
+# Return Type: boolean (indicating whether the user exists or not)
 def user_exists(email):
 	db = sqlite3.connect(c.database)
 	cursor = db.cursor()
@@ -18,6 +24,9 @@ def user_exists(email):
 
 	return exists
 
+# This function inserts the given data into the table with the given table name.
+# Parameters: the data to insert, and the table name of the table to insert into
+# Return Type: void
 def insert_into_db(data, table_name):
 	db = sqlite3.connect(c.database)
 
@@ -35,6 +44,7 @@ def insert_into_db(data, table_name):
 	
 	command += ') VALUES('
 	# insert '?,' for each of the attributes in the table
+	# IMPORTANT: by parameterizing the query, this avoids SQL injection!
 	command += ('?,' * len(attributes_list))
 	command = command[:-1]
 	command += ')'
@@ -51,6 +61,9 @@ def insert_into_db(data, table_name):
 	db.commit()
 	db.close()
 
+# This function updates the table, with given table name, with the given data using its ID field.
+# Parameters: the data to update, and the table name of the table to update
+# Return Type: void
 def update_db(data, table_name):
 	db = sqlite3.connect(c.database)
 
@@ -89,6 +102,9 @@ def update_db(data, table_name):
 	db.commit()
 	db.close()
 
+# This function retrieves data from the table, with the given table name, and using optional filters.
+# Parameters: the table name of the table to retrieve data from, and filters dictionary (with default value to None, indicating no filters)
+# Return Type: dictionary of the retrieved data
 def get_table_data(table_name, filters=None):
 	db = sqlite3.connect(c.database)
 
@@ -126,6 +142,9 @@ def get_table_data(table_name, filters=None):
 
 	return data
 
+# This function is a helper function used by 'get_table_data' to get the command to retrieve data.
+# Parameters: the table name of the table to retrieve data from, and dictionary with filters
+# Return Type: string containing the command to retrieve data
 def get_data_command(table_name, filters):
 	command = 'SELECT * FROM ' + table_name
 	
