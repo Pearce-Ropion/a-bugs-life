@@ -1,21 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import axios from 'axios';
 
 import { Navigation } from './Navigation';
+import { MessagePortal } from './MessagePortal';
+import { ChangeUser } from './ChangeUser';
 import { CreatePane } from './panes/CreatePane';
 import { DetailsPane } from './panes/DetailsPane';
+import { UsersPane } from './panes/UsersPane';
+import { DashboardPane } from './panes/DashboardPane';
 
 import { UserTypes } from '../api/constants/Users';
 import { Panes, TicketViews } from '../api/constants/Panes';
 import { getRole } from '../api/Utils';
 import { getAllLabels } from '../api/Labels';
-import { UsersPane } from './panes/UsersPane';
 import { getTickets, getUsers } from '../api/getData';
-import { MessagePortal } from './MessagePortal';
 import Messages from '../api/constants/Messages';
-import { ChangeUser } from './ChangeUser';
-import { DashboardPane } from './panes/DashboardPane';
 
 export class Application extends React.Component {
     constructor(props) {
@@ -41,7 +40,7 @@ export class Application extends React.Component {
             },
             activePane: Panes.CREATE,
             activeView: TicketViews.NONE,
-            activeTicket: 1,
+            activeTicket: -1,
         }
     }
 
@@ -148,10 +147,6 @@ export class Application extends React.Component {
         });
     };
 
-    onCreateUser = valid => {
-        
-    }
-
     onOpenMessage = message => {
         const self = this;
         this.setState({
@@ -204,7 +199,7 @@ export class Application extends React.Component {
         this.setState({
             activePane: Panes[data.name.toUpperCase()],
             activeView: TicketViews.NONE,
-            activeTicket: 0,
+            activeTicket: -1,
         });
     };
 
@@ -212,7 +207,7 @@ export class Application extends React.Component {
         this.setState({
             activePane: Panes.DETAILS,
             activeView: TicketViews[data.name.toUpperCase()],
-            activeTicket: 0,
+            activeTicket: -1,
         });
     };
 
@@ -241,7 +236,6 @@ export class Application extends React.Component {
             });
 
             if (getRole(user.role) === UserTypes.USER) {
-                console.log(this.tickets);
                 this.setState({
                     activeView: TicketViews.REPORTED,
                 });
@@ -251,9 +245,13 @@ export class Application extends React.Component {
     };
 
     onChangeTicket = id => {
+        if (this.state.activePane !== Panes.DETAILS) {
+            this.setState({
+                activePane: Panes.DETAILS,
+                activeView: TicketViews.ALL,
+            });
+        }
         this.setState({
-            activePane: Panes.DETAILS,
-            activeView: TicketViews.ALL,
             activeTicket: id,
         });
     }
