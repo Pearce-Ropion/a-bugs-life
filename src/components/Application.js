@@ -305,7 +305,7 @@ export class Application extends React.Component {
             {
                 this.getActivePane()
             }
-            <Button onClick={this.generate} content='Generate' />
+            {/* <Button onClick={this.generate} content='Generate' /> */}
         </React.Fragment>
             
     );
