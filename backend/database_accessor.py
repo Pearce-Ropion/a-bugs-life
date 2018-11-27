@@ -135,10 +135,6 @@ def get_table_data(table_name, filters=None):
 			rowObject[key] = value
 			counter += 1
 		
-		if table_name == c.users_table:
-			# this is for security, so the data sent back doesn't contain user's password
-			rowObject.pop('password', None)
-		
 		data.append(rowObject)
 
 	db.close()
