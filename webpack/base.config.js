@@ -16,7 +16,7 @@ const config = {
     },
     module: {
         rules: [{
-            test: /\.js/,
+            test: /\.js$/,
             loader: 'babel-loader',
             options: {
                 presets: [
