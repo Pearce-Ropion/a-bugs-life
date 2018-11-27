@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @summary Implements the Login Handler Class
+ */
+
 import React from 'react'
 import { Button, Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
@@ -6,6 +11,26 @@ import { LoginForm } from './LoginForm';
 import { NewUserHandler } from './NewUserHandler';
 import { userFields, userFieldsError } from '../../api/models/user';    
 
+/**
+ * @export
+ * @class LoginHandler
+ * @summary Implements logging into the application
+ * 
+ * @param {Object} props - the available props
+ * @property {Boolean} props.isLoggedIn - whether the use is logged in
+ * @property {Boolean} props.loginError - whether to display a log in error
+ * @property {Boolean} props.isLoginModalOpen - whether the login modal is open
+ * @property {Boolean} props.isUserModalOpen - whether the user creation modal is open
+ * @property {Function} props.toggleLoginModal - an event handler to toggle the visiblity of the login modal
+ * @property {Function} props.toggleUserModal - an event handler to toggle the visiblity of the user creation modal
+ * @property {Function} props.onLogin - an event handler to request a login action
+ * @property {Function} props.onLogout - an event handler to request a logout action
+ * @property {Function} props.onOpenMessage - an event handler to open the specified message in portal
+ * @property {Function} props.refreshUsers - an event handler to refresh the user list
+ * @property {Function} props.onCreateUser - an event handler to request a user creation action
+ * 
+ * @returns {React.Component} <LoginHandler />
+ */
 export class LoginHandler extends React.Component {
     constructor(props) {
         super(props);
@@ -15,8 +40,15 @@ export class LoginHandler extends React.Component {
         };
     };
 
+    /**
+     * @function onFieldChange
+     * @summary Updates the value of the field
+     *
+     * @param {Event} event - React's Synthetic Event
+     * @param {Object} data - the available props
+     * @property {String} data.value - the new value
+     */
     onFieldChange = (event, data) => {
-        // console.log(this.state.fields)
         this.setState({
             fields: userFields({
                 ...this.state.fields,
@@ -26,6 +58,10 @@ export class LoginHandler extends React.Component {
         });
     };
 
+    /**
+     * @function toggleLoginModal
+     * @summary Toggles the visibility of the login modal
+     */
     toggleLoginModal = () => {
         this.setState({
             fields: userFields({}),
@@ -34,6 +70,12 @@ export class LoginHandler extends React.Component {
         this.props.toggleLoginModal();
     }
 
+    /**
+     * @function validateUser
+     * @summary Checks that all fields have information entered correctly
+     * 
+     * @returns {Boolean} Whether the user information is valid
+     */
     validateUser = () => {
         const newError = userFieldsError({});
         Object.entries(this.state.fields).forEach(([key, field]) => {
@@ -49,16 +91,28 @@ export class LoginHandler extends React.Component {
         return !Object.values(newError).includes(true);
     }
 
+    /**
+     * @function onLogin
+     * @summary Sends a login action after validating the fields
+     */
     onLogin = () => {
         if (this.validateUser()) {
             this.props.onLogin(this.state.fields);
         }
     };
 
+    /**
+     * @function onCreateUser
+     * @summary Event handler to toggle the login modal 
+     */
     onCreateUser = () => {
         this.toggleLoginModal();
     }
 
+    /**
+     * @function render
+     * @summary Renders the component
+     */
     render = () => {
         return <Modal
             size='mini'

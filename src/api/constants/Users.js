@@ -1,5 +1,16 @@
+/**
+ * @file
+ * @summary Constants relating to users and user manipulation
+ */
+
 import PropTypes from 'prop-types';
 
+/**
+ * @export
+ * @enum
+ * @constant {Object} UserTypes
+ * @summary The available user types
+ */
 export const UserTypes = {
     TESTER: {
         type: Symbol('Tester'),
@@ -23,6 +34,12 @@ export const UserTypes = {
     },
 };
 
+/**
+ * @export
+ * @enum
+ * @constant {Object} EmployeeTypes
+ * @summary The available employee types
+ */
 export const EmployeeTypes = {
     TESTER: UserTypes.TESTER,
     DEVELOPER: UserTypes.DEVELOPER,
@@ -30,6 +47,11 @@ export const EmployeeTypes = {
     USER: UserTypes.USER,
 };
 
+/**
+ * @export
+ * @constant {Object} UserProps
+ * @summary The available property types of a single user
+ */
 export const UserProps = {
     id: PropTypes.number,
     name: PropTypes.string,
@@ -37,6 +59,11 @@ export const UserProps = {
     role: PropTypes.string,
 };
 
+/**
+ * @export
+ * @constant {Object} UserProps
+ * @summary The available property types of the current user
+ */
 export const CurrentUserProps = {
     id: PropTypes.number,
     name: PropTypes.string,
@@ -44,6 +71,11 @@ export const CurrentUserProps = {
     role: PropTypes.oneOf(Object.values(UserTypes)),
 }
 
+/**
+ * @export
+ * @constant {Array} UserDropdownOptions
+ * @summary The available employee types to be used in dropdown menus
+ */
 export const UserDropdownOptions = Object.keys(EmployeeTypes)
     .map(user => {
         return {

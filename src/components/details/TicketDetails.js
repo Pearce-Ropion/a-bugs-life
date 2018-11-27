@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @summary Creates the Ticket Details Component
+ */
+
 import React from 'react';
 import { Grid, Header, Label } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
@@ -7,6 +12,16 @@ import { StatusTag, TicketTag } from '../utils/Tags';
 
 import TicketProps from '../../api/constants/TicketProps';
 
+/**
+ * @export
+ * @function TicketDetails
+ * @summary Detail listing of a ticket
+ * 
+ * @param {Object} props - the available properties
+ * @property {Object} ticket - the ticket to render
+ * 
+ * @returns {FSC} <TicketDetails />
+ */
 export const TicketDetails = props =>
     <Grid padded='horizontally'>
         <Grid.Row columns={1}>

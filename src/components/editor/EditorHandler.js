@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @summary Implements the Editor Handler Class
+ */
+
 import React from 'react';
 import { Modal, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
@@ -11,6 +16,26 @@ import { sqlNormalizeTicket } from '../../api/Utils';
 import Messages from '../../api/constants/Messages';
 import TicketProps from '../../api/constants/TicketProps';
 
+
+/**
+ * @export
+ * @callback
+ * @class EditorHandler
+ * @summary Implements editing of single fields within a modal
+ * 
+ * @param {Object} props - the available props
+ * @property {String} props.type - the type of the editor
+ * @property {String} props.original - the the original value of the editor
+ * @property {Object} props.ticket - the current ticket being updated
+ * @property {Array} props.values - the values to place in the dropdown
+ * @property {Function} props.content - the component to render
+ * @property {String} props.property - the property to call the editor
+ * @property {Function} props.onOpenMessage - an event handler to open a specified message
+ * @property {Function} props.refreshTickets - an event handler to refresh the list of all tickets
+ * @property {Object} props.extraUpdates - other updates to apply to the ticket
+ * 
+ * @returns {React.Component} <EditorHandler />
+ */
 export const EditorHandler = withAxios(class AxiosEditorHandler extends React.Component {
     constructor(props) {
         super(props);
@@ -40,6 +65,10 @@ export const EditorHandler = withAxios(class AxiosEditorHandler extends React.Co
         extraUpdates: PropTypes.shape(TicketProps),
     }
 
+    /**
+     * @function toggleEditorModal
+     * @summary Toggles the visiblity of the editor modal and resets the value of the field
+     */
     toggleEditorModal = () => {
         const re = new RegExp(_.escapeRegExp(this.props.original), 'i');
         const isMatch = result => re.test(result.title);
@@ -56,6 +85,14 @@ export const EditorHandler = withAxios(class AxiosEditorHandler extends React.Co
         });
     };
 
+    /**
+     * @function onFieldChange
+     * @summary Updates the current field with new values
+     * 
+     * @param {Event} event - React's Synthetic Event
+     * @param {Object} data - the available props
+     * @property {String} data.value - the new value
+     */
     onFieldChange = (event, data) => {
         this.setState({
             error: false, 
@@ -63,6 +100,14 @@ export const EditorHandler = withAxios(class AxiosEditorHandler extends React.Co
         });
     }
 
+    /**
+     * @function onSearchChange
+     * @summary Updates the search field with new search results
+     *
+     * @param {Event} event - React's Synthetic Event
+     * @param {Object} data - the available props
+     * @property {String} data.value - the new value
+     */
     onSearchChange = (event, data) => {
         this.setState({
             isSearchLoading: true,
@@ -76,6 +121,11 @@ export const EditorHandler = withAxios(class AxiosEditorHandler extends React.Co
                 });
             } else {
                 const re = new RegExp(_.escapeRegExp(data.value), 'i');
+
+                /**
+                 * @function isMatch
+                 * @param {Object} result - the object to search
+                 */
                 const isMatch = result => re.test(result.title);
 
                 this.setState({
@@ -90,12 +140,24 @@ export const EditorHandler = withAxios(class AxiosEditorHandler extends React.Co
         }, 300);
     };
 
+    /**
+     * @function onSearchSelect
+     * @summary Sets the new value of the search field
+     * 
+     * @param {Event} event - React's Synthetic Event
+     * @param {Object} data - the available props
+     * @property {String} data.result.title - the new value
+     */
     onSearchSelect = (event, data) => {
         this.onFieldChange(event, {
             value: data.result.title,
         });
     };
 
+    /**
+     * @function validate
+     * @summary validates the field in the editor
+     */
     validate = () => {
         if (this.state.field === '') {
             if (this.props.type === 'search') {
@@ -111,6 +173,10 @@ export const EditorHandler = withAxios(class AxiosEditorHandler extends React.Co
         return true; // Change
     }
 
+    /**
+     * @function onUpdate
+     * @summary updates the field in the database
+     */
     onUpdate = () => {
         if (this.validate()) {
             const normalized = sqlNormalizeTicket(true, {
@@ -134,6 +200,11 @@ export const EditorHandler = withAxios(class AxiosEditorHandler extends React.Co
         }
     };
 
+    /**
+     * @constant handlers
+     * @memberof EditorHandler
+     * @summary Easy way to reference the functions
+     */
     handlers = {
         toggleEditorModal: this.toggleEditorModal,
         onFieldChange: this.onFieldChange,
@@ -141,6 +212,10 @@ export const EditorHandler = withAxios(class AxiosEditorHandler extends React.Co
         onSearchSelect: this.onSearchSelect,
     }
 
+    /**
+     * @function render
+     * @summary Renders the component
+     */
     render = () => {
         return (
             <Modal

@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @summary Implements the Users Handler Class
+ */
+
 import React from 'react';
 import { Grid, Table, Dropdown, Message } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
@@ -7,6 +12,18 @@ import { UserDropdownOptions, UserProps } from '../../api/constants/Users';
 import { sqlNormalizeUser, getRole } from '../../api/Utils';
 import Messages from '../../api/constants/Messages';
 
+/**
+ * @export
+ * @class UsersPane
+ * @summary Implements the users handler and renderer
+ * 
+ * @param {Object} props - the available props
+ * @property {Object} props.users - all the users
+ * @property {Function} props.onOpenMessage - an event handler to open the specified messages
+ * @property {Function} props.refreshTickets - an event handler to refresh the tickets list
+ * 
+ * @returns {React.Component} <UsersPane />
+ */
 export class UsersPane extends React.Component {
     constructor(props) {
         super(props);
@@ -21,6 +38,15 @@ export class UsersPane extends React.Component {
         refreshUsers: PropTypes.func.isRequired,
     };
 
+    /**
+     * @function onUpdateRole
+     * @summary Updates the role in the database of the specified user
+     *
+     * @param {Event} event - React's Synthetic Event
+     * @param {Object} data - the available props
+     * @property {String} data.id - the user id
+     * @property {String} data.value - the new role value
+     */
     onUpdateRole = (event, data) => {
         const user = sqlNormalizeUser(true, {
             ...this.props.users.find(next => next.id === data.id),
@@ -37,6 +63,10 @@ export class UsersPane extends React.Component {
             });
     };
 
+    /**
+     * @function render
+     * @summary Renders the component
+     */
     render = () => {
         return (
             <Grid centered padded>

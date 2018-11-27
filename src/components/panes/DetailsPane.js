@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @summary Implements the Details Handler Class
+ */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Message, Segment, Divider } from 'semantic-ui-react';
@@ -17,6 +22,24 @@ import { UserTypes, CurrentUserProps, UserProps } from '../../api/constants/User
 import { sortDDoptions, sortOptions } from '../../api/DropdownOptions';
 import { getTicketKey } from '../../api/Utils';
 
+/**
+ * @export
+ * @class DashboardPane
+ * @summary Implements the details handler and renderer
+ * 
+ * @param {Object} props - the available props
+ * @property {Object} props.currentUser - the current user
+ * @property {Array} props.tickets - all the tickets
+ * @property {Number|String} props.activeTicket - the active ticket to display
+ * @property {Object} props.labels - all the labels
+ * @property {Symbol} props.view - the current view
+ * @property {Object} props.users - all the users
+ * @property {Function} props.onOpenMessage - an event handler to open the specified messages
+ * @property {Function} props.refreshTickets - an event handler to refresh the tickets list
+ * @property {Function} props.onChangeTicket - an event handler to change the ticket
+ * 
+ * @returns {React.Component} <DashboardPane />
+ */
 export class DetailsPane extends React.Component {
     constructor(props) {
         super(props);
@@ -42,6 +65,20 @@ export class DetailsPane extends React.Component {
         onChangeTicket: PropTypes.func.isRequired,
     };
     
+    /**
+     * @function filterTickets
+     * @summary Filters, searches and sorts the tickets
+     * 
+     * @param {Array} tickets - all the tickets
+     * @param {Symbol} view - the current view of the details pane
+     * @param {Object} currentUser - the current user
+     * @param {String} searchString - the string to search by
+     * @param {String} searchCategory - the category to search by
+     * @param {Boolean} isSearching - whether a search should occur
+     * @param {String} sortBy - the category to sort by
+     * 
+     * @returns {Map} Filtered tickets
+     */
     filterTickets = memoize((tickets, view, currentUser, searchString, searchCategory, isSearching, sortBy) => {
         let filtered = [];
 
@@ -72,21 +109,53 @@ export class DetailsPane extends React.Component {
         return filterTickets;
     }, _.isEqual);
 
+    /**
+     * @function changeTicket
+     * @summary Changes the current ticket
+     *
+     * @param {Event} event - React's Synthetic Event
+     * @param {Object} data - the available props
+     * @property {String} data.ticketid - the new ticket id
+     */
     changeTicket = (event, data) => {
         this.props.onChangeTicket(data.ticketid);
     };
 
+    /**
+     * @function onSortChange
+     * @summary Updates the sort type
+     *
+     * @param {Event} event - React's Synthetic Event
+     * @param {Object} data - the available props
+     * @property {String} data.value - the new value
+     */
     onSortChange = (event, data) => {
         this.setState({
             sortBy: data.value,
         });
     };
 
+    /**
+     * @function sortTickets
+     * @summary Sorts the tickets by the specified category
+     * 
+     * @param {Array} tickets - the available tickets
+     * @param {String} category - the category to sort by
+     * 
+     * @returns {Array} Sorted tickets
+     */
     sortTickets = (tickets, category) =>
         sortOptions[category] === 'base'
             ? _.sortBy(tickets, [category])
             : _.sortBy(tickets, [ticket => getTicketKey[category](ticket[category])[sortOptions[category]]]);
-        
+    
+    /**
+     * @function onSearch
+     * @summary An event handler to handle a new search request
+     * 
+     * @param {String} string - the search string
+     * @param {String} category - the category to search by
+     */
     onSearch = (string, category) => {
         if (string !== '' && category !== '') {
             this.setState({
@@ -99,6 +168,10 @@ export class DetailsPane extends React.Component {
         }
     };
 
+    /**
+     * @function clearSearch
+     * @summary Clears the search state
+     */
     clearSearch = () => {
         this.setState({
             search: {
@@ -109,6 +182,10 @@ export class DetailsPane extends React.Component {
         });
     };
 
+    /**
+     * @function render
+     * @summary renders the component
+     */
     render = () => {
         const categoryOptions = sortDDoptions();
         let { activeTicket } = this.props;

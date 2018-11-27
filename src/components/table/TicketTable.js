@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @summary Implements the Ticket Table Class
+ */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Table, AutoSizer, Column, CellMeasurerCache, CellMeasurer } from 'react-virtualized';
@@ -9,6 +14,16 @@ import { getPriority } from '../../api/Utils';
 
 import 'react-virtualized/styles.css';
 
+/**
+ * @export
+ * @class TicketTable
+ * @summary Implements the ticket table and renderer
+ * 
+ * @param {Object} props - the available props
+ * @property {Object} props.tickets - all the tickets
+ * 
+ * @returns {React.Component} <TicketTable />
+ */
 export class TicketTable extends React.Component {
     constructor(props) {
         super(props);
@@ -28,11 +43,25 @@ export class TicketTable extends React.Component {
         tickets: PropTypes.array,
     };
 
+    /**
+     * @function onOpenTicket
+     * @summary Sends an action to open the specified ticket in the ticket details pane
+     */
     onOpenTicket = event => {
         const id = event.target.getAttribute('ticket');
         this.props.onOpenTicket(id);
     }
 
+    /**
+     * @function baseCell
+     * @summary Creates a base cell component to auto measure the contents of the cell
+     * 
+     * @param {Function} content - a function to call to render the contents of the cell
+     * @param {CellMeasurerCache} cache - the cache of the table
+     * @param {Object} cellProps - the available props
+     * 
+     * @returns {FSC} <CellMeasurer />
+     */
     baseCell = (content, cache, cellProps) => {
         const { columnIndex, rowIndex, cellData, key, dataKey } = cellProps;
         const styles = {

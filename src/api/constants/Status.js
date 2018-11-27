@@ -1,3 +1,14 @@
+/**
+ * @file
+ * @summary Enum representations for properties that reflect the status of a ticket
+ */
+
+/**
+ * @export
+ * @enum
+ * @constant {Object} StatusTypes
+ * @summary Enum representations of the different status types of a ticket
+ */
 export const StatusTypes = {
     OPEN: {
         type: Symbol('OPEN'),
@@ -61,6 +72,12 @@ export const StatusTypes = {
     },
 };
 
+/**
+ * @export
+ * @enum
+ * @constant {Object} ResolutionTypes
+ * @summary Enum representations of the different resolution types of a ticket
+ */
 export const ResolutionTypes = {
     FIXED: 'Fixed',
     WONT_FIX: 'Wont Fix',

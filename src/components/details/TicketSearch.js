@@ -1,9 +1,25 @@
+/**
+ * @file
+ * @summary Creates the Ticket Search Component
+ */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Container, Input, Dropdown, Popup, Button, Icon } from 'semantic-ui-react';
 
 import { sortDDoptions } from '../../api/DropdownOptions';
 
+/**
+ * @export
+ * @class TicketSearch
+ * @summary Implements searching of tickets and a search bar at the top of the details page
+ * 
+ * @param {Object} props - the available props
+ * @property {Function} props.onSearch - an even handler to start a search action
+ * @property {Function} props.clearSearch - an event handler to clear the search bar and update the ticket list
+ * 
+ * @returns {React.Component} <TicketSearch />
+ */
 export class TicketSearch extends React.Component {
     constructor(props) {
         super(props);
@@ -22,6 +38,15 @@ export class TicketSearch extends React.Component {
         clearSearch: PropTypes.func.isRequired,
     };
 
+    /**
+     * @function onSearchChange
+     * @summary Handles a change of the searhc input or category
+     * 
+     * @param {Event} - React's Syntehtic Event
+     * @param {Object} data - the available props
+     * @property {String} data.value - the current value of the component
+     * @property {Boolean} data.error - the error state of the component
+     */
     onSearchChange = (event, data) => {
         this.setState({
             [data.name]: data.value,
@@ -32,6 +57,10 @@ export class TicketSearch extends React.Component {
         });
     };
 
+    /**
+     * @function onSearch
+     * @summary Called when a search is performed. Does data validation and passes actual searching to parent component
+     */
     onSearch = () => {
         const { search, category } = this.state;
         if (search.length !== 0 && category.length !== 0) {
@@ -64,6 +93,10 @@ export class TicketSearch extends React.Component {
         }
     };
 
+    /**
+     * @function clearSearch
+     * @summary Clears the state of the search bar and passes a clear command to the parent component
+     */
     clearSearch = () => {
         if (this.state.search.length !== 0) {
             this.props.clearSearch();
@@ -74,6 +107,10 @@ export class TicketSearch extends React.Component {
         }
     };
 
+    /**
+     * @function render
+     * @summary Renders the component
+     */
     render = () => {
         const categoryOptions = sortDDoptions();
         return (

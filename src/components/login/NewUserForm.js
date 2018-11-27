@@ -1,9 +1,27 @@
+/**
+ * @file
+ * @summary Creates a New User Form Component
+ */
+
 import React from 'react';
-import { Form, Label, Input } from 'semantic-ui-react';
+import { Form, Label } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import { displayLabel } from '../../api/Labels';
 
+/**
+ * @export
+ * @function NewUserForm
+ * @summary Implements the new user creation form
+ * 
+ * @param {Object} props - the available props
+ * @property {Object} props.fields - the field values to display in the form
+ * @property {Object} props.error - the error states of the fields
+ * @property {Object} props.confirmation - the value and error state of the confirmation field
+ * @property {Function} props.onFieldChange - an event handler to handle field changes
+ * 
+ * @returns {FSC} <NewUserForm />
+ */
 export const NewUserForm = props =>
     <React.Fragment>
         <Form>

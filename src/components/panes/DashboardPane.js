@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @summary Implements the Dashboard Handler Class
+ */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Segment, Label } from 'semantic-ui-react';
@@ -9,6 +14,16 @@ import { TicketTable } from '../table/TicketTable';
 import TicketProps from '../../api/constants/TicketProps';
 import { capitalize } from '../../api/Utils';
 
+/**
+ * @export
+ * @class DashboardPane
+ * @summary Implements the dashboard handler and renderer
+ * 
+ * @param {Object} props - the available props
+ * @property {Array} props.tickets - all the tickets
+ * 
+ * @returns {React.Component} <DashboardPane />
+ */
 export class DashboardPane extends React.Component {
     constructor(props) {
         super(props);
@@ -27,11 +42,25 @@ export class DashboardPane extends React.Component {
         tickets: PropTypes.arrayOf(PropTypes.shape(TicketProps)),
     };
 
+    /** 
+     * @function splitTickets
+     * @summary Splits the tickets by their defined type
+     * 
+     * @param {String} type - the preperty to split the tickets by
+     * 
+     * @returns {Array} Subarray of tickets
+     */
     splitTickets = type =>
         this.statusCategories.hasOwnProperty(type)
             ? _.filter(this.props.tickets, ({ status }) => this.statusCategories[type].includes(status))
             : [];
     
+    /**
+     * @function categorizeTickets
+     * @summary Specified the pie segments to be rendered
+     * 
+     * @returns {Array} Pie segment object
+     */
     categorizeTickets = () => {
         const types = {
             open: { count: 0, color: 'hsl(210, 100%, 45%)'},
@@ -56,6 +85,10 @@ export class DashboardPane extends React.Component {
         });
     };
 
+    /**
+     * @function render
+     * @summary renders the component
+     */
     render = () => {
         const open = this.splitTickets('open');
         const testing = this.splitTickets('testing');

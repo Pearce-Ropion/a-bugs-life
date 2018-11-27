@@ -1,9 +1,26 @@
+/**
+ * @file
+ * @summary Creates a Login Form Component
+ */
+
 import React from 'react';
 import { Form, Segment, Message, Label } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 import { displayLabel } from '../../api/Labels';
 
+/**
+ * @export
+ * @function LoginForm
+ * @summary Implements the login form for logging into the app
+ * 
+ * @param {Object} props - the available props
+ * @property {Boolean} props.loginError - whether the error is displayed on the component
+ * @property {User} props.fields - the value of the fields
+ * @property {Function} props.onFieldChange - an event handler to update the value of the fields
+ * 
+ * @returns {FSC} <LoginForm />
+ */
 export const LoginForm = props =>
     <React.Fragment>
         <Segment basic padded={false} style={{ display: !props.loginError ? 'none' : 'block' }}>

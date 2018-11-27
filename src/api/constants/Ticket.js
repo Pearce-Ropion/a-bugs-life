@@ -1,3 +1,14 @@
+/**
+ * @file
+ * @summary Enum representations for properties that reflect properties of a ticket
+ */
+
+/**
+ * @export
+ * @enum
+ * @constant {Object} PriorityLevels
+ * @summary Enum representations of the different priority levels of a ticket
+ */
 export const PriorityLevels = {
     TOP_PRIORITY: {
         short: 'P0',
@@ -55,6 +66,12 @@ export const PriorityLevels = {
     },
 };
 
+/**
+ * @export
+ * @enum
+ * @constant {Object} SeverityLevels
+ * @summary Enum representations of the different severity levels of a ticket
+ */
 export const SeverityLevels = {
     CRITICAL: 'Critical',
     HIGH: 'High',
@@ -63,6 +80,12 @@ export const SeverityLevels = {
     NA: 'N/A',
 };
 
+/**
+ * @export
+ * @enum
+ * @constant {Array} SeverityLevels
+ * @summary A lit of the available component types
+ */
 export const ComponentTypes = [
     'Network',
     'Camino',

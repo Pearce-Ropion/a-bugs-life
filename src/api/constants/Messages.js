@@ -1,3 +1,15 @@
+/**
+ * @file
+ * @summary A set of messages that are displayed to the user when actions have been made
+ */
+
+/**
+ * @export
+ * @default
+ * @enum
+ * @constant {Object} Messages
+ * @summary A set of messages that are displayed to the user when actions have been made
+ */
 export default {
     CREATE_TICKET_SUCCESS_LOGIN: {
         color: 'green',

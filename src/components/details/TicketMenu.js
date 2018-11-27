@@ -1,6 +1,11 @@
+/**
+ * @file
+ * @summary Creates the Ticket Menu Component
+ */
+
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Segment, Button, ButtonGroup } from 'semantic-ui-react';
+import { Segment, Button } from 'semantic-ui-react';
 
 import { TicketHandler } from '../ticket/TicketHandler';
 import { AssigneeEditor } from '../editor/Assignee';
@@ -14,6 +19,21 @@ import { ticketFields } from '../../api/models/ticket';
 import { ResolutionTypes, StatusTypes } from '../../api/constants/Status';
 import { LabelProps } from '../../api/Labels';
 
+/**
+ * @export
+ * @function TicketMenu
+ * @summary The menu to be displayed on the right of the details with options for editing a ticket
+ * 
+ * @param {Object} props - the available properties
+ * @property {Array} users - all the available users
+ * @property {Array} ticket - the current ticket
+ * @property {Object} labels - all the available labels
+ * @property {Object} currentUser - the current user
+ * @property {Function} onOpenMessage - an event handler to open the message portal when an action is performed
+ * @property {Function} refreshTickets - an event handler to refresh the ticket list
+ * 
+ * @returns {FSC} <TicketMeu />
+ */
 export const TicketMenu = props =>
     <Segment.Group id='ticket-menu'>
         <Segment basic>

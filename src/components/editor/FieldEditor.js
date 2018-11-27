@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @summary Implements the Field Editor Class
+ */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'semantic-ui-react';
@@ -9,6 +14,24 @@ import { sqlNormalizeTicket } from '../../api/Utils';
 import Messages from '../../api/constants/Messages';
 import TicketProps from '../../api/constants/TicketProps';
 
+/**
+ * @export
+ * @callback
+ * @class FieldEditor
+ * @summary Implements editing of single fields with a button
+ * 
+ * @param {Object} props - the available props
+ * @property {String} props.value - the value to change to
+ * @property {Object} props.ticket - the current ticket being updated
+ * @property {Array} props.field - the current value of the field
+ * @property {Function} props.content - the component to render
+ * @property {Function} props.onOpenMessage - an event handler to open a specified message
+ * @property {Function} props.refreshTickets - an event handler to refresh the list of all tickets
+ * @property {Object} props.extraUpdates - other updates to apply to the ticket
+ * @property {Object} props.additionalSemProps - additional props to apply to the button
+ * 
+ * @returns {React.Component} <FieldEditor />
+ */
 export const FieldEditor = withAxios(class AxiosFieldEditor extends React.Component {
     constructor(props) {
         super(props);
@@ -29,6 +52,10 @@ export const FieldEditor = withAxios(class AxiosFieldEditor extends React.Compon
         additionalSemProps: PropTypes.object,
     }
 
+    /**
+     * @function onUpdate
+     * @summary updates the ticket with the new parameters
+     */
     onUpdate = () => {
         const ticket = ticketFields({
             ...this.props.ticket,
@@ -47,6 +74,10 @@ export const FieldEditor = withAxios(class AxiosFieldEditor extends React.Compon
             });
     }
 
+    /**
+     * @function render
+     * @summary Component rendering
+     */
     render = () => {
         return (
             <Button fluid basic {...this.props.additionalSemProps} disabled={this.props.ticket.status === this.props.value} content={this.props.content} field={this.props.field} onClick={this.onUpdate} />

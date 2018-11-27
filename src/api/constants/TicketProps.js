@@ -1,5 +1,16 @@
+/**
+ * @file
+ * @summary The default properties types of a single ticket
+ */
+
 import PropTypes from 'prop-types';
 
+/**
+ * @export
+ * @default
+ * @constant {Object} TicketProps
+ * @summary The default ptoperties of asingle ticket
+ */
 export default {
     id: PropTypes.number,
     summary: PropTypes.string,
