@@ -119,9 +119,9 @@ export const NewUserHandler = withAxios(class AxiosNewUserHandler extends React.
                     newError.email = !validator.validate(field);
                 }
                 if (key === 'password') {
-                    // if (field.length < 6) {
-                    //     newError.password = true;
-                    // }
+                    if (field.length < 6) {
+                        newError.password = true;
+                    }
                     if (this.state.confirmation.field != field) {
                         newError.password = true;
                         confirmationError = true;
@@ -149,7 +149,6 @@ export const NewUserHandler = withAxios(class AxiosNewUserHandler extends React.
     onCreateUser = () => {
         if (this.validateUser()) {
             const hash = bcrypt.hashSync(this.state.fields.password, 8);
-            console.log(hash);
             const normalizedFields = sqlNormalizeUser(false, {
                 ...this.state.fields,
                 password: hash,

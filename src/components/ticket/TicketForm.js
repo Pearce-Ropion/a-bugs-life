@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @summary Creates a Ticket Form Component
+ */
+
 import React from 'react';
 import { Form, Search, Divider } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
@@ -6,6 +11,20 @@ import dropdownOptions from '../../api/DropdownOptions';
 import TicketProps from '../../api/constants/TicketProps';
 import { sortByKey } from '../../api/Utils';
 
+/**
+ * @export
+ * @function TicketForm
+ * @summary Implements the ticket form component
+ * 
+ * @param {Object} props - the available props
+ * @property {Boolean} props.isEditable - whether the form is being edited
+ * @property {Boolean} props.isEmployee - whether the current user is an employee
+ * @property {Object} props.fields - the values of the fields
+ * @property {Object} props.errors - the error states of each field
+ * @property {Function} props.onFieldChange - an event handler to update the value of a field
+ * 
+ * @returns {FSC} <TicketForm />
+ */
 export const TicketForm = props => {
     return <Form style={{ padding: '2em 2em 0'}}>
         <Form.Input 

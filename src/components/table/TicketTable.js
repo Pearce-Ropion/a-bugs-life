@@ -90,6 +90,15 @@ export class TicketTable extends React.Component {
         </CellMeasurer>;
     };
 
+    /**
+     * @function iconRender
+     * @summary Creates an icon with a pop up
+     * 
+     * @param {CellMeasurerCache} cache - the table cache
+     * @param {Object} cellProps - the available props
+     * 
+     * @returns {Function} Instance of baseCell
+     */
     iconRender = cache => cellProps => {
         const priorityName = cellProps.cellData;
         const priority = getPriority(priorityName);
@@ -99,26 +108,56 @@ export class TicketTable extends React.Component {
         return this.baseCell(content, cache, cellProps);
     };
 
+    /**
+     * @function linkRender
+     * @summary Creates an anchor tag
+     * 
+     * @param {CellMeasurerCache} cache - the table cache
+     * @param {Object} cellProps - the available props
+     * 
+     * @returns {Function} Instance of baseCell
+     */
     linkRender = cache => cellProps => {
         const id = cellProps.cellData;
         const content = <a style={{ textDecoration: 'underline', cursor: 'pointer' }} ticket={id} onClick={this.onOpenTicket}>{id}</a>
         return this.baseCell(content, cache, cellProps);
     }
 
+    /**
+     * @function textRender
+     * @summary Creates a container with text
+     * 
+     * @param {CellMeasurerCache} cache - the table cache
+     * @param {Object} cellProps - the available props
+     * 
+     * @returns {Function} Instance of baseCell
+     */
     textRender = cache => cellProps => {
         const content = <Container content={cellProps.cellData} />
         return this.baseCell(content, cache, cellProps);
     };
 
+    /**
+     * @function statusRender
+     * @summary Creates a status tag
+     * 
+     * @param {CellMeasurerCache} cache - the table cache
+     * @param {Object} cellProps - the available props
+     * 
+     * @returns {Function} Instance of baseCell
+     */
     statusRender = cache => cellProps => {
         const status = cellProps.cellData;
         const content = <StatusTag name={status} />
         return this.baseCell(content, cache, cellProps);
     };
 
+    /**
+     * @function renders
+     * @summary Renders the component
+     */
     render = () => {
         const cache = this.cache;
-        // console.log(this.props.tickets);
         return (
             <div style={{ flex: '1 1 auto' }}>
                 <AutoSizer disableHeight>
