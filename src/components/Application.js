@@ -1,11 +1,14 @@
+/**
+ * @file
+ * @summary Creates the Application and manages all transitions and high level interactions
+ */
+
 import React from 'react';
 import axios from 'axios';
-import { Button } from 'semantic-ui-react';
 import bcrypt from 'bcryptjs';
 
 import { Navigation } from './Navigation';
 import { MessagePortal } from './MessagePortal';
-import { ChangeUser } from './ChangeUser';
 import { CreatePane } from './panes/CreatePane';
 import { DetailsPane } from './panes/DetailsPane';
 import { UsersPane } from './panes/UsersPane';
@@ -15,9 +18,16 @@ import { UserTypes } from '../api/constants/Users';
 import { Panes, TicketViews } from '../api/constants/Panes';
 import { getRole } from '../api/Utils';
 import { getAllLabels } from '../api/Labels';
-import { getTickets, getUsers, genData } from '../api/getData';
+import { getTickets, getUsers } from '../api/getData';
 import Messages from '../api/constants/Messages';
 
+/**
+ * @export
+ * @class Application
+ * @summary Manages all transitions and high level interactions
+ * 
+ * @returns <Application />
+ */
 export class Application extends React.Component {
     constructor(props) {
         super(props);
@@ -45,6 +55,10 @@ export class Application extends React.Component {
         }
     }
 
+    /**
+     * @function componentDidMount
+     * @summary refreshes the tickets and users when the component mounts
+     */
     componentDidMount = () => {
         if (!this.tickets.length) {
             this.refreshTickets()
@@ -55,6 +69,10 @@ export class Application extends React.Component {
         }
     }
 
+    /**
+     * @function refreshTickets
+     * @summary refreshes the ticket list and label array
+     */
     refreshTickets = () => {
         getTickets()
             .then(response => {
@@ -73,6 +91,10 @@ export class Application extends React.Component {
             });
     }
 
+    /**
+     * @function refreshUsers
+     * @summary refreshes the user list
+     */
     refreshUsers = () => {
         getUsers()
             .then(response => {
@@ -90,18 +112,32 @@ export class Application extends React.Component {
             });
     }
 
+    /**
+     * @function toggleLoginModal
+     * @summary Toggles the visibility of the login modal
+     */
     toggleLoginModal = () => {
         this.setState({
             isLoginModalOpen: !this.state.isLoginModalOpen,
         });
     };
 
+    /**
+     * @function toggleUserModal
+     * @summary Toggles the visibility of the user creation modal
+     */
     toggleUserModal = () => {
         this.setState({
             isUserModalOpen: !this.state.isUserModalOpen,
         });
     };
 
+    /**
+     * @function onLogin
+     * @summary Checks whether the user logging in is a real user and whether the credentials are correct. Logs in the user
+     * 
+     * @param {Object} fields - the fields from the login modal
+     */
     onLogin = fields => {
         this.setState({
             loginError: false,
@@ -138,6 +174,10 @@ export class Application extends React.Component {
             .catch(err => console.warn(err));
     };
     
+    /**
+     * @function onLogout
+     * @summary Logs out the current user
+     */
     onLogout = () => {
         this.setState({
             currentUser: {
@@ -150,6 +190,10 @@ export class Application extends React.Component {
         });
     };
 
+    /**
+     * @function onOpenMessage
+     * @summary Opens the specified message
+     */
     onOpenMessage = message => {
         const self = this;
         this.setState({
@@ -161,12 +205,22 @@ export class Application extends React.Component {
         }, 3000);
     }
 
+    /**
+     * @function onCloseMessage
+     * @summary Closes the message pop up
+     */
     onCloseMessage = () => {
         this.setState({
             isMessageOpen: false,
         })
     }
 
+    /**
+     * @function getActivePane
+     * @summary Gets the active pane and passes relevant props
+     * 
+     * @returns {React.Component} The relevant pane
+     */
     getActivePane = () => {
         const { activePane } = this.state;
         if (activePane === Panes.CREATE) {
@@ -198,6 +252,14 @@ export class Application extends React.Component {
         return null;
     };
 
+    /**
+     * @function changeActivePane
+     * @summary updates the active pane
+     *
+     * @param {Event} event - React's Synthetic Event
+     * @param {Object} data - the available props
+     * @property {String} data.name - the new pane name
+     */
     changeActivePane = (event, data) => {
         this.setState({
             activePane: Panes[data.name.toUpperCase()],
@@ -206,6 +268,14 @@ export class Application extends React.Component {
         });
     };
 
+    /**
+     * @function changeActiveView
+     * @summary updates the current ticket view
+     *
+     * @param {Event} event - React's Synthetic Event
+     * @param {Object} data - the available props
+     * @property {String} data.value - the new ticket view name
+     */
     changeActiveView = (event, data) => {
         this.setState({
             activePane: Panes.DETAILS,
@@ -214,39 +284,12 @@ export class Application extends React.Component {
         });
     };
 
-    onUserChange = (event, data) => {
-        if (data.value === 'None') {
-            this.setState({
-                currentUser: {
-                    name: 'No Logged In',
-                    email: null,
-                    role: UserTypes.NONE,
-                },
-                isLoggedIn: false,
-                activePane: Panes.CREATE,
-            });
-        } else {
-            const user = this.users.find(user => user.role === data.value);
-            this.setState({
-                currentUser: {
-                    ...user,
-                    role: getRole(user.role),
-                },
-                isLoggedIn: true,
-                loginError: false,
-                activePane: Panes.DETAILS,
-                activeView: TicketViews.ALL,
-            });
-
-            if (getRole(user.role) === UserTypes.USER) {
-                this.setState({
-                    activeView: TicketViews.REPORTED,
-                });
-            }
-        }
-        this.forceUpdate();
-    };
-
+    /**
+     * @function onChangeTicket
+     * @summary changes the current ticket
+     * 
+     * @param {Number|String} id - the id of the ticket to change to
+     */
     onChangeTicket = id => {
         if (this.state.activePane !== Panes.DETAILS) {
             this.setState({
@@ -259,6 +302,10 @@ export class Application extends React.Component {
         });
     };
 
+    /**
+     * @function render
+     * @summary Component renderer
+     */
     render = () => (
         <React.Fragment>
             <Navigation

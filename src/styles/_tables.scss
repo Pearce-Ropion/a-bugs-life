@@ -1,11 +1,13 @@
+// CSS for the ticket table
+
 .ticket-table {
   font-size: .85em;
 
   .ReactVirtualized__Table__row {
-    
     &:nth-of-type(even) {
-        background-color: #F8F8F8;
+      background-color: #F8F8F8;
     }
+
     .ReactVirtualized__Table__rowColumn {
       margin-right: 0 !important;
 
@@ -17,8 +19,9 @@
       &:first-of-type {
         margin-left: 0 !important;
       }
+
       &:last-of-type {
-          margin-right: 10px !important;
+        margin-right: 10px !important;
       }
     }
   }

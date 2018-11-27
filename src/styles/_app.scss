@@ -1,3 +1,5 @@
+// main css file for the app
+
 @import './abstracts';
 @import './heading';
 @import './tickets';
@@ -5,7 +7,7 @@
 @import './tables';
 
 body {
-//   overflow: hidden;
+  //   overflow: hidden;
 }
 
 #details {
@@ -26,5 +28,5 @@ body {
 }
 
 #ticket-menu {
-    margin-top: 1rem !important;
+  margin-top: 1rem !important;
 }

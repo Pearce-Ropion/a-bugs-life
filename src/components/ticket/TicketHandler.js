@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @summary Implements the Ticket Handler Class
+ */
+
 import React from 'react';
 import { Segment, Button, Header, Divider, Form } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
@@ -9,15 +14,54 @@ import { TicketModal } from './TicketModal';
 import { TicketForm } from './TicketForm';
 
 import { ticketFields, ticketFieldErrors } from '../../api/models/ticket';
-import { UserTypes, CurrentUserProps } from '../../api/constants/Users';
+import { UserTypes, CurrentUserProps, UserProps } from '../../api/constants/Users';
 import TicketProps from '../../api/constants/TicketProps';
 import { sqlNormalizeTicket } from '../../api/Utils';
 import Messages from '../../api/constants/Messages';
 import { LabelProps } from '../../api/Labels';
 
+/**
+ * @function userFieldFactory
+ * @summary Creates field objects for reporter name on create pane
+ * 
+ * @param {Object} params - the available params
+ * @property {String} [params.fname = ''] - the first name
+ * @property {String} [params.lname = ''] - the last name
+ * 
+ * @returns {Object} User Field Factory
+ */
 const userFieldFactory = ({ fname = '', lname = '' }) => ({ fname, lname });
+
+/**
+ * @function userErrorFactory
+ * @summary Creates field objects for reporter name on create pane
+ * 
+ * @param {Object} params - the available params
+ * @property {String} [params.fname = false] - the first name
+ * @property {String} [params.lname = false] - the last name
+ * 
+ * @returns {Object} User Field Factory
+ */
 const userErrorFactory = ({ fname = false, lname = false }) => ({ fname, lname });
 
+/**
+ * @export
+ * @callback
+ * @class TicketHandler
+ * @summary Implements creating and editing tickets
+ * 
+ * @param {Object} props - the available props
+ * @property {Boolean} props.isEditable - whether the current instance of TicketHandler is being edited
+ * @property {Boolean} props.currentUser - the current user
+ * @property {Boolean} props.ticket - the current ticket
+ * @property {Boolean} props.labels - all the labels
+ * @property {Array} props.users - all users
+ * @property {Boolean} props.onSubmitTicket - an event handler to send a action to submit a ticket
+ * @property {Boolean} props.refreshTickets - an event handler to refresh the ticket list
+ * @property {Boolean} props.onOpenMessage - an event handler to open the specified message
+ * 
+ * @returns {React.Component} <TicketHandler />
+ */
 export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Component {
     constructor(props) {
         super(props);
@@ -39,12 +83,19 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
         currentUser: PropTypes.shape(CurrentUserProps),
         ticket: PropTypes.shape(TicketProps),
         labels: LabelProps,
+        users: PropTypes.arrayOf(PropTypes.shape(UserProps)),
         onSubmitTicket: PropTypes.func,
         refreshTickets: PropTypes.func.isRequired,
         onOpenMessage: PropTypes.func.isRequired,
     };
 
-    componentDidUpdate = (prevProps, prevState) => {
+    /**
+     * @function componentDidUpdate
+     * @summary Calls when the component finishes updating
+     * 
+     * @param {Object} prevProps - the previous version of the props
+     */
+    componentDidUpdate = prevProps => {
         if (this.props.ticket !== prevProps.ticket) {
             this.setState({
                 fields: this.getTicket(this.props.ticket)
@@ -52,6 +103,14 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
         }
     };
 
+    /**
+     * @function getTicket
+     * @summary Gets the current ticket's fields and fills in the correct reporter
+     * 
+     * @param {Object} ticket - the ticket to get the fields for
+     * 
+     * @returns {Ticket} the ticket fields
+     */
     getTicket = ticket => {
         const { isEditable, currentUser } = this.props;
         if (!isEditable) {
@@ -67,6 +126,14 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
         });
     };
 
+    /**
+     * @function onFieldChange
+     * @summary Handler to update the field value
+     *
+     * @param {Event} event - React's Synthetic Event
+     * @param {Object} data - the available props
+     * @property {String} data.value - the new value
+     */
     onFieldChange = (event, data) => {
         this.setState({
             fields: ticketFields({
@@ -80,6 +147,14 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
         });
     };
 
+    /**
+     * @function onUserFieldChange
+     * @summary Handler to update the fields of the user name on create pane
+     *
+     * @param {Event} event - React's Synthetic Event
+     * @param {Object} data - the available props
+     * @property {String} data.value - the new value
+     */
     onUserFieldChange = (event, data) => {
         this.setState({
             userFields: userFieldFactory({
@@ -93,6 +168,14 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
         });
     };
 
+    /**
+     * @function onSearchChange
+     * @summary Handler to create a new result set from the input
+     *
+     * @param {Event} event - React's Synthetic Event
+     * @param {Object} data - the available props
+     * @property {String} data.value - the new value
+     */
     onSearchChange = (event, data) => {
         this.setState({
             isAssigneeLoading: true,
@@ -124,6 +207,14 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
         }, 300);
     };
 
+    /**
+     * @function onSearchSelect
+     * @summary Function call when a specific search was selected
+     *
+     * @param {Event} event - React's Synthetic Event
+     * @param {Object} data - the available props
+     * @property {String} data.result.title - the new value
+     */
     onSearchSelect = (event, data) => {
         this.onFieldChange(event, {
             name: data.name,
@@ -131,6 +222,14 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
         });
     };
 
+    /**
+     * @function onAddItem
+     * @summary Handler to add a label
+     *
+     * @param {Event} event - React's Synthetic Event
+     * @param {Object} data - the available props
+     * @property {String} data.value - the new value
+     */
     onAddItem = (event, data) => {
         this.setState({
             labels: [
@@ -144,12 +243,22 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
         });
     };
 
+    /**
+     * @function toggleModal
+     * @summary Toggles the ticket modal
+     */
     toggleModal = () => {
         this.setState({
             isModalOpen: !this.state.isModalOpen,
         });
     };
 
+    /**
+     * @function validateForm
+     * @summary Validates the input fields of the for
+     * 
+     * @returns {Boolean} whether the form is valid or not
+     */
     validateForm = () => {
         const newError = ticketFieldErrors({});
         const newUserError = userErrorFactory({});
@@ -187,6 +296,10 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
         return valid;
     };
 
+    /**
+     * @function onSubmit
+     * @summary Creates a new ticket or updates an existing ticket
+     */
     onSubmit = () => {
         if (!this.validateForm()) {
             this.props.onOpenMessage(Messages.TICKET_FIELD_ERROR);
@@ -215,6 +328,10 @@ export const TicketHandler = withAxios(class AxiosTicketHandler extends React.Co
         }
     };
 
+    /**
+     * @function render
+     * @summary Renders the component
+     */
     render = () => {
         return this.props.isModal
             ? <TicketModal

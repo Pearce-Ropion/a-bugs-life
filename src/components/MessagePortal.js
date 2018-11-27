@@ -1,7 +1,21 @@
+/**
+ * @file
+ * @summary Creates a Message portal component
+ */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Portal, Message } from 'semantic-ui-react';
 
+/**
+ * @function MessagePortal
+ * @summary Creates a popup overlay with a message that displays for a few seconds
+ * 
+ * @param {Object} props - the available props
+ * @property {Boolean} isMessageOpen - whether message popup is open
+ * @property {Object} message - the message details to display
+ * @property {Function} onCloseMessage - an event handler to close the message pop up
+ */
 export const MessagePortal = props =>
     <Portal open={props.isMessageOpen}>
         <Message 

@@ -1,31 +1,38 @@
+// Color definition for statuses
+
 .status-red {
-    color: $red !important;
-    border: 1px solid $red !important;
-    background-color: $lightRed !important;
+  color: $red !important;
+  border: 1px solid $red !important;
+  background-color: $lightRed !important;
 }
+
 .status-orange {
-    color: $orange !important;
-    border: 1px solid $orange !important;
-    background-color: $lightOrange !important;
+  color: $orange !important;
+  border: 1px solid $orange !important;
+  background-color: $lightOrange !important;
 }
+
 .status-yellow {
-    color: $yellow !important;
-    border: 1px solid $yellow !important;
-    background-color: $lightYellow !important;
+  color: $yellow !important;
+  border: 1px solid $yellow !important;
+  background-color: $lightYellow !important;
 }
+
 .status-green {
-    color: $green !important;
-    border: 1px solid $green !important;
-    background-color: $lightGreen !important;
+  color: $green !important;
+  border: 1px solid $green !important;
+  background-color: $lightGreen !important;
 }
+
 .status-blue {
-    color: $blue !important;
-    border: 1px solid $blue !important;
-    background-color: $lightBlue !important;
+  color: $blue !important;
+  border: 1px solid $blue !important;
+  background-color: $lightBlue !important;
 }
+
 .ticket-tag {
-    color: $teal !important;
-    border: 1px solid $teal !important;
-    background-color: $lightTeal !important;
-    padding: 0.3em 0.5em !important;
+  color: $teal !important;
+  border: 1px solid $teal !important;
+  background-color: $lightTeal !important;
+  padding: .3em .5em !important;
 }

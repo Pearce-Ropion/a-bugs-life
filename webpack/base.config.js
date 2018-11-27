@@ -1,4 +1,8 @@
-const fs = require('fs')
+/**
+ * @file
+ * @summary Base configuration from file for web pack
+ */
+
 const webpack = require('webpack');
 const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
