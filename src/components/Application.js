@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { Button } from 'semantic-ui-react';
+import bcrypt from 'bcryptjs';
 
 import { Navigation } from './Navigation';
 import { MessagePortal } from './MessagePortal';
@@ -24,7 +25,6 @@ export class Application extends React.Component {
         this.users = [];
         this.labels = {};
         this.state = {
-            debug: true,
             isMessageOpen: false,
             isLoginModalOpen: false,
             isUserModalOpen: false,
@@ -103,13 +103,15 @@ export class Application extends React.Component {
     };
 
     onLogin = fields => {
+        this.setState({
+            loginError: false,
+        });
         axios.post('/api/users/get', {
             email: fields.email,
-            password: fields.password,
         })
             .then(response => response.data)
             .then(response => {
-                if (response.valid) {
+                if (response.valid && bcrypt.compareSync(fields.password, response.user.password)) {
                     this.setState({
                         currentUser: {
                             ...response.user,
@@ -257,19 +259,6 @@ export class Application extends React.Component {
         });
     };
 
-    generate = (event, data, counter = 1) => {
-        if (counter < 300) {
-            setTimeout(() => {
-                const data = genData();
-                axios.post('/api/tickets/create', data)
-                    .then(() => {
-                        console.log(data);
-                        this.generate({}, {}, ++counter);
-                    })
-            }, 200);
-        }
-    };
-
     render = () => (
         <React.Fragment>
             <Navigation
@@ -297,15 +286,8 @@ export class Application extends React.Component {
                 message={this.state.message}
                 onCloseMessage={this.onCloseMessage} />
             {
-                this.state.debug &&
-                    <ChangeUser
-                        currentUser={this.state.currentUser}
-                        onUserChange={this.onUserChange} />
-            }
-            {
                 this.getActivePane()
             }
-            {/* <Button onClick={this.generate} content='Generate' /> */}
         </React.Fragment>
             
     );
